@@ -1,0 +1,43 @@
+@import '@/assets/scss/_var.scss';
+
+.nav {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  .nav-item {
+    flex: 1;
+    position: relative;
+    &:not(:first-child) {
+      &::after {
+        position: absolute;
+        content: '';
+        width: 1px;
+        height: 30%;
+        background-color: $c-primary;
+        left: 0;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+    a {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 1rem 0;
+      color: $c-primary;
+      i {
+        font-size: 2rem;
+        display: inline-block;
+      }
+      span {
+        font-size: 1.6rem;
+        margin-top: 0.5rem;
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+@import '@/assets/scss/_var.scss';
+
+.wrapper {
+  max-width: 40rem;
+  width: 100%;
+  background-color: #ccc;
+  box-shadow: 3px 0 10px rgba(0, 0, 0, 0.4);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  margin-left: 5rem;
+}
+
+#map {
+  flex: 1;
+  position: relative;
+  z-index: 0;
+}

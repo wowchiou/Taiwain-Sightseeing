@@ -1,0 +1,85 @@
+@import '@/assets/scss/_var.scss';
+
+.popup {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: map-get($color, 'contentBG');
+  top: 0;
+  left: 0;
+  z-index: 500;
+  overflow: auto;
+}
+
+.popup_wrap {
+  max-width: 640px;
+  margin: auto;
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .content {
+    max-width: 50rem;
+    width: 85%;
+    margin: 10rem 0;
+  }
+  .content_bg {
+    padding: 3rem 4rem;
+    background-color: #f0f0e6;
+    border-radius: 2rem;
+    border: 0.4rem solid #269e3d;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    @media (max-width: 40em) {
+      padding: 3rem 4%;
+    }
+    @media (max-width: 23.15em) {
+      padding: 3rem 1.5rem;
+    }
+  }
+}
+
+.popup_wrap .popup_header,
+.popup_wrap .popup_body {
+  color: map-get($color, 'primary');
+  text-align: center;
+  line-height: 1.3;
+  letter-spacing: 2px;
+  padding-left: 2px;
+  span {
+    display: block;
+  }
+}
+
+.popup_wrap .popup_header {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+}
+
+.popup_wrap .popup_body {
+  font-size: 2.4rem;
+}
+
+.popup_wrap .popup_footer {
+  margin-top: 3rem;
+  .btns {
+    text-align: center;
+    .btn + .btn {
+      margin-left: 2rem;
+    }
+  }
+}
+
+.popup_wrap .popup_close {
+  width: 3.4rem;
+  height: 3.4rem;
+  background-image: url(~@/assets/images/close-2.png);
+  background-size: 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+}
