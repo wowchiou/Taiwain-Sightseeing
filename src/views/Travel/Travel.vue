@@ -51,7 +51,7 @@ export default {
 
     function searchData() {
       const res = store.state.travel.scenicSpot.filter(
-        (itm) => itm.City === cities.value && itm.Picture
+        (itm) => itm.City === cities.value && itm.Picture.PictureUrl1
       );
       console.log(res);
     }
