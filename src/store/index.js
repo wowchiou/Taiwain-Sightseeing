@@ -1,10 +1,8 @@
 import { createStore } from 'vuex';
+import Service from '@/service';
 
 import map from './modules/map';
 import travel from './modules/travel';
-
-const baseRout =
-  process.env.NODE_ENV === 'production' ? '/Taiwain-Sightseeing/' : '/';
 
 export default createStore({
   modules: { map, travel },
@@ -23,14 +21,21 @@ export default createStore({
   },
   actions: {
     fetchCity({ commit }) {
-      return fetch(baseRout + 'data/city.json')
-        .then((res) => res.json())
+      return Service.getCity()
         .then((cities) => {
-          console.log(cities);
-          commit('SET_CITIES', cities);
+          commit('SET_CITIES', cities.data);
         })
         .catch((err) => {
           throw err;
+        });
+    },
+    fetchCityAddress(context, cityName) {
+      return Service.getCityAddress(cityName)
+        .then((res) => {
+          return res.data;
+        })
+        .catch((err) => {
+          console.log(err);
         });
     },
   },

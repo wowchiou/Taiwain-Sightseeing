@@ -1,4 +1,9 @@
 @import '@/assets/scss/_var.scss';
 
 .appButton {
+  background-color: $c-primary;
+  font-size: 1.8rem;
+  text-align: center;
+  padding: 1rem 0;
+  cursor: pointer;
 }

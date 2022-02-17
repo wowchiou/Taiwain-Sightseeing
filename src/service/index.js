@@ -1,10 +1,24 @@
 import axios from 'axios';
 import jsSHA from 'jssha';
 
-export const http = axios.create({
+export const httpTDX = axios.create({
   baseURL: 'https://ptx.transportdata.tw/MOTC',
   headers: GetAuthorizationHeader(),
 });
+
+export const httpGIST = axios.create({
+  baseURL: 'https://gist.motc.gov.tw/gist_api',
+  headers: GetAuthorizationHeader(),
+});
+
+export default {
+  getCity() {
+    return httpGIST.get('/V3/Map/Basic/City');
+  },
+  getCityAddress(cityName) {
+    return httpGIST.get('/V3/Map/GeoCode/Coordinate/Address/' + cityName);
+  },
+};
 
 function GetAuthorizationHeader() {
   var AppID = process.env.VUE_APP_TDX_ID;

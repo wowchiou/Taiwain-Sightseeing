@@ -1,7 +1,7 @@
-import { http } from './index';
+import { httpTDX } from './index';
 
 export default {
   getScenicSpot() {
-    return http.get('/v2/Tourism/ScenicSpot');
+    return httpTDX.get('/v2/Tourism/ScenicSpot');
   },
 };
