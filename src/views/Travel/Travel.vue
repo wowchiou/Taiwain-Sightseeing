@@ -4,28 +4,20 @@
       <TravelNavigation />
       <form class="search-form">
         <InputGroup label="城市搜尋">
-          <select class="field" v-model="cities" :disabled="!!keyword">
+          <select class="field" v-model="cities">
             <option value="">-- 請選擇城市 --</option>
             <option
               v-for="city in $store.getters['getCities']"
               :key="city.CityID"
-              :value="city.City"
+              :value="city.CityName"
             >
               {{ city.CityName }}
             </option>
           </select>
         </InputGroup>
-        <InputGroup label="關鍵字搜尋">
-          <input
-            v-model="keyword"
-            class="field"
-            type="text"
-            placeholder="-- 請輸入關鍵字 --"
-            :disabled="!!cities"
-          />
-        </InputGroup>
+
         <InputGroup>
-          <div class="field-button">
+          <div class="field-button" @click="searchData">
             <span>搜尋</span>
           </div>
         </InputGroup>
@@ -47,13 +39,24 @@ export default {
     TravelNavigation,
     InputGroup,
   },
+  async created() {
+    await this.$store
+      .dispatch('travel/fetchScenicSpot')
+      .catch((err) => console.log(err));
+  },
+
   setup() {
     const cities = ref('');
-    const keyword = ref('');
     const store = useStore();
 
-    store.dispatch('travel/fetchScenicSpot').catch((err) => console.log(err));
-    return { cities, keyword };
+    function searchData() {
+      const res = store.state.travel.scenicSpot.filter(
+        (itm) => itm.City === cities.value && itm.Picture
+      );
+      console.log(res);
+    }
+
+    return { cities, searchData };
   },
 };
 </script>

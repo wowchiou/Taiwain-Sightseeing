@@ -11,7 +11,8 @@ export default {
     },
   },
   actions: {
-    fetchScenicSpot({ commit }) {
+    fetchScenicSpot({ state, commit }) {
+      if (state.scenicSpot) return;
       return Travel.getScenicSpot()
         .then((res) => {
           console.log(res);
