@@ -1,19 +1,19 @@
 <template>
   <ul class="nav">
     <li class="nav-item">
-      <AppLink :to="'false'">
+      <AppLink :to="{ name: 'travel', params: { page: 'scenicSpot' } }">
         <i class="fas fa-binoculars"></i>
         <span>風景區</span>
       </AppLink>
     </li>
     <li class="nav-item">
-      <AppLink :to="'false'">
+      <AppLink :to="{ name: 'travel', params: { page: 'restaurant' } }">
         <i class="fas fa-utensils"></i>
         <span>餐飲</span>
       </AppLink>
     </li>
     <li class="nav-item">
-      <AppLink :to="'false'">
+      <AppLink :to="{ name: 'travel', params: { page: 'hotel' } }">
         <i class="fas fa-bed"></i>
         <span>旅宿</span>
       </AppLink>

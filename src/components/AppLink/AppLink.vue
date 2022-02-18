@@ -9,9 +9,9 @@
   >
     <slot />
   </a>
-  <router-link v-else v-bind="$props" class="appLink">
+  <RouterLink v-else v-bind="$props" class="appLink">
     <slot />
-  </router-link>
+  </RouterLink>
 </template>
 
 <script>
@@ -21,6 +21,7 @@ export default {
   props: {
     ...RouterLink.props,
   },
+  components: { RouterLink },
   computed: {
     isExternal() {
       return (

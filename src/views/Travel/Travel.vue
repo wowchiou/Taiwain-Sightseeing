@@ -1,59 +1,56 @@
 <template>
-  <MapLayout>
-    <div class="travel">
-      <TravelNavigation />
-      <form class="search-form">
-        <InputGroup label="城市搜尋">
-          <select class="field" v-model="cityName">
-            <option value="">-- 請選擇城市 --</option>
-            <option
-              v-for="city in $store.getters['getCities']"
-              :key="city.CityID"
-              :value="city.CityName"
-            >
-              {{ city.CityName }}
-            </option>
-          </select>
-        </InputGroup>
-        <InputGroup>
-          <AppButton @click="searchHandler">搜尋</AppButton>
-        </InputGroup>
-      </form>
-
-      <div class="content">
-        <p v-if="!hasResult" class="remind">請選擇城市/輸入關鍵字查詢</p>
-        <ul v-else class="search-list">
-          <li
-            v-for="result in searchResult"
-            class="search-item"
-            :key="result.ScenicSpotID"
-            :data="result"
+  <div class="travel">
+    <form class="search-form">
+      <InputGroup label="城市搜尋">
+        <select class="field" v-model="cityName">
+          <option value="">-- 請選擇城市 --</option>
+          <option
+            v-for="city in $store.getters['getCities']"
+            :key="city.CityID"
+            :value="city.CityName"
           >
-            <p @click="showPosition(result.Position)">
-              {{ result.ScenicSpotName }}
-            </p>
-          </li>
-        </ul>
-      </div>
+            {{ city.CityName }}
+          </option>
+        </select>
+      </InputGroup>
+      <InputGroup>
+        <AppButton @click="searchHandler">搜尋</AppButton>
+      </InputGroup>
+    </form>
+
+    <div class="content">
+      <p v-if="!hasResult" class="remind">請選擇城市/輸入關鍵字查詢</p>
+      <ul v-else class="search-list">
+        <li
+          v-for="result in searchResult"
+          class="search-item"
+          :key="result.ScenicSpotID"
+        >
+          <AppLink
+            class="link"
+            :to="{
+              name: 'travel-detail',
+              params: { id: result.ScenicSpotID },
+            }"
+            @click="showPosition(result.Position)"
+          >
+            {{ result.ScenicSpotName }}
+          </AppLink>
+        </li>
+      </ul>
     </div>
-  </MapLayout>
+  </div>
 </template>
 
 <script>
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
-import MapLayout from '@/layouts/MapLayout';
-import TravelNavigation from '@/components/TravelNavigation';
 import InputGroup from '@/components/InputGroup';
 import AppButton from '@/components/AppButton';
+import AppLink from '@/components/AppLink';
 
 export default {
-  components: {
-    MapLayout,
-    TravelNavigation,
-    InputGroup,
-    AppButton,
-  },
+  components: { InputGroup, AppButton, AppLink },
   async created() {
     await this.$store
       .dispatch('travel/fetchScenicSpot')
@@ -67,6 +64,8 @@ export default {
 
     async function searchHandler() {
       if (!cityName.value) return;
+
+      // 判斷page決定要撈哪個api(scenicSpot、restaurant、hotel)
       const result = store.state.travel.scenicSpot.filter(
         (itm) => itm.City === cityName.value && itm.Picture.PictureUrl1
       );
@@ -90,7 +89,13 @@ export default {
       });
     }
 
-    return { cityName, searchHandler, searchResult, hasResult, showPosition };
+    return {
+      cityName,
+      searchHandler,
+      searchResult,
+      hasResult,
+      showPosition,
+    };
   },
 };
 </script>

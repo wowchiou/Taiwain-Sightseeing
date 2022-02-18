@@ -11,12 +11,26 @@ const routes = [
     },
   },
   {
-    path: '/travel',
-    name: 'travel',
-    component: () => import('@/views/Travel'),
+    path: '/travel/:page',
+    name: 'travel-layout',
+    component: () => import('@/views/Travel/Layout'),
+    props: true,
     meta: {
       requireMenu: true,
     },
+    children: [
+      {
+        path: '',
+        name: 'travel',
+        component: () => import('@/views/Travel'),
+      },
+      {
+        path: ':id',
+        name: 'travel-detail',
+        props: true,
+        component: () => import('@/views/Travel/Detail'),
+      },
+    ],
   },
   {
     path: '/bike',

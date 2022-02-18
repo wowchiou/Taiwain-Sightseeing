@@ -2,7 +2,10 @@
   <div class="theNavigation">
     <ul class="menu">
       <li>
-        <AppLink :to="{ name: 'travel' }" title="旅遊查詢">
+        <AppLink
+          :to="{ name: 'travel', params: { page: 'scenicSpot' } }"
+          title="旅遊查詢"
+        >
           <i class="fas fa-backpack"></i>
         </AppLink>
       </li>
