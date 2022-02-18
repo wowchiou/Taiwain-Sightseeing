@@ -3,7 +3,7 @@
     <ul class="menu">
       <li>
         <AppLink
-          :to="{ name: 'travel', params: { page: 'scenicSpot' } }"
+          :to="{ name: 'travel', params: { page: 'ScenicSpot' } }"
           title="旅遊查詢"
         >
           <i class="fas fa-backpack"></i>

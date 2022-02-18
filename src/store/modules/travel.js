@@ -3,11 +3,7 @@ import Travel from '@/service/travel';
 export default {
   namespaced: true,
   state: {
-    selectCity: {
-      name: null,
-      data: null,
-    },
-    selectCityData: null,
+    selectCity: '',
     scenicSpot: null,
   },
   mutations: {

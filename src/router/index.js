@@ -25,7 +25,7 @@ const routes = [
         component: () => import('@/views/Travel'),
       },
       {
-        path: ':id',
+        path: ':id/:name',
         name: 'travel-detail',
         props: true,
         component: () => import('@/views/Travel/Detail'),

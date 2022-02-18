@@ -16,6 +16,14 @@ export default {
     MapLayout,
     TravelNavigation,
   },
+  props: {
+    page: {
+      type: String,
+    },
+  },
+  created() {
+    console.log(this.page);
+  },
 };
 </script>
 
