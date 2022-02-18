@@ -43,14 +43,14 @@
   &:not(:first-child) {
     margin-top: 1rem;
   }
-  .link {
+  .appLink {
     flex: 1;
     padding: 1rem;
     display: inline-block;
     width: 100%;
   }
   &:hover {
-    .link {
+    .appLink {
       background-color: #555;
     }
   }

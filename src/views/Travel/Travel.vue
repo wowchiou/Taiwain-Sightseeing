@@ -2,7 +2,7 @@
   <div class="travel">
     <form class="search-form">
       <InputGroup label="城市搜尋">
-        <select class="field" v-model="cityName">
+        <select class="field" v-model="cityName" @change="searchHandler">
           <option value="">-- 請選擇城市 --</option>
           <option
             v-for="city in $store.getters['getCities']"
@@ -13,9 +13,9 @@
           </option>
         </select>
       </InputGroup>
-      <InputGroup>
+      <!-- <InputGroup>
         <AppButton @click="searchHandler">搜尋</AppButton>
-      </InputGroup>
+      </InputGroup> -->
     </form>
 
     <div class="content">
@@ -27,7 +27,6 @@
           :key="result.ScenicSpotID"
         >
           <AppLink
-            class="link"
             :to="{
               name: 'travel-detail',
               params: { id: result.ScenicSpotID },
@@ -46,21 +45,27 @@
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import InputGroup from '@/components/InputGroup';
-import AppButton from '@/components/AppButton';
+// import AppButton from '@/components/AppButton';
 import AppLink from '@/components/AppLink';
 
 export default {
-  components: { InputGroup, AppButton, AppLink },
+  components: { InputGroup, AppLink },
   async created() {
-    await this.$store
-      .dispatch('travel/fetchScenicSpot')
-      .catch((err) => console.log(err));
+    if (!this.$store.state.travel.scenicSpot) {
+      await this.$store
+        .dispatch('travel/fetchScenicSpot')
+        .catch((err) => console.log(err));
+    }
   },
   setup() {
     const cityName = ref('');
     const searchResult = ref([]);
     const store = useStore();
     const hasResult = computed(() => searchResult.value.length !== 0);
+
+    if (store.state.travel.selectCity.name) {
+      backFromDetail();
+    }
 
     async function searchHandler() {
       if (!cityName.value) return;
@@ -70,6 +75,10 @@ export default {
         (itm) => itm.City === cityName.value && itm.Picture.PictureUrl1
       );
       searchResult.value = result;
+      store.commit('travel/SET_SELECT_CITY', {
+        name: cityName.value,
+        data: result,
+      });
       await setCityView();
       store.dispatch('map/setCircleMarker', result);
     }
@@ -87,6 +96,14 @@ export default {
         position: itemPosition,
         zoom: 16,
       });
+    }
+
+    async function backFromDetail() {
+      const selectCity = store.state.travel.selectCity;
+      cityName.value = selectCity.name;
+      searchResult.value = selectCity.data;
+      await setCityView();
+      store.dispatch('map/setCircleMarker', selectCity.data);
     }
 
     return {

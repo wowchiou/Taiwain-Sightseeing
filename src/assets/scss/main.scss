@@ -30,6 +30,11 @@ span {
   display: inline-block;
 }
 
+img {
+  display: inline-block;
+  width: 100%;
+}
+
 select {
   background-image: url(~@/assets/images/down-arrow.png);
   background-repeat: no-repeat;
