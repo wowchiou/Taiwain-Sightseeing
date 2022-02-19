@@ -43,14 +43,19 @@ export default {
       dispatch('setMapView', { position, zoom: 10 });
     },
 
-    setCircleMarker({ state, commit }, data) {
+    setTravelMarker({ dispatch }, data) {
       if (data.length === 0) return;
+      const layers = data.map((itm) => {
+        return [itm.Position.PositionLat, itm.Position.PositionLon];
+      });
+      dispatch('setCircleMarker', layers);
+    },
+
+    setCircleMarker({ state, commit }, positionArr) {
       if (state.layerGroup) state.layerGroup.clearLayers();
       const layers = [];
-      data.forEach((itm) => {
-        const lat = itm.Position.PositionLat;
-        const lng = itm.Position.PositionLon;
-        const layer = new L.circleMarker([lat, lng], {
+      positionArr.forEach((position) => {
+        const layer = new L.circleMarker(position, {
           radius: 5,
           className: 'myCircle',
           weight: 1,

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <TheNavigation v-if="$route.meta.requireMenu" />
+    <TheNavigation />
     <router-view></router-view>
   </div>
 </template>

@@ -3,10 +3,26 @@
     <ul class="menu">
       <li>
         <AppLink
-          :to="{ name: 'travel', params: { page: 'ScenicSpot' } }"
-          title="旅遊查詢"
+          :to="{ name: 'travel-index', params: { page: 'ScenicSpot' } }"
+          title="景點查詢"
         >
-          <i class="fas fa-backpack"></i>
+          <i class="fas fa-binoculars"></i>
+        </AppLink>
+      </li>
+      <li>
+        <AppLink
+          :to="{ name: 'travel-index', params: { page: 'Restaurant' } }"
+          title="餐飲查詢"
+        >
+          <i class="fas fa-utensils"></i>
+        </AppLink>
+      </li>
+      <li>
+        <AppLink
+          :to="{ name: 'travel-index', params: { page: 'Hotel' } }"
+          title="旅宿查詢"
+        >
+          <i class="fas fa-bed"></i>
         </AppLink>
       </li>
       <li>

@@ -4,27 +4,45 @@ export default {
   namespaced: true,
   state: {
     selectCity: '',
-    scenicSpot: null,
+    travelData: null,
   },
   mutations: {
-    SET_SCENIC_SPOT(state, spots) {
-      state.scenicSpot = spots;
+    SET_TRAVEL_DATA(state, data) {
+      state.travelData = data;
     },
     SET_SELECT_CITY(state, city) {
       state.selectCity = city;
     },
   },
   actions: {
-    fetchScenicSpot({ commit }) {
+    fetchTravelData({ dispatch }, page) {
+      switch (page) {
+        case 'ScenicSpot':
+          return dispatch('fetchScenicSpot');
+        case 'Restaurant':
+          break;
+        case 'Hotel':
+          break;
+
+        default:
+          break;
+      }
+    },
+
+    fetchScenicSpot({ dispatch }) {
       return Travel.getScenicSpot()
         .then((res) => {
-          console.log(res);
-          commit('SET_SCENIC_SPOT', res.data);
-          return res.data;
+          return dispatch('onSuccess', res);
         })
         .catch((err) => {
           throw err;
         });
+    },
+
+    onSuccess({ commit }, res) {
+      console.log(res);
+      commit('SET_TRAVEL_DATA', res.data);
+      return res.data;
     },
   },
 };

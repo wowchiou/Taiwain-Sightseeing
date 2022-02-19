@@ -6,19 +6,33 @@
 </template>
 
 <script>
-import { onMounted } from 'vue';
+import { onMounted, watch, computed } from 'vue';
 import { useStore } from 'vuex';
 import { getUserPosition } from '@/utils';
 import L from 'leaflet';
 
 export default {
-  setup() {
+  props: {
+    page: {
+      type: String,
+    },
+  },
+  setup(props) {
     const store = useStore();
-    const currentPosition = store.state.map.currentPosition;
+    const currentPosition = computed(() => store.state.map.currentPosition);
+
+    watch(
+      () => props.page,
+      (page, prevPage) => {
+        if (page !== prevPage) {
+          resetMap(currentPosition.value);
+        }
+      }
+    );
 
     onMounted(() => {
-      if (currentPosition) {
-        return setMap(currentPosition);
+      if (currentPosition.value) {
+        return setMap(currentPosition.value);
       }
       getUserPosition()
         .then((position) => {
@@ -36,6 +50,20 @@ export default {
         zoom: 15,
       });
       store.dispatch('map/buildMap', OSM);
+      store.dispatch('map/setCircleMarker', [position]);
+    }
+
+    function resetMap(position) {
+      store.commit('travel/SET_SELECT_CITY', '');
+      store.commit('travel/SET_TRAVEL_DATA', null);
+      store.dispatch('map/setCircleMarker', [position]);
+      store.dispatch('map/setMapView', {
+        position: {
+          lat: position[0],
+          lng: position[1],
+        },
+        zoom: 15,
+      });
     }
   },
 };

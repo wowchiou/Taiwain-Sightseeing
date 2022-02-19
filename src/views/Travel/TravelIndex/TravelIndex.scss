@@ -1,0 +1,57 @@
+@import '@/assets/scss/_var.scss';
+
+.travel {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.search-form {
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.content {
+  margin-top: 2rem;
+  overflow: auto;
+  flex: 1;
+  width: 100%;
+}
+
+.remind {
+  font-size: 1.8rem;
+  color: $c-primary;
+  text-align: center;
+}
+
+.search-list {
+  padding-bottom: 2rem;
+}
+
+.search-item {
+  color: #fff;
+  background-color: #777;
+  line-height: 1.2;
+  cursor: pointer;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  &:not(:first-child) {
+    margin-top: 1rem;
+  }
+  .appLink {
+    flex: 1;
+    padding: 1rem;
+    display: inline-block;
+    width: 100%;
+  }
+  &:hover {
+    .appLink {
+      background-color: #555;
+    }
+  }
+}

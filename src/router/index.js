@@ -12,8 +12,8 @@ const routes = [
   },
   {
     path: '/travel/:page',
-    name: 'travel-layout',
-    component: () => import('@/views/Travel/Layout'),
+    name: 'travel',
+    component: () => import('@/views/Travel'),
     props: true,
     meta: {
       requireMenu: true,
@@ -21,14 +21,15 @@ const routes = [
     children: [
       {
         path: '',
-        name: 'travel',
-        component: () => import('@/views/Travel'),
+        name: 'travel-index',
+        props: true,
+        component: () => import('@/views/Travel/TravelIndex'),
       },
       {
         path: ':id/:name',
         name: 'travel-detail',
         props: true,
-        component: () => import('@/views/Travel/Detail'),
+        component: () => import('@/views/Travel/TravelDetail'),
       },
     ],
   },
