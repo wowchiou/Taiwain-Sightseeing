@@ -1,40 +1,23 @@
 <template>
   <div class="travel">
-    <form class="search-form">
-      <InputGroup label="城市搜尋">
-        <select
-          class="field"
-          v-model="cityName"
-          @change="searchHandler"
-          :disabled="!$store.state.map.OSM"
-        >
-          <option value="">-- 請選擇城市 --</option>
-          <option
-            v-for="city in $store.getters['getCities']"
-            :key="city.CityID"
-            :value="city.CityName"
-          >
-            {{ city.CityName }}
-          </option>
-        </select>
-      </InputGroup>
-    </form>
+    <TravelSearcher v-model="cityName" :searchHandler="searchHandler" />
+
     <div class="content">
       <p v-if="!hasResult" class="remind">請選擇城市/輸入關鍵字查詢</p>
       <ul v-else class="search-list">
         <li
           v-for="result in searchResult"
           class="search-item"
-          :key="result.ScenicSpotID"
+          :key="result[`${page}ID`]"
         >
           <AppLink
             :to="{
               name: 'travel-detail',
-              params: { id: result.ScenicSpotID, name: result.ScenicSpotName },
+              params: { id: result[`${page}ID`], name: result[`${page}Name`] },
             }"
             @click="showPosition(result.Position)"
           >
-            {{ result.ScenicSpotName }}
+            {{ result[`${page}Name`] }}
           </AppLink>
         </li>
       </ul>
@@ -43,10 +26,10 @@
 </template>
 
 <script>
-import { ref, computed, watch, watchEffect } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
-import InputGroup from '@/components/InputGroup';
 import AppLink from '@/components/AppLink';
+import TravelSearcher from '@/components/TravelSearcher';
 
 export default {
   props: {
@@ -54,46 +37,45 @@ export default {
       type: String,
     },
   },
-  components: { InputGroup, AppLink },
+  components: { AppLink, TravelSearcher },
   setup(props) {
     const cityName = ref('');
     const searchResult = ref([]);
     const store = useStore();
     const hasResult = computed(() => searchResult.value.length !== 0);
-    const selectCity = store.state.travel.selectCity;
+    const selectCity = computed(() => store.state.travel.selectCity);
+    const travelData = computed(() => store.state.travel.travelData);
 
     watch(
       () => props.page,
-      (page, prevPage) => {
+      async (page, prevPage) => {
         if (page !== prevPage) {
           cityName.value = '';
           searchResult.value = [];
+          await store
+            .dispatch('travel/fetchTravelData', props.page)
+            .catch((err) => console.log(err));
         }
-      }
+      },
+      { immediate: true }
     );
 
-    watchEffect(async () => {
-      if (!store.state.travel.travelData) {
-        await store
-          .dispatch('travel/fetchTravelData', props.page)
-          .catch((err) => console.log(err));
-      }
-    });
-
-    if (selectCity) {
-      cityName.value = selectCity;
+    if (selectCity.value) {
+      cityName.value = selectCity.value;
       searchHandler();
     }
 
     async function searchHandler() {
       if (!cityName.value) return;
-      const result = store.state.travel.travelData.filter(
-        (itm) => itm.City === cityName.value && itm.Picture.PictureUrl1
+      console.log(travelData.value);
+      const result = travelData.value.filter(
+        (itm) => itm.City === cityName.value
       );
       searchResult.value = result;
+      console.log(result);
       store.commit('travel/SET_SELECT_CITY', cityName.value);
       await setCityCenter();
-      store.dispatch('map/setTravelMarker', result);
+      // store.dispatch('map/setTravelMarker', result);
     }
 
     async function setCityCenter() {

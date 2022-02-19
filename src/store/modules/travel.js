@@ -20,17 +20,34 @@ export default {
         case 'ScenicSpot':
           return dispatch('fetchScenicSpot');
         case 'Restaurant':
-          break;
+          return dispatch('fetchRestaurant');
         case 'Hotel':
-          break;
-
-        default:
-          break;
+          return dispatch('fetchHotel');
       }
     },
 
     fetchScenicSpot({ dispatch }) {
       return Travel.getScenicSpot()
+        .then((res) => {
+          return dispatch('onSuccess', res);
+        })
+        .catch((err) => {
+          throw err;
+        });
+    },
+
+    fetchRestaurant({ dispatch }) {
+      return Travel.getRestaurant()
+        .then((res) => {
+          return dispatch('onSuccess', res);
+        })
+        .catch((err) => {
+          throw err;
+        });
+    },
+
+    fetchHotel({ dispatch }) {
+      return Travel.getHotel()
         .then((res) => {
           return dispatch('onSuccess', res);
         })

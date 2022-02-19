@@ -37,8 +37,10 @@ export default createStore({
       if (state.cityAddress[cityName]) {
         return state.cityAddress[cityName];
       }
+      console.log('do');
       return Service.getCityAddress(cityName)
         .then((res) => {
+          console.log(res);
           commit('SET_CITY_ADDRESS', { name: cityName, data: res.data });
           return res.data;
         })
