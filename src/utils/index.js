@@ -16,3 +16,30 @@ export function getUserPosition() {
     }
   });
 }
+
+export const StopBodyScroll = (function () {
+  let instance = null;
+  function StopBodyScroll() {
+    this.pageTop = 0;
+    this.body = document.body;
+    this.html = document.querySelector('html');
+  }
+  StopBodyScroll.prototype.fixedBody = function () {
+    this.pageTop = window.scrollY;
+    this.html.style.height = window.screen.availHeight + 'px';
+    this.body.style.position = 'fixed';
+    this.body.style.top = -this.pageTop + 'px';
+  };
+  StopBodyScroll.prototype.scrollBody = function () {
+    this.html.style.height = 'auto';
+    this.body.style.position = '';
+    this.body.style.top = '';
+    window.scrollTo(0, this.pageTop);
+  };
+  return function () {
+    if (!instance) {
+      instance = new StopBodyScroll();
+    }
+    return instance;
+  };
+})();

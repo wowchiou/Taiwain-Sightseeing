@@ -8,4 +8,27 @@
   p + p {
     margin-top: 1.5rem;
   }
+
+  .title {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-start;
+    .appButton {
+      margin-right: 1rem;
+      border-radius: 50%;
+      width: 3.5rem;
+      height: 3.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: $c-secondary;
+      line-height: 1.2;
+      flex: 1;
+    }
+  }
 }

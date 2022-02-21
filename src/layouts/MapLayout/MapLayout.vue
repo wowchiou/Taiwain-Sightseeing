@@ -34,6 +34,7 @@ export default {
       if (currentPosition.value) {
         return setMap(currentPosition.value);
       }
+      store.dispatch('showLoader', true);
       getUserPosition()
         .then((position) => {
           store.commit('map/SET_CURRENT_POSITION', position);
@@ -51,6 +52,8 @@ export default {
       });
       store.dispatch('map/buildMap', OSM);
       store.dispatch('map/setCircleMarker', [position]);
+      console.log(2);
+      store.dispatch('showLoader', false);
     }
 
     function resetMap(position) {

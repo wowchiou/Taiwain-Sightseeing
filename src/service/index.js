@@ -16,7 +16,9 @@ export default {
     return httpGIST.get('/V3/Map/Basic/City');
   },
   getCityAddress(cityName) {
-    return httpGIST.get('/V3/Map/GeoCode/Coordinate/Address/' + cityName);
+    return httpGIST.get(
+      '/V3/Map/GeoCode/Coordinate/Address/' + cityName + '政府'
+    );
   },
 };
 

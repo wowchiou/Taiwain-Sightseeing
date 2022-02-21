@@ -1,7 +1,7 @@
 <template>
   <div class="travel">
+    <h1>{{ page.toUpperCase() }}</h1>
     <TravelSearcher v-model="cityName" :searchHandler="searchHandler" />
-
     <div class="content">
       <p v-if="!hasResult" class="remind">請選擇城市/輸入關鍵字查詢</p>
       <ul v-else class="search-list">
@@ -44,7 +44,8 @@ export default {
     const store = useStore();
     const hasResult = computed(() => searchResult.value.length !== 0);
     const selectCity = computed(() => store.state.travel.selectCity);
-    const travelData = computed(() => store.state.travel.travelData);
+
+    let travelData = null;
 
     watch(
       () => props.page,
@@ -52,30 +53,29 @@ export default {
         if (page !== prevPage) {
           cityName.value = '';
           searchResult.value = [];
-          await store
+          travelData = await store
             .dispatch('travel/fetchTravelData', props.page)
             .catch((err) => console.log(err));
+
+          if (selectCity.value) {
+            cityName.value = selectCity.value;
+            searchHandler();
+          }
         }
       },
       { immediate: true }
     );
 
-    if (selectCity.value) {
-      cityName.value = selectCity.value;
-      searchHandler();
-    }
-
     async function searchHandler() {
-      if (!cityName.value) return;
-      console.log(travelData.value);
-      const result = travelData.value.filter(
-        (itm) => itm.City === cityName.value
+      store.dispatch('showLoader', true);
+      const result = travelData.filter(
+        (itm) => itm.City === cityName.value && itm.Picture.PictureUrl1
       );
       searchResult.value = result;
-      console.log(result);
       store.commit('travel/SET_SELECT_CITY', cityName.value);
       await setCityCenter();
-      // store.dispatch('map/setTravelMarker', result);
+      store.dispatch('map/setTravelMarker', result);
+      store.dispatch('showLoader', false);
     }
 
     async function setCityCenter() {

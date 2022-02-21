@@ -1,17 +1,25 @@
 <template>
   <div v-if="data" class="detail">
-    <AppButton @click="backHandler">返回</AppButton>
-    <p>{{ data.City }}</p>
-    <p>{{ data.ScenicSpotName }}</p>
-    <p>{{ data.Address }}</p>
-    <p>{{ data.Phone }}</p>
-    <p>{{ data.OpenTime }}</p>
-    <p v-html="data.TravelInfo"></p>
-    <img
-      :src="data.Picture.PictureUrl1"
-      :alt="data.Picture.PictureDescription1"
-    />
-    <p>{{ data.DescriptionDetail }}</p>
+    <div class="title">
+      <AppButton @click="backHandler">
+        <i class="fas fa-arrow-left"></i>
+      </AppButton>
+      <h1>{{ data.ScenicSpotName }}</h1>
+    </div>
+
+    <TravelDetailItem title="地址" :content="data.Address" />
+    <TravelDetailItem title="電話" :content="data.Phone" />
+    <TravelDetailItem title="營業時間" :content="data.OpenTime" />
+    <TravelDetailItem title="詳細資訊" :content="data.TravelInfo" />
+
+    <TravelDetailItem>
+      <img
+        :src="data.Picture.PictureUrl1"
+        :alt="data.Picture.PictureDescription1"
+      />
+    </TravelDetailItem>
+
+    <TravelDetailItem :content="data.DescriptionDetail" />
   </div>
 </template>
 
@@ -20,6 +28,7 @@ import { ref, watchEffect, computed } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import AppButton from '@/components/AppButton';
+import TravelDetailItem from '@/components/TravelDetailItem';
 
 export default {
   props: {
@@ -34,6 +43,7 @@ export default {
   },
   components: {
     AppButton,
+    TravelDetailItem,
   },
   setup(props) {
     const store = useStore();
