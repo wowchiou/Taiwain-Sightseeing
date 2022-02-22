@@ -13,7 +13,7 @@
     font-size: 2.4rem;
     font-weight: 900;
     padding-top: 0.5rem;
-    color: $c-light;
+    color: $c-secondary;
   }
 }
 
@@ -41,7 +41,7 @@
 
 .search-item {
   color: #fff;
-  background-color: #777;
+  background-color: $c-primary;
   line-height: 1.2;
   cursor: pointer;
   display: flex;
@@ -58,7 +58,7 @@
   }
   &:hover {
     .appLink {
-      background-color: #555;
+      background-color: $c-grey;
     }
   }
 }

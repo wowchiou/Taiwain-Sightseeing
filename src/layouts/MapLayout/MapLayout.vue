@@ -52,7 +52,7 @@ export default {
       });
       store.dispatch('map/buildMap', OSM);
       // store.dispatch('map/setCircleMarker', [position]);
-      store.dispatch('map/setIconMarker', position);
+      store.dispatch('map/setBlueIconMarker', position);
       store.dispatch('showLoader', false);
     }
 

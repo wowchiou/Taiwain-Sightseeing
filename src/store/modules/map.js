@@ -1,10 +1,20 @@
 import L from 'leaflet';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+import 'leaflet.markercluster';
 import Wkt from 'wicket';
 
 const wkt = new Wkt.Wkt();
 
-const blueMarker = L.icon({
+const lightMarker = L.icon({
   iconUrl: '/images/marker-light.png',
+  iconSize: [40, 40],
+  iconAnchor: [20, 35],
+  popupAnchor: [-3, -76],
+});
+
+const blueMarker = L.icon({
+  iconUrl: '/images/marker-blue.png',
   iconSize: [40, 40],
   iconAnchor: [20, 35],
   popupAnchor: [-3, -76],
@@ -55,27 +65,31 @@ export default {
       const layers = data.map((itm) => {
         return [itm.Position.PositionLat, itm.Position.PositionLon];
       });
-      dispatch('setCircleMarker', layers);
+      dispatch('setMarkers', layers);
     },
 
-    setCircleMarker({ state, commit }, positionArr) {
+    setTravelMarkers({ state, commit }, data) {
       if (state.layerGroup) state.layerGroup.clearLayers();
-      const layers = [];
-      positionArr.forEach((position) => {
-        const layer = new L.circleMarker(position, {
-          radius: 5,
-          className: 'myCircle',
-          weight: 1,
-          fill: true,
-          fillOpacity: 1,
-        });
-        layers.push(layer);
+      const markers = L.markerClusterGroup({
+        spiderfyOnMaxZoom: false,
+        showCoverageOnHover: true,
+        zoomToBoundsOnClick: true,
       });
-      commit('SET_LAYER_GROUP', L.layerGroup(layers));
-      state.OSM.addLayer(state.layerGroup);
+      data.forEach((itm) => {
+        const layer = L.marker(itm.position, { icon: lightMarker }).bindPopup(
+          itm.name,
+          {
+            closeButton: false,
+            className: 'travel-popup',
+          }
+        );
+        markers.addLayer(layer);
+      });
+      commit('SET_LAYER_GROUP', markers);
+      state.OSM.addLayer(markers);
     },
 
-    setIconMarker({ state }, position) {
+    setBlueIconMarker({ state }, position) {
       L.marker(position, { icon: blueMarker }).addTo(state.OSM);
     },
   },

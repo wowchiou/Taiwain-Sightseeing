@@ -57,9 +57,18 @@ export default {
           .dispatch('travel/fetchTravelData', props.page)
           .catch((err) => console.log(err));
         data.value = result.find((itm) => itm[`${props.page}ID`] === props.id);
+
+        // 繪製地圖marker
         const lat = data.value.Position.PositionLat;
         const lng = data.value.Position.PositionLon;
-        store.dispatch('map/setCircleMarker', [[lat, lng]]);
+        store.dispatch('map/setTravelMarkers', [
+          {
+            name: data.value[`${props.page}Name`],
+            position: [lat, lng],
+          },
+        ]);
+
+        // 設定地圖位置
         store.dispatch('map/setMapView', {
           position: { lat, lng },
           zoom: 15,

@@ -72,17 +72,24 @@ export default {
         (itm) => itm.City === cityName.value && itm.Picture.PictureUrl1
       );
       searchResult.value = result;
-      store.commit('travel/SET_SELECT_CITY', cityName.value);
-      await setCityCenter();
-      store.dispatch('map/setTravelMarker', result);
-      store.dispatch('showLoader', false);
-    }
 
-    async function setCityCenter() {
+      // 抓取市中心位置
+      store.commit('travel/SET_SELECT_CITY', cityName.value);
       const cityPosition = await store
         .dispatch('fetchCityAddress', cityName.value)
         .catch((err) => console.log(err));
       store.dispatch('map/setCityCenter', cityPosition);
+
+      // 繪製地圖marker
+      const dataPosition = result.map((itm) => {
+        return {
+          name: itm[`${props.page}Name`],
+          position: [itm.Position.PositionLat, itm.Position.PositionLon],
+        };
+      });
+      console.log(dataPosition);
+      store.dispatch('map/setTravelMarkers', dataPosition);
+      store.dispatch('showLoader', false);
     }
 
     function showPosition(data) {
