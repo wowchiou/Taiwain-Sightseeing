@@ -51,15 +51,15 @@ export default {
         zoom: 15,
       });
       store.dispatch('map/buildMap', OSM);
-      store.dispatch('map/setCircleMarker', [position]);
-      console.log(2);
+      // store.dispatch('map/setCircleMarker', [position]);
+      store.dispatch('map/setIconMarker', position);
       store.dispatch('showLoader', false);
     }
 
     function resetMap(position) {
       store.commit('travel/SET_SELECT_CITY', '');
       store.commit('travel/SET_TRAVEL_DATA', null);
-      store.dispatch('map/setCircleMarker', [position]);
+      // store.dispatch('map/setIconMarker', position);
       store.dispatch('map/setMapView', {
         position: {
           lat: position[0],

@@ -3,6 +3,13 @@ import Wkt from 'wicket';
 
 const wkt = new Wkt.Wkt();
 
+const blueMarker = L.icon({
+  iconUrl: '/images/marker-light.png',
+  iconSize: [40, 40],
+  iconAnchor: [20, 35],
+  popupAnchor: [-3, -76],
+});
+
 export default {
   namespaced: true,
   state: {
@@ -66,6 +73,10 @@ export default {
       });
       commit('SET_LAYER_GROUP', L.layerGroup(layers));
       state.OSM.addLayer(state.layerGroup);
+    },
+
+    setIconMarker({ state }, position) {
+      L.marker(position, { icon: blueMarker }).addTo(state.OSM);
     },
   },
 };
