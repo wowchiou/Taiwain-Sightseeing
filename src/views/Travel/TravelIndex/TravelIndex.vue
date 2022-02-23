@@ -15,7 +15,6 @@
               name: 'travel-detail',
               params: { id: result[`${page}ID`], name: result[`${page}Name`] },
             }"
-            @click="showPosition(result.Position)"
           >
             {{ result[`${page}Name`] }}
           </AppLink>
@@ -28,6 +27,7 @@
 <script>
 import { ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 import AppLink from '@/components/AppLink';
 import TravelSearcher from '@/components/TravelSearcher';
 
@@ -39,13 +39,16 @@ export default {
   },
   components: { AppLink, TravelSearcher },
   setup(props) {
+    const store = useStore();
+    const router = useRouter();
     const cityName = ref('');
     const searchResult = ref([]);
-    const store = useStore();
     const hasResult = computed(() => searchResult.value.length !== 0);
     const selectCity = computed(() => store.state.travel.selectCity);
 
     let travelData = null;
+
+    console.log(router);
 
     watch(
       () => props.page,
@@ -85,27 +88,27 @@ export default {
         return {
           name: itm[`${props.page}Name`],
           position: [itm.Position.PositionLat, itm.Position.PositionLon],
+          id: itm[`${props.page}ID`],
+          router,
         };
       });
-      console.log(dataPosition);
       store.dispatch('map/setTravelMarkers', dataPosition);
       store.dispatch('showLoader', false);
     }
 
-    function showPosition(data) {
-      const itemPosition = [data.PositionLat, data.PositionLon];
-      store.dispatch('map/setMapView', {
-        position: itemPosition,
-        zoom: 11,
-      });
-    }
+    // function showPosition(data) {
+    //   const itemPosition = [data.PositionLat, data.PositionLon];
+    //   store.dispatch('map/setMapView', {
+    //     position: itemPosition,
+    //     zoom: 15,
+    //   });
+    // }
 
     return {
       cityName,
       searchHandler,
       searchResult,
       hasResult,
-      showPosition,
     };
   },
 };

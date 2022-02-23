@@ -43,7 +43,6 @@ export default createStore({
     fetchCity({ commit }) {
       return Service.getCity()
         .then((cities) => {
-          console.log(223);
           commit('SET_CITIES', cities.data);
         })
         .catch((err) => {
@@ -55,10 +54,8 @@ export default createStore({
       if (state.cityAddress[cityName]) {
         return state.cityAddress[cityName];
       }
-      console.log('fetch city address');
       return Service.getCityAddress(cityName)
         .then((res) => {
-          console.log(res);
           commit('SET_CITY_ADDRESS', { name: cityName, data: res.data });
           return res.data;
         })

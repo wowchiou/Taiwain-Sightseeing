@@ -1,4 +1,12 @@
 @import '@/assets/scss/_var.scss';
 
 .travelDetailItem {
+  line-height: 1.3;
+  color: $c-primary;
+
+  h3 {
+    color: $c-dark-green;
+    font-weight: 500;
+    font-size: 18px;
+  }
 }

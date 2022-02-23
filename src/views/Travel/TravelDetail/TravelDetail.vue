@@ -4,22 +4,35 @@
       <AppButton @click="backHandler">
         <i class="fas fa-arrow-left"></i>
       </AppButton>
-      <h1>{{ data.ScenicSpotName }}</h1>
+      <h1>{{ data[`${page}Name`] }}</h1>
     </div>
 
-    <TravelDetailItem title="地址" :content="data.Address" />
-    <TravelDetailItem title="電話" :content="data.Phone" />
-    <TravelDetailItem title="營業時間" :content="data.OpenTime" />
-    <TravelDetailItem title="詳細資訊" :content="data.TravelInfo" />
+    <TravelDetailItem
+      v-if="data.Address"
+      title="地址"
+      :content="data.Address"
+    />
 
-    <TravelDetailItem>
+    <TravelDetailItem v-if="data.Phone" title="電話" :content="data.Phone" />
+
+    <TravelDetailItem v-if="data.OpenTime" title="營業時間">
+      <p v-html="data.OpenTime"></p>
+    </TravelDetailItem>
+
+    <TravelDetailItem v-if="data.TravelInfo" title="營業時間">
+      <p v-html="data.TravelInfo"></p>
+    </TravelDetailItem>
+
+    <TravelDetailItem v-if="data.Picture.PictureUrl1">
       <img
         :src="data.Picture.PictureUrl1"
         :alt="data.Picture.PictureDescription1"
       />
     </TravelDetailItem>
 
-    <TravelDetailItem :content="data.DescriptionDetail" />
+    <TravelDetailItem v-if="data.DescriptionDetail">
+      <p v-html="data.DescriptionDetail"></p>
+    </TravelDetailItem>
   </div>
 </template>
 
@@ -57,6 +70,8 @@ export default {
           .dispatch('travel/fetchTravelData', props.page)
           .catch((err) => console.log(err));
         data.value = result.find((itm) => itm[`${props.page}ID`] === props.id);
+
+        console.log(data.value);
 
         // 繪製地圖marker
         const lat = data.value.Position.PositionLat;
