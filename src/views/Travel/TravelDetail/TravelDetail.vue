@@ -19,7 +19,7 @@
       <p v-html="data.OpenTime"></p>
     </TravelDetailItem>
 
-    <TravelDetailItem v-if="data.TravelInfo" title="營業時間">
+    <TravelDetailItem v-if="data.TravelInfo" title="詳細資訊">
       <p v-html="data.TravelInfo"></p>
     </TravelDetailItem>
 

@@ -90,9 +90,7 @@ export default {
 
       const markers = [];
       data.forEach((itm) => {
-        const layer = L.marker(itm.position, { icon: lightMarker }).bindTooltip(
-          itm.name
-        );
+        const layer = L.marker(itm.position, { icon: lightMarker });
         markers.push(layer);
       });
       const layers = L.layerGroup(markers);
