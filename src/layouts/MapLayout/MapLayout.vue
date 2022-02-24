@@ -29,8 +29,8 @@ export default {
           store.commit('travel/SET_TRAVEL_DATA', null);
           store.dispatch('map/setMapView', {
             position: {
-              lat: currentPosition.value.position[0],
-              lng: currentPosition.value.position[1],
+              lat: currentPosition.value[0],
+              lng: currentPosition.value[1],
             },
             zoom: 15,
           });
@@ -62,7 +62,7 @@ export default {
         zoom: 15,
       });
       store.dispatch('map/buildMap', OSM);
-      store.dispatch('map/setBlueIconMarker', position);
+      store.dispatch('map/setCurrentPositionMarker', position);
     }
   },
 };

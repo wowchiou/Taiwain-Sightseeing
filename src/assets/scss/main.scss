@@ -138,6 +138,15 @@ select {
     font-size: 20px;
     color: $c-secondary;
   }
+  p {
+    position: absolute;
+    font-size: 16px;
+    color: $c-secondary;
+    font-weight: 500;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
+  }
 }
 
 @keyframes shrink1 {

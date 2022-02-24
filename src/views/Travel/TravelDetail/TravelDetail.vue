@@ -61,6 +61,7 @@ export default {
   setup(props) {
     const store = useStore();
     const router = useRouter();
+
     const data = ref(null);
     const isMapInit = computed(() => store.state.map.OSM || null);
 
@@ -68,20 +69,17 @@ export default {
       if (isMapInit.value) {
         const result = await store
           .dispatch('travel/fetchTravelData', props.page)
-          .catch((err) => console.log(err));
-        data.value = result.find((itm) => itm[`${props.page}ID`] === props.id);
+          .catch((err) => {
+            console.log(err);
+            router.push({ name: 'network-error' });
+          });
 
-        console.log(data.value);
+        data.value = result.find((itm) => itm[`${props.page}ID`] === props.id);
 
         // 繪製地圖marker
         const lat = data.value.Position.PositionLat;
         const lng = data.value.Position.PositionLon;
-        store.dispatch('map/setTravelMarkers', [
-          {
-            name: data.value[`${props.page}Name`],
-            position: [lat, lng],
-          },
-        ]);
+        store.dispatch('map/setDetailMarker', [lat, lng]);
 
         // 設定地圖位置
         store.dispatch('map/setMapView', {

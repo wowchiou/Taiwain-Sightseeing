@@ -27,8 +27,10 @@ export default {
   setup(props) {
     const store = useStore();
     const router = useRouter();
+
     const cityName = ref('');
     const searchResult = ref([]);
+
     const hasSearchResult = computed(() => searchResult.value.length !== 0);
     const selectCity = computed(() => store.state.travel.selectCity);
     const title = computed(() => props.page.toUpperCase());
@@ -39,16 +41,21 @@ export default {
       () => props.page,
       async (page, prevPage) => {
         if (page !== prevPage) {
+          // 換頁時清除之前搜尋紀錄
           cityName.value = '';
           searchResult.value = [];
+          // 清空marker
+          store.dispatch('map/clearMarkersCluster');
+
+          // 獲取景點、餐飲、旅宿資料
           travelData = await store
-            .dispatch('travel/fetchTravelData', props.page)
-            .catch((err) => console.log(err));
+            .dispatch('travel/fetchTravelData', page)
+            .catch((err) => {
+              console.log(err);
+              router.push({ name: 'network-error' });
+            });
 
-          if (store.state.map.layerGroup) {
-            store.state.map.layerGroup.clearLayers();
-          }
-
+          // 從詳細頁回來重新搜尋之前縣市資料
           if (selectCity.value) {
             cityName.value = selectCity.value;
             searchHandler();
@@ -60,11 +67,11 @@ export default {
 
     async function searchHandler() {
       store.dispatch('showLoader', true);
-      const result = travelData.filter((itm) => itm.City === cityName.value);
-      searchResult.value = result;
+
+      // 儲存目前選擇的城市，從詳細頁回來時以此重抓資料
+      store.commit('travel/SET_SELECT_CITY', cityName.value);
 
       // 抓取市中心位置
-      store.commit('travel/SET_SELECT_CITY', cityName.value);
       const cityPosition = await store
         .dispatch('fetchCityAddress', cityName.value)
         .catch((err) => {
@@ -72,17 +79,28 @@ export default {
           router.push({ name: 'network-error' });
         });
 
-      store.dispatch('map/setCityCenter', cityPosition);
+      // 讀取市中心經緯度
+      await store
+        .dispatch('map/readCityGeometry', cityPosition[0].Geometry)
+        .then((res) => {
+          store.dispatch('map/setMapView', { position: res, zoom: 12 });
+        });
+
+      // 設定地圖中心位
 
       // 繪製地圖marker
-      const markerData = result.map((itm) => {
+      const page = props.page;
+      const result = travelData.filter((itm) => itm.City === cityName.value);
+      searchResult.value = result;
+      const markersData = result.map((itm) => {
         return {
-          name: itm[`${props.page}Name`],
+          name: itm[`${page}Name`],
           position: [itm.Position.PositionLat, itm.Position.PositionLon],
-          id: itm[`${props.page}ID`],
+          id: itm[`${page}ID`],
         };
       });
-      store.dispatch('map/setTravelMarkers', { page: props.page, markerData });
+      store.dispatch('map/setTravelMarkers', { page, markers: markersData });
+
       store.dispatch('showLoader', false);
     }
 
