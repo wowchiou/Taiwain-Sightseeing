@@ -42,8 +42,8 @@ export default createStore({
 
     fetchCity({ commit }) {
       return Service.getCity()
-        .then((cities) => {
-          commit('SET_CITIES', cities.data);
+        .then((city) => {
+          commit('SET_CITIES', city.data);
         })
         .catch((err) => {
           throw err;

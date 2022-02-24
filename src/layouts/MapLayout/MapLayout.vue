@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { onMounted, watch, computed } from 'vue';
+import { watch, computed } from 'vue';
 import { useStore } from 'vuex';
 import { getUserPosition } from '@/utils';
 import L from 'leaflet';
@@ -30,20 +30,23 @@ export default {
       }
     );
 
-    onMounted(() => {
-      if (currentPosition.value) {
-        return setMap(currentPosition.value);
-      }
-      store.dispatch('showLoader', true);
-      getUserPosition()
-        .then((position) => {
-          store.commit('map/SET_CURRENT_POSITION', position);
-          setMap(position);
-        })
-        .catch(() => {
-          setMap([25.05, 121.55]);
-        });
-    });
+    if (currentPosition.value) {
+      return setMap(currentPosition.value);
+    }
+
+    store.dispatch('showLoader', true);
+
+    getUserPosition()
+      .then((position) => {
+        store.commit('map/SET_CURRENT_POSITION', position);
+        setMap(position);
+      })
+      .catch(() => {
+        setMap([25.0467351, 121.5119929]);
+      })
+      .finally(() => {
+        store.dispatch('showLoader', false);
+      });
 
     function setMap(position) {
       const OSM = L.map('map', {
@@ -51,15 +54,12 @@ export default {
         zoom: 15,
       });
       store.dispatch('map/buildMap', OSM);
-      // store.dispatch('map/setCircleMarker', [position]);
       store.dispatch('map/setBlueIconMarker', position);
-      store.dispatch('showLoader', false);
     }
 
     function resetMap(position) {
       store.commit('travel/SET_SELECT_CITY', '');
       store.commit('travel/SET_TRAVEL_DATA', null);
-      // store.dispatch('map/setIconMarker', position);
       store.dispatch('map/setMapView', {
         position: {
           lat: position[0],

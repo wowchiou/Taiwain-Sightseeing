@@ -4,7 +4,7 @@
     <router-view></router-view>
 
     <teleport to="#portal-loader">
-      <AppLoader v-if="$store.state.loader" />
+      <AppLoader v-if="loader" />
     </teleport>
   </div>
 </template>
@@ -19,7 +19,15 @@ export default {
     AppLoader,
   },
   async created() {
-    await this.$store.dispatch('fetchCity').catch((err) => console.log(err));
+    await this.$store.dispatch('fetchCity').catch((err) => {
+      console.log(err);
+      this.$router.push({ name: 'network-error' });
+    });
+  },
+  computed: {
+    loader() {
+      return this.$store.state.loader;
+    },
   },
 };
 </script>

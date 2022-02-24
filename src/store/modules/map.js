@@ -70,32 +70,59 @@ export default {
 
     setTravelMarkers({ state, commit }, data) {
       if (state.layerGroup) state.layerGroup.clearLayers();
-      // const markers = L.markerClusterGroup({
-      //   spiderfyOnMaxZoom: false,
-      //   showCoverageOnHover: true,
-      //   zoomToBoundsOnClick: true,
-      // });
+      let travelIcon = (() => {
+        switch (data.page) {
+          case 'ScenicSpot':
+            return `<i class="fas fa-binoculars"></i>`;
+          case 'Restaurant':
+            return `<i class="fas fa-utensils"></i>`;
+          case 'Hotel':
+            return `<i class="fas fa-bed"></i>`;
+        }
+      })();
+
+      console.log(travelIcon);
+      const markers = L.markerClusterGroup({
+        spiderfyOnMaxZoom: true,
+        showCoverageOnHover: false,
+        zoomToBoundsOnClick: true,
+        argumentsspiderfyOnMaxZoom: false,
+        maxClusterRadius: 120,
+        iconCreateFunction: function (cluster) {
+          const markers = cluster.getAllChildMarkers();
+          const html = `
+            <div class="map-circle" id="map-circle${markers.length}">
+              ${travelIcon}
+            </div>
+            .
+          `;
+          return L.divIcon({
+            html: html,
+            className: 'clusterBikeIcon',
+            iconSize: L.point(40, 40),
+          });
+        },
+      });
+      data.markerData.forEach((itm) => {
+        const layer = L.marker(itm.position, { icon: lightMarker });
+        markers.addLayer(layer);
+      });
+      commit('SET_LAYER_GROUP', markers);
+      state.OSM.addLayer(markers);
+
+      // const markers = [];
       // data.forEach((itm) => {
-      //   const layer = L.marker(itm.position, { icon: lightMarker }).bindPopup(
-      //     itm.name,
-      //     {
-      //       closeButton: false,
-      //       className: 'travel-popup',
+      //   const layer = L.marker(itm.position, { icon: lightMarker }).on(
+      //     'click',
+      //     () => {
+      //       console.log(itm.name);
       //     }
       //   );
-      //   markers.addLayer(layer);
+      //   markers.push(layer);
       // });
-      // commit('SET_LAYER_GROUP', markers);
-      // state.OSM.addLayer(markers);
-
-      const markers = [];
-      data.forEach((itm) => {
-        const layer = L.marker(itm.position, { icon: lightMarker });
-        markers.push(layer);
-      });
-      const layers = L.layerGroup(markers);
-      commit('SET_LAYER_GROUP', layers);
-      state.OSM.addLayer(layers);
+      // const layers = L.layerGroup(markers);
+      // commit('SET_LAYER_GROUP', layers);
+      // state.OSM.addLayer(layers);
     },
 
     setBlueIconMarker({ state }, position) {

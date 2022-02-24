@@ -104,3 +104,49 @@ select {
   font-size: 1.6rem;
   color: #999;
 }
+
+.map-circle {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  border: 2px solid $c-secondary;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &::after,
+  &::before {
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid $c-secondary;
+    border-radius: 50%;
+    transform-origin: center center;
+  }
+  &::after {
+    animation: shrink1 1.8s infinite;
+  }
+  &::before {
+    animation: shrink1 1.8s 1.2s infinite;
+  }
+  i {
+    font-size: 20px;
+    color: $c-secondary;
+  }
+}
+
+@keyframes shrink1 {
+  form {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+  }
+}

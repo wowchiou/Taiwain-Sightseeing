@@ -1,25 +1,13 @@
 <template>
   <div class="travel">
-    <h1>{{ page.toUpperCase() }}</h1>
+    <h1>{{ title }}</h1>
+
     <TravelSearcher v-model="cityName" :searchHandler="searchHandler" />
+
     <div class="content">
-      <p v-if="!hasResult" class="remind">請選擇城市/輸入關鍵字查詢</p>
-      <ul v-else class="search-list">
-        <li
-          v-for="result in searchResult"
-          class="search-item"
-          :key="result[`${page}ID`]"
-        >
-          <AppLink
-            :to="{
-              name: 'travel-detail',
-              params: { id: result[`${page}ID`], name: result[`${page}Name`] },
-            }"
-          >
-            {{ result[`${page}Name`] }}
-          </AppLink>
-        </li>
-      </ul>
+      <p v-if="!hasSearchResult" class="remind">請選擇城市/輸入關鍵字查詢</p>
+
+      <TravelSearchList v-else :searchResult="searchResult" :page="page" />
     </div>
   </div>
 </template>
@@ -28,27 +16,24 @@
 import { ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import AppLink from '@/components/AppLink';
 import TravelSearcher from '@/components/TravelSearcher';
+import TravelSearchList from '@/components/TravelSearchList';
 
 export default {
-  props: {
-    page: {
-      type: String,
-    },
-  },
-  components: { AppLink, TravelSearcher },
+  props: ['page'],
+
+  components: { TravelSearcher, TravelSearchList },
+
   setup(props) {
     const store = useStore();
     const router = useRouter();
     const cityName = ref('');
     const searchResult = ref([]);
-    const hasResult = computed(() => searchResult.value.length !== 0);
+    const hasSearchResult = computed(() => searchResult.value.length !== 0);
     const selectCity = computed(() => store.state.travel.selectCity);
+    const title = computed(() => props.page.toUpperCase());
 
     let travelData = null;
-
-    console.log(router);
 
     watch(
       () => props.page,
@@ -59,6 +44,10 @@ export default {
           travelData = await store
             .dispatch('travel/fetchTravelData', props.page)
             .catch((err) => console.log(err));
+
+          if (store.state.map.layerGroup) {
+            store.state.map.layerGroup.clearLayers();
+          }
 
           if (selectCity.value) {
             cityName.value = selectCity.value;
@@ -71,44 +60,38 @@ export default {
 
     async function searchHandler() {
       store.dispatch('showLoader', true);
-      const result = travelData.filter(
-        (itm) => itm.City === cityName.value && itm.Picture.PictureUrl1
-      );
+      const result = travelData.filter((itm) => itm.City === cityName.value);
       searchResult.value = result;
 
       // 抓取市中心位置
       store.commit('travel/SET_SELECT_CITY', cityName.value);
       const cityPosition = await store
         .dispatch('fetchCityAddress', cityName.value)
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          router.push({ name: 'network-error' });
+        });
+
       store.dispatch('map/setCityCenter', cityPosition);
 
       // 繪製地圖marker
-      const dataPosition = result.map((itm) => {
+      const markerData = result.map((itm) => {
         return {
           name: itm[`${props.page}Name`],
           position: [itm.Position.PositionLat, itm.Position.PositionLon],
           id: itm[`${props.page}ID`],
-          router,
         };
       });
-      store.dispatch('map/setTravelMarkers', dataPosition);
+      store.dispatch('map/setTravelMarkers', { page: props.page, markerData });
       store.dispatch('showLoader', false);
     }
-
-    // function showPosition(data) {
-    //   const itemPosition = [data.PositionLat, data.PositionLon];
-    //   store.dispatch('map/setMapView', {
-    //     position: itemPosition,
-    //     zoom: 15,
-    //   });
-    // }
 
     return {
       cityName,
       searchHandler,
       searchResult,
-      hasResult,
+      hasSearchResult,
+      title,
     };
   },
 };
