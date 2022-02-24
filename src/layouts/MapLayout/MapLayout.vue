@@ -25,7 +25,15 @@ export default {
       () => props.page,
       (page, prevPage) => {
         if (page !== prevPage) {
-          resetMap(currentPosition.value);
+          store.commit('travel/SET_SELECT_CITY', '');
+          store.commit('travel/SET_TRAVEL_DATA', null);
+          store.dispatch('map/setMapView', {
+            position: {
+              lat: currentPosition.value.position[0],
+              lng: currentPosition.value.position[1],
+            },
+            zoom: 15,
+          });
         }
       }
     );
@@ -55,18 +63,6 @@ export default {
       });
       store.dispatch('map/buildMap', OSM);
       store.dispatch('map/setBlueIconMarker', position);
-    }
-
-    function resetMap(position) {
-      store.commit('travel/SET_SELECT_CITY', '');
-      store.commit('travel/SET_TRAVEL_DATA', null);
-      store.dispatch('map/setMapView', {
-        position: {
-          lat: position[0],
-          lng: position[1],
-        },
-        zoom: 15,
-      });
     }
   },
 };
