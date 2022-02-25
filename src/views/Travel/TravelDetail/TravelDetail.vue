@@ -79,13 +79,19 @@ export default {
         // 繪製地圖marker
         const lat = data.value.Position.PositionLat;
         const lng = data.value.Position.PositionLon;
-        store.dispatch('map/setDetailMarker', [lat, lng]);
+        store.dispatch('map/setTravelMarkers', {
+          page: props.page,
+          markers: [
+            {
+              position: [lat, lng],
+              name: data.value[`${props.page}Name`],
+              id: data.value[`${props.page}ID`],
+            },
+          ],
+        });
 
         // 設定地圖位置
-        store.dispatch('map/setMapView', {
-          position: { lat, lng },
-          zoom: 15,
-        });
+        store.state.map.OSM.setView([lat, lng], 15);
       }
     });
 

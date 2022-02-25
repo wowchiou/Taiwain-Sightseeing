@@ -108,13 +108,20 @@ select {
 .map-circle {
   width: 40px;
   height: 40px;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 50%;
-  border: 2px solid $c-secondary;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: 700;
+  border: 2px solid;
+  font-size: 18px;
+  border-radius: 50%;
+}
+
+.cluster-circle {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-color: $c-secondary;
+  color: $c-secondary;
   &::after,
   &::before {
     position: absolute;
@@ -134,19 +141,6 @@ select {
   &::before {
     animation: shrink1 1.8s 1.2s infinite;
   }
-  i {
-    font-size: 20px;
-    color: $c-secondary;
-  }
-  p {
-    position: absolute;
-    font-size: 16px;
-    color: $c-secondary;
-    font-weight: 500;
-    top: 0;
-    right: 0;
-    transform: translate(50%, -50%);
-  }
 }
 
 @keyframes shrink1 {
@@ -157,5 +151,62 @@ select {
   to {
     transform: translate(-50%, -50%) scale(1.5);
     opacity: 0;
+  }
+}
+
+.marker-circle {
+  background-color: rgba(255, 255, 255, 0.8);
+  color: $c-primary;
+  border-color: $c-secondary;
+}
+
+.current-circle {
+  background-color: rgba(255, 255, 255, 0.8);
+  color: $c-dark-green;
+  border-color: $c-dark-green;
+}
+
+.travel-popup {
+  .leaflet-popup-content-wrapper {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: $c-primary;
+    border: 2px solid $c-secondary;
+    font-weight: 500;
+    position: relative;
+  }
+  .leaflet-popup-content {
+    margin: 10px 15px 10px 20px;
+  }
+  .leaflet-popup-tip {
+    background-color: $c-secondary;
+    width: 2px;
+    height: 10px;
+    transform: none;
+    margin: 0 auto;
+  }
+  .leaflet-popup-close-button {
+    color: $c-primary !important;
+    display: block;
+    width: auto;
+    height: auto;
+  }
+  .popup-link {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(-60%, -50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: $c-secondary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 16px;
+  }
+  .popup-name {
+    margin: 0;
+    font-size: 16px;
   }
 }

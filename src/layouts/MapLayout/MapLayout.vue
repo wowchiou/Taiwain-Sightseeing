@@ -27,13 +27,7 @@ export default {
         if (page !== prevPage) {
           store.commit('travel/SET_SELECT_CITY', '');
           store.commit('travel/SET_TRAVEL_DATA', null);
-          store.dispatch('map/setMapView', {
-            position: {
-              lat: currentPosition.value[0],
-              lng: currentPosition.value[1],
-            },
-            zoom: 15,
-          });
+          store.state.map.OSM.setView(currentPosition.value, 15);
         }
       }
     );
@@ -46,8 +40,9 @@ export default {
 
     getUserPosition()
       .then((position) => {
-        store.commit('map/SET_CURRENT_POSITION', position);
         setMap(position);
+        store.dispatch('map/setCurrentPositionMarker', position);
+        store.commit('map/SET_CURRENT_POSITION', position);
       })
       .catch(() => {
         setMap([25.0467351, 121.5119929]);
@@ -60,9 +55,11 @@ export default {
       const OSM = L.map('map', {
         center: position,
         zoom: 15,
+        zoomAnimation: false,
+        zoomControl: true,
+        markerZoomAnimation: false,
       });
       store.dispatch('map/buildMap', OSM);
-      store.dispatch('map/setCurrentPositionMarker', position);
     }
   },
 };

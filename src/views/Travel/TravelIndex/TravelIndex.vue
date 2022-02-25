@@ -35,7 +35,7 @@ export default {
     const selectCity = computed(() => store.state.travel.selectCity);
     const title = computed(() => props.page.toUpperCase());
 
-    let travelData = null;
+    let travelData = [];
 
     watch(
       () => props.page,
@@ -82,9 +82,7 @@ export default {
       // 讀取市中心經緯度
       await store
         .dispatch('map/readCityGeometry', cityPosition[0].Geometry)
-        .then((res) => {
-          store.dispatch('map/setMapView', { position: res, zoom: 12 });
-        });
+        .then((res) => store.state.map.OSM.setView(res, 12));
 
       // 設定地圖中心位
 

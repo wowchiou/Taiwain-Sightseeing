@@ -25,7 +25,7 @@
           <i class="fas fa-bed"></i>
         </AppLink>
       </li>
-      <li>
+      <!-- <li>
         <AppLink :to="{ name: 'bike' }" title="單車路線查詢">
           <i class="fas fa-bicycle"></i>
         </AppLink>
@@ -34,7 +34,7 @@
         <AppLink :to="{ name: 'bus' }" title="公車/客運時間查詢">
           <i class="fas fa-bus"></i>
         </AppLink>
-      </li>
+      </li> -->
     </ul>
   </div>
 </template>
