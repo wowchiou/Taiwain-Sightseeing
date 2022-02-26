@@ -3,12 +3,17 @@
     <TheNavigation />
     <slot />
   </div>
-  <div id="map"></div>
+  <div class="map-wrap" :class="{ active: isMapActive }">
+    <div id="map"></div>
+    <div class="map-button" @click="handleMapActive(!isMapActive)">
+      <i class="fas fa-map"></i>
+    </div>
+  </div>
 </template>
 
 <script>
 import TheNavigation from '@/components/TheNavigation';
-import { watch, computed } from 'vue';
+import { watch, computed, ref } from 'vue';
 import { useStore } from 'vuex';
 import { getUserPosition } from '@/utils';
 import L from 'leaflet';
@@ -22,6 +27,7 @@ export default {
   },
   setup(props) {
     const store = useStore();
+    const isMapActive = ref(false);
     const currentPosition = computed(() => store.state.map.currentPosition);
 
     watch(
@@ -66,6 +72,12 @@ export default {
       });
       store.dispatch('map/buildMap', OSM);
     }
+
+    function handleMapActive(toggle) {
+      isMapActive.value = toggle;
+    }
+
+    return { isMapActive, handleMapActive };
   },
 };
 </script>
