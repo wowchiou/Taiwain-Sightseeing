@@ -1,6 +1,6 @@
 <template>
   <MapLayout>
-    <div class="layout">
+    <div class="travel">
       <router-view></router-view>
     </div>
   </MapLayout>

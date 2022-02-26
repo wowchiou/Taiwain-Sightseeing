@@ -1,6 +1,6 @@
 @import '@/assets/scss/_var.scss';
 
-.search-list {
+.travelSearchList {
   padding-bottom: 2rem;
 }
 
@@ -12,18 +12,23 @@
   display: flex;
   align-items: stretch;
   justify-content: flex-start;
+  p {
+    flex: 1;
+    padding: 1rem;
+  }
+  .appLink {
+    display: flex;
+    width: 50px;
+    justify-content: center;
+    align-items: center;
+  }
   &:not(:first-child) {
     margin-top: 1rem;
   }
-  .appLink {
-    flex: 1;
-    padding: 1rem;
-    display: inline-block;
-    width: 100%;
-  }
   &:hover {
-    .appLink {
-      background-color: $c-grey;
-    }
+    background-color: $c-grey;
+  }
+  &.active {
+    background-color: $c-secondary;
   }
 }

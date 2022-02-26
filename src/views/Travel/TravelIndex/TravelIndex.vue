@@ -1,12 +1,12 @@
 <template>
-  <div class="travel">
-    <h1>{{ title }}</h1>
-
-    <TravelSearcher v-model="cityName" :searchHandler="searchHandler" />
+  <div class="travelIndex">
+    <div class="travel-top">
+      <h1>{{ title }}</h1>
+      <TravelSearcher v-model="cityName" :searchHandler="searchHandler" />
+    </div>
 
     <div class="content">
       <p v-if="!hasSearchResult" class="remind">請選擇城市/輸入關鍵字查詢</p>
-
       <TravelSearchList v-else :searchResult="searchResult" :page="page" />
     </div>
   </div>
