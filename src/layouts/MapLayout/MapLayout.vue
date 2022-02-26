@@ -27,7 +27,9 @@ export default {
         if (page !== prevPage) {
           store.commit('travel/SET_SELECT_CITY', '');
           store.commit('travel/SET_TRAVEL_DATA', null);
-          store.state.map.OSM.setView(currentPosition.value, 15);
+          if (currentPosition.value) {
+            store.state.map.OSM.setView(currentPosition.value, 15);
+          }
         }
       }
     );
