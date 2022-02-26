@@ -5,16 +5,20 @@
 }
 
 .search-item {
-  color: #fff;
-  background-color: $c-primary;
+  color: $c-primary;
   line-height: 1.2;
   cursor: pointer;
   display: flex;
   align-items: stretch;
   justify-content: flex-start;
+  border-radius: 5px;
+  border: 1px solid $c-primary;
   p {
     flex: 1;
     padding: 1rem;
+  }
+  a {
+    color: $c-primary;
   }
   .appLink {
     display: flex;
@@ -26,9 +30,18 @@
     margin-top: 1rem;
   }
   &:hover {
-    background-color: $c-grey;
+    background-color: $c-primary;
+    color: #fff;
+    a {
+      color: #fff;
+    }
   }
   &.active {
     background-color: $c-secondary;
+    border-color: $c-secondary;
+    color: #fff;
+    a {
+      color: #fff;
+    }
   }
 }

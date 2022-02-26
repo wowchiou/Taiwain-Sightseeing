@@ -7,32 +7,23 @@
       <h1>{{ data[`${page}Name`] }}</h1>
     </div>
 
+    <TravelDetailIte title="地址" :content="data.Address" />
+    <TravelDetailItem title="電話" :content="data.Phone" />
+    <TravelDetailItem title="營業時間" :content="data.OpenTime" />
+    <TravelDetailItem title="旅遊資訊" :content="data.TravelInfo" />
     <TravelDetailItem
-      v-if="data.Address"
-      title="地址"
-      :content="data.Address"
+      v-if="!isEmptyObject(data.Picture)"
+      title="旅遊圖片"
+      :content="{
+        src: data.Picture.PictureUrl1,
+        alt: data.Picture.PictureDescription1,
+      }"
     />
-
-    <TravelDetailItem v-if="data.Phone" title="電話" :content="data.Phone" />
-
-    <TravelDetailItem v-if="data.OpenTime" title="營業時間">
-      <p v-html="data.OpenTime"></p>
-    </TravelDetailItem>
-
-    <TravelDetailItem v-if="data.TravelInfo" title="詳細資訊">
-      <p v-html="data.TravelInfo"></p>
-    </TravelDetailItem>
-
-    <TravelDetailItem v-if="data.Picture.PictureUrl1">
-      <img
-        :src="data.Picture.PictureUrl1"
-        :alt="data.Picture.PictureDescription1"
-      />
-    </TravelDetailItem>
-
-    <TravelDetailItem v-if="data.DescriptionDetail">
-      <p v-html="data.DescriptionDetail"></p>
-    </TravelDetailItem>
+    <TravelDetailItem
+      v-if="data.DescriptionDetail"
+      title="地點說明"
+      :content="data.DescriptionDetail"
+    />
   </div>
 </template>
 
@@ -99,7 +90,11 @@ export default {
       router.back();
     }
 
-    return { data, backHandler };
+    function isEmptyObject(data) {
+      return JSON.stringify(data) === '{}';
+    }
+
+    return { data, backHandler, isEmptyObject };
   },
 };
 </script>

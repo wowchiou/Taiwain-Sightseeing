@@ -1,13 +1,13 @@
 @import '@/assets/scss/_var.scss';
 
 .wrapper {
-  max-width: 40rem;
+  max-width: 50rem;
   width: 50%;
   min-height: 100vh;
   background-color: $c-light-grey;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   position: relative;
-  padding-left: 5rem;
+  padding-left: 4.5rem;
   z-index: 1;
   @media (max-width: 640px) {
     max-width: none;
@@ -16,7 +16,7 @@
 }
 
 #map {
-  width: calc(100% - 40rem);
+  width: calc(100% - 50rem);
   min-width: 50%;
   position: fixed;
   height: 100vh;

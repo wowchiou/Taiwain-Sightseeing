@@ -4,7 +4,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 50px;
+  width: 4.5rem;
   height: 100%;
   z-index: 100;
   .menu {
@@ -24,7 +24,6 @@
           color: #fff;
         }
         &:hover {
-          // background-color: rgb(87, 85, 85);
           background-color: $c-grey;
           color: $c-primary;
         }

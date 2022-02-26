@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(255, 255, 255, 0.8);
   z-index: 9999;
   .lds-ellipsis {
     display: inline-block;
@@ -23,7 +23,7 @@
     width: 13px;
     height: 13px;
     border-radius: 50%;
-    background: #dfc;
+    background: $c-dark-green;
     animation-timing-function: cubic-bezier(0, 1, 1, 0);
   }
   .lds-ellipsis div:nth-child(1) {
