@@ -1,17 +1,20 @@
 <template>
   <div class="wrapper">
+    <TheNavigation />
     <slot />
   </div>
   <div id="map"></div>
 </template>
 
 <script>
+import TheNavigation from '@/components/TheNavigation';
 import { watch, computed } from 'vue';
 import { useStore } from 'vuex';
 import { getUserPosition } from '@/utils';
 import L from 'leaflet';
 
 export default {
+  components: { TheNavigation },
   props: {
     page: {
       type: String,

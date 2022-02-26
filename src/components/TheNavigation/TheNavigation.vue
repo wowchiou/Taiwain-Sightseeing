@@ -1,28 +1,40 @@
 <template>
-  <div class="theNavigation">
+  <div class="theNavigation" :class="{ active: isActive }">
     <ul class="menu">
       <li>
         <AppLink
           :to="{ name: 'travel-index', params: { page: 'ScenicSpot' } }"
+          @click="toggleNavigation(false)"
           title="景點查詢"
         >
-          <i class="fas fa-binoculars"></i>
+          <div>
+            <i class="fas fa-binoculars"></i>
+          </div>
+          <span v-if="isActive">景點查詢</span>
         </AppLink>
       </li>
       <li>
         <AppLink
           :to="{ name: 'travel-index', params: { page: 'Restaurant' } }"
+          @click="toggleNavigation(false)"
           title="餐飲查詢"
         >
-          <i class="fas fa-utensils"></i>
+          <div>
+            <i class="fas fa-utensils"></i>
+          </div>
+          <span v-if="isActive">餐飲查詢</span>
         </AppLink>
       </li>
       <li>
         <AppLink
           :to="{ name: 'travel-index', params: { page: 'Hotel' } }"
+          @click="toggleNavigation(false)"
           title="旅宿查詢"
         >
-          <i class="fas fa-bed"></i>
+          <div>
+            <i class="fas fa-bed"></i>
+          </div>
+          <span v-if="isActive">旅宿查詢</span>
         </AppLink>
       </li>
       <!-- <li>
@@ -36,6 +48,9 @@
         </AppLink>
       </li> -->
     </ul>
+    <div class="active-button" @click="toggleNavigation(!isActive)">
+      <i class="fas fa-arrow-right"></i>
+    </div>
   </div>
 </template>
 
@@ -45,6 +60,16 @@ import AppLink from '@/components/AppLink';
 export default {
   components: {
     AppLink,
+  },
+  data() {
+    return {
+      isActive: false,
+    };
+  },
+  methods: {
+    toggleNavigation(toggle) {
+      this.isActive = toggle;
+    },
   },
 };
 </script>

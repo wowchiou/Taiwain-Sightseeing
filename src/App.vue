@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <TheNavigation />
     <router-view></router-view>
 
     <teleport to="#portal-loader">
@@ -10,12 +9,10 @@
 </template>
 
 <script>
-import TheNavigation from '@/components/TheNavigation';
 import AppLoader from '@/components/AppLoader';
 
 export default {
   components: {
-    TheNavigation,
     AppLoader,
   },
   async created() {
