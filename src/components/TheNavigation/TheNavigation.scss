@@ -8,6 +8,9 @@
   height: 100%;
   z-index: 100;
   transition: width 0.3s;
+  @media (max-width: 640px) {
+    width: 4rem;
+  }
   &.active {
     width: 50%;
     max-width: 50rem;
@@ -35,6 +38,9 @@
         display: flex;
         align-items: baseline;
         justify-content: flex-start;
+        @media (max-width: 640px) {
+          font-size: 18px;
+        }
         &.router-link-active {
           color: #fff;
         }
