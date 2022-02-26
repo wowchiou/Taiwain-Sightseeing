@@ -2,18 +2,28 @@
 
 .wrapper {
   max-width: 40rem;
-  width: 100%;
+  width: 50%;
   min-height: 100vh;
   background-color: $c-light-grey;
-  box-shadow: 3px 0 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   position: relative;
   padding-left: 5rem;
+  z-index: 1;
+  @media (max-width: 640px) {
+    max-width: none;
+    width: 100%;
+  }
 }
 
 #map {
   width: calc(100% - 40rem);
+  min-width: 50%;
   position: fixed;
   height: 100vh;
   top: 0;
   right: 0;
+  @media (max-width: 640px) {
+    width: calc(100% - 5rem);
+    min-width: none;
+  }
 }
