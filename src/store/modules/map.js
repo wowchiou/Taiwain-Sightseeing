@@ -153,7 +153,9 @@ export default {
           </a>
           `
         );
-        layer.bindPopup(popup);
+        layer.bindPopup(popup).on('click', () => {
+          layer.openPopup();
+        });
         markersCluster.addLayer(layer);
       });
       commit('SET_MARKERS_CLUSTER', markersCluster);
@@ -197,7 +199,9 @@ export default {
           </div>
           `
         );
-        layer.bindPopup(popup);
+        layer.bindPopup(popup).on('click', () => {
+          layer.openPopup();
+        });
         markersCluster.addLayer(layer);
       });
       commit('SET_MARKERS_CLUSTER', markersCluster);
