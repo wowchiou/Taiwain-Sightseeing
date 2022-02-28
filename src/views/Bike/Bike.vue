@@ -49,12 +49,14 @@ export default {
         .dispatch('bike/fetchBikeStation', city.value)
         .catch((err) => {
           console.log(err);
+          store.dispatch('showLoader', false);
           router.push({ name: 'network-error' });
         });
       const bikeAvailability = await store
         .dispatch('bike/fetchBikeAvailability', city.value)
         .catch((err) => {
           console.log(err);
+          store.dispatch('showLoader', false);
           router.push({ name: 'network-error' });
         });
       const bikeTotalData = bikeStation.map((station) => {
@@ -64,6 +66,7 @@ export default {
         return { ...station, detail: bikeDetail };
       });
       console.log(bikeTotalData);
+
       store.dispatch('map/setBikeMarkers', bikeTotalData);
 
       // 抓取市中心位置
@@ -77,16 +80,15 @@ export default {
           store.dispatch('showLoader', false);
           router.push({ name: 'network-error' });
         });
+
       // 讀取市中心經緯度
       await store
         .dispatch('map/readCityGeometry', cityPosition[0].Geometry)
         .then((res) => {
           store.state.map.OSM.setView(res, 12);
-          bikeResult.value = bikeTotalData;
-        })
-        .finally(() => {
-          store.dispatch('showLoader', false);
         });
+      bikeResult.value = bikeTotalData;
+      store.dispatch('showLoader', false);
     }
 
     return { city, bikeResult, cityStation, searchHandler };

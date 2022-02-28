@@ -40,6 +40,33 @@ const getTravelIcon = (page) => {
   }
 };
 
+const stationStatus = (status) => {
+  switch (status) {
+    case 0:
+      return { class: 'error', text: '停止營運' };
+    case 1:
+      return { class: 'success', text: '正常營運' };
+    case 2:
+      return { class: 'warn', text: '暫停營運' };
+  }
+};
+
+const bikeType = (type) => {
+  switch (type) {
+    case 1:
+      return 'YouBike1.0';
+    case 2:
+      return 'YouBike2.0';
+  }
+};
+
+const formateStationName = (name) => {
+  const stationName = name.split('_');
+  return stationName.length > 1
+    ? stationName[stationName.length - 1]
+    : stationName[0];
+};
+
 export default {
   namespaced: true,
   state: {
@@ -149,18 +176,28 @@ export default {
             iconSize: L.point(40, 40),
           }),
         });
-        // const popup = L.popup({
-        //   minWidth: 250,
-        //   className: 'travel-popup',
-        // }).setContent(
-        //   `
-        //   <p class="popup-name">${itm.name}</p>
-        //   <a class="popup-link" href="#/travel/${data.page}/${itm.id}/${itm.name}">
-        //     <i class="fas fa-link"></i>
-        //   </a>
-        //   `
-        // );
-        // layer.bindPopup(popup);
+        const status = stationStatus(bike.detail.ServiceStatus);
+        const type = bikeType(bike.ServiceType);
+        const name = formateStationName(bike.StationName.Zh_tw);
+        const popup = L.popup({
+          minWidth: 250,
+          className: 'bike-popup',
+        }).setContent(
+          `
+          <div class="bike-header">
+            <div class="bike-top">
+              <p class="bike-status ${status.class}">${status.text}</p>
+              <div class="bike-type">${type}</div>
+            </div>
+            <p class="bike-name">${name}</p>
+          </div>
+          <div class="bike-body">
+            <p class="bike-rent">可出借<span>${bike.detail.AvailableRentBikes}</span>輛</p>
+            <p class="bike-return">可歸還<span>${bike.detail.AvailableReturnBikes}</span>輛</p>
+          </div>
+          `
+        );
+        layer.bindPopup(popup);
         markersCluster.addLayer(layer);
       });
       commit('SET_MARKERS_CLUSTER', markersCluster);

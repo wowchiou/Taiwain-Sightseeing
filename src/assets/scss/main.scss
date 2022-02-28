@@ -252,3 +252,81 @@ select {
     font-size: 16px;
   }
 }
+
+.bike-popup {
+  .leaflet-popup-content-wrapper {
+    background-color: transparent;
+    box-shadow: 0.3rem 0.3rem 0.3rem rgba(0, 0, 0, 0.1);
+  }
+  .leaflet-popup-content {
+    margin: 0;
+    font-size: 1.6rem;
+    background-color: #fff;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  p {
+    padding: 0;
+    margin: 0;
+  }
+  .bike-header {
+    background-color: $c-primary;
+    color: #fff;
+    padding: 1rem;
+  }
+  .bike-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-start;
+    font-size: 1.4rem;
+  }
+  .bike-status {
+    margin-right: 1rem;
+    padding: 0.2rem 0 0.2rem 10px;
+    position: relative;
+    &::after {
+      position: absolute;
+      content: '';
+      width: 6.5px;
+      height: 6.5px;
+      border-radius: 50%;
+      top: 50%;
+      left: 0;
+      transform: translate(0, -50%);
+    }
+    &.success::after {
+      background-color: $c-dark-green;
+    }
+    &.error::after {
+      background-color: $c-light;
+    }
+    &.warn::after {
+      background-color: $c-warn;
+    }
+  }
+  .bike-type {
+    color: $c-grey;
+  }
+  .bike-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+  .bike-body {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    & > p {
+      font-size: 1.4rem;
+      & + p {
+        margin-left: 1.5rem;
+      }
+      span {
+        font-size: 1.8rem;
+        margin: 0 0.3rem;
+        font-weight: 700;
+        color: $c-blue;
+      }
+    }
+  }
+}

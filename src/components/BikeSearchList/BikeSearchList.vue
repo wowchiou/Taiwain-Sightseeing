@@ -1,6 +1,11 @@
 <template>
   <ul class="bikeSearchList">
-    <li v-for="bike in bikeResult" :key="bike.stationUID">
+    <li
+      v-for="bike in bikeResult"
+      :class="{ active: itemActive === bike.StationUID }"
+      :key="bike.stationUID"
+      @click="clickHandler(bike)"
+    >
       <div class="top">
         <span
           class="status"
@@ -32,7 +37,8 @@
 </template>
 
 <script>
-import { watch } from 'vue';
+import { ref, onBeforeUpdate } from 'vue';
+import { useStore } from 'vuex';
 
 export default {
   props: {
@@ -40,15 +46,27 @@ export default {
       type: Array,
     },
   },
-  setup(props) {
-    watch(
-      () => props.bikeResult,
-      (result, preResult) => {
-        if (result !== preResult) {
-          window.scrollTo({ top: 0 });
+  setup() {
+    const store = useStore();
+    const itemActive = ref(false);
+
+    onBeforeUpdate(() => {
+      window.scrollTo({ top: 0 });
+    });
+
+    function clickHandler(bike) {
+      const lat = bike.StationPosition.PositionLat;
+      const lng = bike.StationPosition.PositionLon;
+      itemActive.value = bike.StationUID;
+      store.state.map.OSM.setView([lat, lng], 18);
+      store.state.map.markersCluster.eachLayer((layer) => {
+        const layerPosition = layer._latlng;
+        if (layerPosition.lat === lat && layerPosition.lng === lng) {
+          layer.openPopup();
         }
-      }
-    );
+      });
+      store.commit('SET_MAP_ACTIVE', true);
+    }
 
     function formateStationName(name) {
       const stationName = name.split('_');
@@ -77,7 +95,13 @@ export default {
       }
     }
 
-    return { formateStationName, stationStatus, bikeType };
+    return {
+      itemActive,
+      formateStationName,
+      stationStatus,
+      bikeType,
+      clickHandler,
+    };
   },
 };
 </script>
