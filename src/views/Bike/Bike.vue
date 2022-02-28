@@ -65,7 +65,6 @@ export default {
         );
         return { ...station, detail: bikeDetail };
       });
-      console.log(bikeTotalData);
 
       store.dispatch('map/setBikeMarkers', bikeTotalData);
 

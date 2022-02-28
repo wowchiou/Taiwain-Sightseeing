@@ -66,7 +66,7 @@ export default {
         zoom: 15,
         zoomAnimation: false,
         zoomControl: true,
-        markerZoomAnimation: false,
+        markerZoomAnimation: true,
       });
       store.dispatch('map/buildMap', OSM);
     }
