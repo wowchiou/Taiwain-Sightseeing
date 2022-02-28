@@ -29,11 +29,13 @@
   &:not(:first-child) {
     margin-top: 1rem;
   }
-  &:hover {
-    background-color: $c-primary;
-    color: #fff;
-    a {
+  @media (min-width: 769px) {
+    &:hover {
+      background-color: $c-primary;
       color: #fff;
+      a {
+        color: #fff;
+      }
     }
   }
   &.active {

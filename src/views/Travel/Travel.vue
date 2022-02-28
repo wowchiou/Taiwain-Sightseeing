@@ -13,6 +13,12 @@ export default {
   components: {
     MapLayout,
   },
+  async created() {
+    // await this.$store.dispatch('fetchCity').catch((err) => {
+    //   console.log(err);
+    //   this.$router.push({ name: 'network-error' });
+    // });
+  },
 };
 </script>
 

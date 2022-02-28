@@ -13,12 +13,8 @@
         }"
         :disabled="!$store.state.map.OSM"
       >
-        <option value="">-- 請選擇城市 --</option>
-        <option
-          v-for="city in $store.getters['getCities']"
-          :key="city.CityID"
-          :value="city.CityName"
-        >
+        <option disabled value="">-- 請選擇城市 --</option>
+        <option v-for="city in cities" :key="city.City" :value="city.City">
           {{ city.CityName }}
         </option>
       </select>
@@ -40,6 +36,10 @@ export default {
     },
     searchHandler: {
       type: Function,
+      required: true,
+    },
+    cities: {
+      type: Array,
       required: true,
     },
   },

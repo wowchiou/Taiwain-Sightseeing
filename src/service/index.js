@@ -1,5 +1,5 @@
 import axios from 'axios';
-import jsSHA from 'jssha';
+import { GetAuthorizationHeader } from '@/utils';
 
 export const httpTDX = axios.create({
   baseURL: 'https://ptx.transportdata.tw/MOTC',
@@ -15,30 +15,30 @@ export default {
   getCity() {
     return httpGIST.get('/V3/Map/Basic/City');
   },
+
   getCityAddress(cityName) {
     return httpGIST.get(
       '/V3/Map/GeoCode/Coordinate/Address/' + cityName + '政府'
     );
   },
-};
 
-function GetAuthorizationHeader() {
-  var AppID = process.env.VUE_APP_TDX_ID;
-  var AppKey = process.env.VUE_APP_TDX_KEY;
-  var GMTString = new Date().toGMTString();
-  var ShaObj = new jsSHA('SHA-1', 'TEXT');
-  ShaObj.setHMACKey(AppKey, 'TEXT');
-  ShaObj.update('x-date: ' + GMTString);
-  var HMAC = ShaObj.getHMAC('B64');
-  var Authorization =
-    'hmac username="' +
-    AppID +
-    '", algorithm="hmac-sha1", headers="x-date", signature="' +
-    HMAC +
-    '"';
-  return {
-    Authorization: Authorization,
-    'X-Date': GMTString,
-    /*,'Accept-Encoding': 'gzip'*/
-  };
-}
+  getScenicSpot() {
+    return httpTDX.get('/v2/Tourism/ScenicSpot');
+  },
+
+  getRestaurant() {
+    return httpTDX.get('/v2/Tourism/Restaurant');
+  },
+
+  getHotel() {
+    return httpTDX.get('/v2/Tourism/Hotel');
+  },
+
+  getBikeStation(city) {
+    return httpTDX.get(`/v2/Bike/Station/${city}`);
+  },
+
+  getBikeAvailability(city) {
+    return httpTDX.get(`/v2/Bike/Availability/${city}`);
+  },
+};

@@ -15,12 +15,6 @@ export default {
   components: {
     AppLoader,
   },
-  async created() {
-    await this.$store.dispatch('fetchCity').catch((err) => {
-      console.log(err);
-      this.$router.push({ name: 'network-error' });
-    });
-  },
   computed: {
     loader() {
       return this.$store.state.loader;

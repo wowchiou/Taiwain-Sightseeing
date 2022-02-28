@@ -59,6 +59,7 @@ export default {
           layer.openPopup();
         }
       });
+      this.$store.commit('SET_MAP_ACTIVE', true);
     },
   },
 };

@@ -6,14 +6,15 @@
   <div class="map-wrap" :class="{ active: isMapActive }">
     <div id="map"></div>
     <div class="map-button" @click="handleMapActive(!isMapActive)">
-      <i class="fas fa-map"></i>
+      <i v-if="!isMapActive" class="icon-map fas fa-map"></i>
+      <i v-else class="icon-list fas fa-list"></i>
     </div>
   </div>
 </template>
 
 <script>
 import TheNavigation from '@/components/TheNavigation';
-import { watch, computed, ref } from 'vue';
+import { watch, computed } from 'vue';
 import { useStore } from 'vuex';
 import { getUserPosition } from '@/utils';
 import L from 'leaflet';
@@ -27,15 +28,14 @@ export default {
   },
   setup(props) {
     const store = useStore();
-    const isMapActive = ref(false);
+    const isMapActive = computed(() => store.state.mapActive);
     const currentPosition = computed(() => store.state.map.currentPosition);
 
     watch(
       () => props.page,
       (page, prevPage) => {
         if (page !== prevPage) {
-          store.commit('travel/SET_SELECT_CITY', '');
-          store.commit('travel/SET_TRAVEL_DATA', null);
+          clearData();
           if (currentPosition.value) {
             store.state.map.OSM.setView(currentPosition.value, 15);
           }
@@ -43,9 +43,7 @@ export default {
       }
     );
 
-    if (currentPosition.value) {
-      return setMap(currentPosition.value);
-    }
+    clearData();
 
     store.dispatch('showLoader', true);
 
@@ -74,7 +72,13 @@ export default {
     }
 
     function handleMapActive(toggle) {
-      isMapActive.value = toggle;
+      store.commit('SET_MAP_ACTIVE', toggle);
+    }
+
+    function clearData() {
+      store.commit('travel/SET_SELECT_CITY', '');
+      store.commit('travel/SET_TRAVEL_DATA', null);
+      handleMapActive(false);
     }
 
     return { isMapActive, handleMapActive };

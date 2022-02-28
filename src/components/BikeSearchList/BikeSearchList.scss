@@ -1,0 +1,92 @@
+@import '@/assets/scss/_var.scss';
+
+.bikeSearchList {
+  font-size: 1.6rem;
+  color: $c-primary;
+  line-height: 1.3;
+  padding-bottom: 5rem;
+  li {
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
+    transition: 0.2s;
+    & + li {
+      margin-top: 1rem;
+    }
+    @media (min-width: 769px) {
+      &:hover {
+        box-shadow: 0.1rem 0.3rem 0.2rem rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+  .top {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-start;
+    font-size: 1.4rem;
+  }
+  .status {
+    padding: 0.2rem 1rem;
+    color: #fff;
+    border-radius: 9999px;
+    margin-right: 1rem;
+    &.success {
+      background-color: $c-dark-green;
+    }
+    &.error {
+      background-color: $c-light;
+    }
+    &.warn {
+      background-color: $c-warn;
+    }
+  }
+  .total {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-start;
+  }
+  .type {
+    border-right: 1px solid $c-grey;
+    padding-right: 1rem;
+  }
+  .capacity {
+    padding-left: 1rem;
+    span {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 0 0.2rem;
+    }
+  }
+  .name {
+    padding: 1rem 0 0.5rem;
+    border-bottom: 1px solid $c-grey;
+    font-weight: 700;
+    font-size: 1.8rem;
+  }
+  .address {
+    padding-top: 0.5rem;
+  }
+  .available {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 1rem;
+    & > div {
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      background-color: $c-blue;
+      font-size: 1.4rem;
+      color: #fff;
+      & + div {
+        margin-left: 1rem;
+      }
+      span {
+        font-size: 1.6rem;
+        margin: 0 0.5rem;
+        font-weight: 700;
+      }
+    }
+  }
+}

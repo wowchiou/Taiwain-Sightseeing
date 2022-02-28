@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
+import store from '@/store';
 import Home from '@/views/Home';
 
 const routes = [
@@ -42,11 +43,23 @@ const routes = [
     name: 'network-error',
     component: () => import('@/views/NetWorkError'),
   },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    component: () => import('@/views/NotFound'),
+  },
 ];
 
 const router = createRouter({
   history: createWebHashHistory(process.env.BASE_URL),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    return savedPosition || { top: 0 };
+  },
+});
+
+router.beforeEach(() => {
+  store.commit('SET_MAP_ACTIVE', false);
 });
 
 export default router;

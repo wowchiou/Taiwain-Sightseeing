@@ -1,6 +1,6 @@
 <template>
   <MapLayout>
-    <div class="bus">bus</div>
+    <div class="bus">coming soon</div>
   </MapLayout>
 </template>
 

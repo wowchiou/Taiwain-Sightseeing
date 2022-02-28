@@ -37,16 +37,30 @@
           <span v-if="isActive">旅宿查詢</span>
         </AppLink>
       </li>
-      <!-- <li>
-        <AppLink :to="{ name: 'bike' }" title="單車路線查詢">
-          <i class="fas fa-bicycle"></i>
+      <li>
+        <AppLink
+          :to="{ name: 'bike' }"
+          @click="toggleNavigation(false)"
+          title="YouBike即時車位查詢"
+        >
+          <div>
+            <i class="fas fa-bicycle"></i>
+          </div>
+          <span v-if="isActive">YouBike即時車位查詢</span>
         </AppLink>
       </li>
       <li>
-        <AppLink :to="{ name: 'bus' }" title="公車/客運時間查詢">
-          <i class="fas fa-bus"></i>
+        <AppLink
+          :to="{ name: 'bus' }"
+          @click="toggleNavigation(false)"
+          title="公車/客運時間查詢"
+        >
+          <div>
+            <i class="fas fa-bus"></i>
+          </div>
+          <span v-if="isActive">公車/客運時間查詢</span>
         </AppLink>
-      </li> -->
+      </li>
     </ul>
     <div class="active-button" @click="toggleNavigation(!isActive)">
       <i class="fas fa-arrow-right"></i>

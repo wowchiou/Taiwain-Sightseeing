@@ -77,6 +77,25 @@ export default {
       return [cityGeometry[1], cityGeometry[0]];
     },
 
+    setCurrentPositionMarker({ state, dispatch, commit }, position) {
+      dispatch('clearMarkersCluster');
+      const html = `<div class="map-circle current-circle"><i class="fas fa-location-arrow"></i></div>`;
+      const marker = createMarker(position, {
+        icon: L.divIcon({
+          html,
+          className: 'currentIcon',
+          iconSize: L.point(40, 40),
+        }),
+      });
+      commit('SET_MARKER', marker.addTo(state.OSM));
+    },
+
+    clearMarker({ state }) {
+      if (state.marker) {
+        state.OSM.removeLayer(state.marker);
+      }
+    },
+
     clearMarkersCluster({ state }) {
       if (state.markersCluster) {
         state.markersCluster.clearLayers();
@@ -114,23 +133,38 @@ export default {
       state.OSM.addLayer(markersCluster);
     },
 
-    setCurrentPositionMarker({ state, dispatch, commit }, position) {
+    setBikeMarkers({ state, commit, dispatch }, data) {
       dispatch('clearMarkersCluster');
-      const html = `<div class="map-circle current-circle"><i class="fas fa-location-arrow"></i></div>`;
-      const marker = createMarker(position, {
-        icon: L.divIcon({
-          html,
-          className: 'currentIcon',
-          iconSize: L.point(40, 40),
-        }),
+      const markersCluster = createMarkersCluster();
+      data.forEach((bike) => {
+        const html = `<div class="map-circle marker-circle"><i class="fas fa-bicycle"></i></div>`;
+        const bikePosition = [
+          bike.StationPosition.PositionLat,
+          bike.StationPosition.PositionLon,
+        ];
+        const layer = createMarker(bikePosition, {
+          icon: L.divIcon({
+            html,
+            className: 'travelIcon',
+            iconSize: L.point(40, 40),
+          }),
+        });
+        // const popup = L.popup({
+        //   minWidth: 250,
+        //   className: 'travel-popup',
+        // }).setContent(
+        //   `
+        //   <p class="popup-name">${itm.name}</p>
+        //   <a class="popup-link" href="#/travel/${data.page}/${itm.id}/${itm.name}">
+        //     <i class="fas fa-link"></i>
+        //   </a>
+        //   `
+        // );
+        // layer.bindPopup(popup);
+        markersCluster.addLayer(layer);
       });
-      commit('SET_MARKER', marker.addTo(state.OSM));
-    },
-
-    clearMarker({ state }) {
-      if (state.marker) {
-        state.OSM.removeLayer(state.marker);
-      }
+      commit('SET_MARKERS_CLUSTER', markersCluster);
+      state.OSM.addLayer(markersCluster);
     },
   },
 };

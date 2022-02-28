@@ -1,18 +1,20 @@
 import { createStore } from 'vuex';
-import Service from '@/service';
+import Api from '@/service';
 import { StopBodyScroll } from '@/utils';
 
 import map from './modules/map';
 import travel from './modules/travel';
+import bike from './modules/bike';
 
 const stopBodyScroll = new StopBodyScroll();
 
 export default createStore({
-  modules: { map, travel },
+  modules: { map, travel, bike },
   state: {
     loader: false,
     cities: null,
     cityAddress: {},
+    mapActive: false,
   },
   mutations: {
     SET_LOADER(state, loading) {
@@ -23,6 +25,9 @@ export default createStore({
     },
     SET_CITY_ADDRESS(state, address) {
       state.cityAddress[address.name] = address.data;
+    },
+    SET_MAP_ACTIVE(state, active) {
+      state.mapActive = active;
     },
   },
   getters: {
@@ -41,7 +46,7 @@ export default createStore({
     },
 
     fetchCity({ commit }) {
-      return Service.getCity()
+      return Api.getCity()
         .then((city) => {
           commit('SET_CITIES', city.data);
         })
@@ -54,7 +59,7 @@ export default createStore({
       if (state.cityAddress[cityName]) {
         return state.cityAddress[cityName];
       }
-      return Service.getCityAddress(cityName)
+      return Api.getCityAddress(cityName)
         .then((res) => {
           commit('SET_CITY_ADDRESS', { name: cityName, data: res.data });
           return res.data;

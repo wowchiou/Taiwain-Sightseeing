@@ -1,4 +1,4 @@
-import Travel from '@/service/travel';
+import Api from '@/service';
 
 export default {
   namespaced: true,
@@ -48,7 +48,7 @@ export default {
     },
 
     fetchScenicSpot({ commit }) {
-      return Travel.getScenicSpot()
+      return Api.getScenicSpot()
         .then((res) => {
           commit('SET_SCENIC_SPOT_DATA', res.data);
           return res.data;
@@ -59,7 +59,7 @@ export default {
     },
 
     fetchRestaurant({ commit }) {
-      return Travel.getRestaurant()
+      return Api.getRestaurant()
         .then((res) => {
           commit('SET_RESTAURANT_DATA', res.data);
           return res.data;
@@ -70,7 +70,7 @@ export default {
     },
 
     fetchHotel({ commit }) {
-      return Travel.getHotel()
+      return Api.getHotel()
         .then((res) => {
           commit('SET_HOTEL_DATA', res.data);
           return res.data;

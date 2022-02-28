@@ -1,12 +1,11 @@
 <template>
-  <div class="netWorkError">
+  <div class="notFound">
     <div class="wrap">
-      <h1>Network Error</h1>
-      <p>抱歉！網路連結異常，請稍後再試！</p>
+      <h1>404 Page Not Found</h1>
+      <p>抱歉！您查詢的頁面不存在！</p>
       <p>
         您可嘗試回到<span @click="$router.go(-1)">上一頁</span>或<AppLink
           :to="{ name: 'home' }"
-          replace
           >返回首頁</AppLink
         >繼續瀏覽。
       </p>
@@ -25,5 +24,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './NetWorkError.scss';
+@import './NotFound.scss';
 </style>
