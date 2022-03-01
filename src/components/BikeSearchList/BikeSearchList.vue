@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { ref, onBeforeUpdate } from 'vue';
+import { ref, watch } from 'vue';
 import { useStore } from 'vuex';
 
 export default {
@@ -46,13 +46,16 @@ export default {
       type: Array,
     },
   },
-  setup() {
+  setup(props) {
     const store = useStore();
     const itemActive = ref(false);
 
-    onBeforeUpdate(() => {
-      window.scrollTo({ top: 0 });
-    });
+    watch(
+      () => props.bikeResult,
+      () => {
+        window.scrollTo({ top: 0 });
+      }
+    );
 
     function clickHandler(bike) {
       const lat = bike.StationPosition.PositionLat;

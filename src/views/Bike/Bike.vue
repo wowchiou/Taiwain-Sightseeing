@@ -3,11 +3,19 @@
     <div class="bike">
       <div class="page-top">
         <h1 class="pageTitle">YouBike即時車位</h1>
-        <TravelSearcher
-          v-model="city"
-          :cities="cityStation"
-          :searchHandler="searchHandler"
-        />
+        <form class="search-form" @submit.prevent="">
+          <CitySelector
+            v-model="city"
+            :cities="cityStation"
+            :searchHandler="searchHandler"
+          />
+          <CityKeywordInput
+            v-model="keyword"
+            :disabled="!city"
+            :result="bikeResult"
+            :keywordSearch="keywordSearch"
+          />
+        </form>
       </div>
 
       <div class="page-search-content">
@@ -25,24 +33,30 @@ import { ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import MapLayout from '@/layouts/MapLayout';
-import TravelSearcher from '@/components/TravelSearcher';
+import CitySelector from '@/components/CitySelector';
+import CityKeywordInput from '@/components/CityKeywordInput';
 import BikeSearchList from '@/components/BikeSearchList';
 import cityStation from '@/utils/bikeCityStations.json';
 
 export default {
   components: {
     MapLayout,
-    TravelSearcher,
+    CitySelector,
+    CityKeywordInput,
     BikeSearchList,
   },
   setup() {
     const store = useStore();
     const router = useRouter();
+
     const city = ref('');
+    const keyword = ref('');
+    const cityBikeResult = ref([]);
     const bikeResult = ref([]);
 
     async function searchHandler() {
       if (!city.value) return;
+      keyword.value = '';
 
       store.dispatch('showLoader', true);
       const bikeStation = await store
@@ -86,11 +100,29 @@ export default {
         .then((res) => {
           store.state.map.OSM.setView(res, 12);
         });
+      cityBikeResult.value = bikeTotalData;
       bikeResult.value = bikeTotalData;
       store.dispatch('showLoader', false);
     }
 
-    return { city, bikeResult, cityStation, searchHandler };
+    function keywordSearch() {
+      if (keyword.value === '') {
+        return (bikeResult.value = cityBikeResult.value);
+      }
+      const result = cityBikeResult.value.filter(
+        (itm) => itm.StationName.Zh_tw.indexOf(keyword.value) !== -1
+      );
+      bikeResult.value = result;
+    }
+
+    return {
+      city,
+      bikeResult,
+      keyword,
+      cityStation,
+      searchHandler,
+      keywordSearch,
+    };
   },
 };
 </script>

@@ -15,10 +15,8 @@
     & + li {
       margin-top: 1rem;
     }
-    @media (min-width: 769px) {
-      &:hover {
-        box-shadow: 0.1rem 0.3rem 0.2rem rgba(0, 0, 0, 0.3);
-      }
+    &.active {
+      box-shadow: 0rem 0.2rem 0rem $c-secondary;
     }
   }
   .top {

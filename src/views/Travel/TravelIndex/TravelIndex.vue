@@ -2,11 +2,19 @@
   <div class="travelIndex">
     <div class="page-top">
       <h1 class="pageTitle">{{ title }}</h1>
-      <TravelSearcher
-        v-model="city"
-        :cities="cityData"
-        :searchHandler="searchHandler"
-      />
+      <form class="search-form" @submit.prevent="">
+        <CitySelector
+          v-model="city"
+          :cities="cityData"
+          :searchHandler="searchHandler"
+        />
+        <CityKeywordInput
+          v-model="keyword"
+          :disabled="!city"
+          :result="searchResult"
+          :keywordSearch="keywordSearch"
+        />
+      </form>
     </div>
 
     <div class="page-search-content">
@@ -20,21 +28,24 @@
 import { ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import TravelSearcher from '@/components/TravelSearcher';
+import CitySelector from '@/components/CitySelector';
+import CityKeywordInput from '@/components/CityKeywordInput';
 import TravelSearchList from '@/components/TravelSearchList';
 import cityData from '@/utils/city.json';
 
 export default {
   props: ['page'],
 
-  components: { TravelSearcher, TravelSearchList },
+  components: { CitySelector, CityKeywordInput, TravelSearchList },
 
   setup(props) {
     const store = useStore();
     const router = useRouter();
 
     const city = ref('');
+    const keyword = ref('');
     const searchResult = ref([]);
+    const citySearchResult = ref([]);
 
     const hasSearchResult = computed(() => searchResult.value.length !== 0);
     const selectCity = computed(() => store.state.travel.selectCity);
@@ -95,6 +106,7 @@ export default {
       // 繪製地圖marker
       const page = props.page;
       const result = travelData.filter((itm) => itm.City === cityName);
+      citySearchResult.value = result;
       searchResult.value = result;
       const markersData = result.map((itm) => {
         return {
@@ -108,6 +120,16 @@ export default {
       store.dispatch('showLoader', false);
     }
 
+    function keywordSearch() {
+      if (keyword.value === '') {
+        return (searchResult.value = citySearchResult.value);
+      }
+      const result = citySearchResult.value.filter(
+        (itm) => itm[`${props.page}Name`].indexOf(keyword.value) !== -1
+      );
+      searchResult.value = result;
+    }
+
     return {
       city,
       cityData,
@@ -115,6 +137,8 @@ export default {
       searchResult,
       hasSearchResult,
       title,
+      keyword,
+      keywordSearch,
     };
   },
 };

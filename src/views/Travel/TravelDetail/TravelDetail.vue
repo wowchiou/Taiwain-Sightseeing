@@ -7,7 +7,7 @@
       <h1>{{ data[`${page}Name`] }}</h1>
     </div>
 
-    <TravelDetailIte title="地址" :content="data.Address" />
+    <TravelDetailItem title="地址" :content="data.Address" />
     <TravelDetailItem title="電話" :content="data.Phone" />
     <TravelDetailItem title="營業時間" :content="data.OpenTime" />
     <TravelDetailItem title="旅遊資訊" :content="data.TravelInfo" />
