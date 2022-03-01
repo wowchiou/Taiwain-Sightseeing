@@ -61,6 +61,7 @@ select {
   background-color: transparent;
   border-bottom: 1px solid $c-primary;
   appearance: none;
+  border-radius: 0;
   &:disabled {
     opacity: 0.5;
   }

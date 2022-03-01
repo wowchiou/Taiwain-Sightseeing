@@ -2,7 +2,7 @@
   <div class="travelIndex">
     <div class="page-top">
       <h1 class="pageTitle">{{ title }}</h1>
-      <form class="search-form" @submit.prevent="">
+      <form class="search-form" @submit.prevent>
         <CitySelector
           v-model="city"
           :cities="cityData"
@@ -74,7 +74,6 @@ export default {
           // 從詳細頁回來重新搜尋之前縣市資料
           if (selectCity.value) {
             city.value = selectCity.value;
-            console.log(2);
             searchHandler();
           }
         }

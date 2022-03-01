@@ -3,7 +3,7 @@
     <div class="bike">
       <div class="page-top">
         <h1 class="pageTitle">YouBike即時車位</h1>
-        <form class="search-form" @submit.prevent="">
+        <form class="search-form" @submit.prevent>
           <CitySelector
             v-model="city"
             :cities="cityStation"

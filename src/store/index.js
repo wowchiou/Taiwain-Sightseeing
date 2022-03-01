@@ -5,11 +5,12 @@ import { StopBodyScroll } from '@/utils';
 import map from './modules/map';
 import travel from './modules/travel';
 import bike from './modules/bike';
+import bus from './modules/bus';
 
 const stopBodyScroll = new StopBodyScroll();
 
 export default createStore({
-  modules: { map, travel, bike },
+  modules: { map, travel, bike, bus },
   state: {
     loader: false,
     cities: null,

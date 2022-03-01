@@ -1,0 +1,33 @@
+@import '@/assets/scss/_var.scss';
+
+.busSearchList {
+  padding-bottom: 5rem;
+  li {
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: transparent;
+    border: 1px solid $c-primary;
+    line-height: 1.4;
+    & + li {
+      margin-top: 1rem;
+    }
+  }
+  .appLink {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    padding: 1rem;
+  }
+  p {
+    &:first-child {
+      margin-right: 1rem;
+    }
+    &.route {
+      color: $c-dark-green;
+    }
+    &.name {
+      color: $c-primary;
+    }
+  }
+}

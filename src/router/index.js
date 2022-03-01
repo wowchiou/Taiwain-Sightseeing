@@ -39,6 +39,12 @@ const routes = [
     component: () => import('@/views/Bus'),
   },
   {
+    path: '/bus/:city/:route',
+    name: 'bus-route',
+    props: true,
+    component: () => import('@/views/BusRoute'),
+  },
+  {
     path: '/network-error',
     name: 'network-error',
     component: () => import('@/views/NetWorkError'),

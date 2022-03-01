@@ -41,4 +41,12 @@ export default {
   getBikeAvailability(city) {
     return httpTDX.get(`/v2/Bike/Availability/${city}`);
   },
+
+  getBusCityRoute(city) {
+    return httpTDX.get(`/v2/Bus/Route/City/${city}`);
+  },
+
+  getBusStopOfRoute(city) {
+    return httpTDX.get(`/v2/Bus/StopOfRoute/City/${city}`);
+  },
 };
