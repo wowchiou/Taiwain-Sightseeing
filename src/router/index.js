@@ -40,9 +40,9 @@ const routes = [
   },
   {
     path: '/bus/:city/:route/:id',
-    name: 'bus-route',
+    name: 'bus-detail',
     props: true,
-    component: () => import('@/views/BusRoute'),
+    component: () => import('@/views/BusDetail'),
   },
   {
     path: '/network-error',

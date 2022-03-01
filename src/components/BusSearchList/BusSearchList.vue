@@ -3,7 +3,7 @@
     <li v-for="bus in busResult" :key="bus.RouteUID">
       <AppLink
         :to="{
-          name: 'bus-route',
+          name: 'bus-detail',
           params: { city, route: bus.RouteName.Zh_tw, id: bus.RouteUID },
         }"
       >

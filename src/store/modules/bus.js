@@ -41,16 +41,9 @@ export default {
         });
     },
 
-    fetchBusCityStop(context, city) {
-      return Api.getBusCityStop(city)
-        .then((res) => res.data)
-        .catch((err) => {
-          throw err;
-        });
-    },
-
-    fetchDisplayStopOfRoute(context, bus) {
-      return Api.getDisplayStopOfRoute(bus.city, bus.route)
+    // 獲取指定客運路線的預估到站資料
+    fetchEstimatedTimeOfArrival(context, bus) {
+      return Api.getEstimatedTimeOfArrival(bus.city, bus.route)
         .then((res) => res.data)
         .catch((err) => {
           throw err;

@@ -1,0 +1,75 @@
+@import '@/assets/scss/_var.scss';
+
+.busDetail {
+  padding-bottom: 5rem;
+  .top {
+    text-align: center;
+    padding: 1rem;
+  }
+  .title {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-start;
+    .city {
+      background-color: $c-dark-green;
+      color: #fff;
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+    }
+    .route-name {
+      margin-left: 1rem;
+      padding-left: 1rem;
+      border-left: 1px solid $c-grey;
+      padding: 0.1rem 0 0.3rem 1rem;
+      span {
+        margin-right: 0.5rem;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: $c-secondary;
+      }
+    }
+  }
+  .station-name {
+    background-color: #fff;
+    padding: 1rem 0;
+    font-size: 2rem;
+    font-weight: 700;
+    border-radius: 5px;
+    margin-top: 1rem;
+    .station-arrow {
+      color: $c-secondary;
+      font-size: 2.2rem;
+      padding: 0.5rem 0;
+    }
+  }
+  .direction {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    margin-top: 1rem;
+    border-radius: 1rem;
+    overflow: hidden;
+    li {
+      padding: 1rem;
+      flex: 1;
+      color: #fff;
+      background-color: $c-grey;
+      cursor: pointer;
+      font-size: 1.4rem;
+      span {
+        color: $c-primary;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-top: 0.5rem;
+        margin-left: 0.5rem;
+        display: block;
+      }
+      &.active {
+        background-color: $c-primary;
+        span {
+          color: $c-secondary;
+        }
+      }
+    }
+  }
+}

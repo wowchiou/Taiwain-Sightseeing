@@ -58,11 +58,9 @@ export default {
     return httpTDX.get(`/v2/Bus/StopOfRoute/City/${city}/${routeName}`);
   },
 
-  getBusCityStop(city) {
-    return httpTDX.get(`/v2/Bus/Stop/City/${city}`);
-  },
-
-  getDisplayStopOfRoute(city, routeName) {
-    return httpTDX.get(`/v2/Bus/DisplayStopOfRoute/City/${city}/${routeName}`);
+  getEstimatedTimeOfArrival(city, routeName) {
+    return httpTDX.get(
+      `/v2/Bus/EstimatedTimeOfArrival/City/${city}/${routeName}`
+    );
   },
 };
