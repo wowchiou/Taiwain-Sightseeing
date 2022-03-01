@@ -46,7 +46,23 @@ export default {
     return httpTDX.get(`/v2/Bus/Route/City/${city}`);
   },
 
-  getBusStopOfRoute(city) {
+  getBusCityStopOfRoute(city) {
     return httpTDX.get(`/v2/Bus/StopOfRoute/City/${city}`);
+  },
+
+  getBusTimeOfArrival(city, routeName) {
+    return httpTDX.get(`/v2/Bus/RealTimeByFrequency/City/${city}/${routeName}`);
+  },
+
+  getBusStopOfRoute(city, routeName) {
+    return httpTDX.get(`/v2/Bus/StopOfRoute/City/${city}/${routeName}`);
+  },
+
+  getBusCityStop(city) {
+    return httpTDX.get(`/v2/Bus/Stop/City/${city}`);
+  },
+
+  getDisplayStopOfRoute(city, routeName) {
+    return httpTDX.get(`/v2/Bus/DisplayStopOfRoute/City/${city}/${routeName}`);
   },
 };

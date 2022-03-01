@@ -2,7 +2,10 @@
   <ul class="busSearchList">
     <li v-for="bus in busResult" :key="bus.RouteUID">
       <AppLink
-        :to="{ name: 'bus-route', params: { city, route: bus.RouteUID } }"
+        :to="{
+          name: 'bus-route',
+          params: { city, route: bus.RouteName.Zh_tw, id: bus.RouteUID },
+        }"
       >
         <p class="route">[ {{ bus.RouteName.Zh_tw }} ]</p>
         <p class="name">{{ formateBusName(bus) }}</p>

@@ -39,7 +39,7 @@ const routes = [
     component: () => import('@/views/Bus'),
   },
   {
-    path: '/bus/:city/:route',
+    path: '/bus/:city/:route/:id',
     name: 'bus-route',
     props: true,
     component: () => import('@/views/BusRoute'),

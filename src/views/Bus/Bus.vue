@@ -61,7 +61,7 @@ export default {
           router.push({ name: 'network-error' });
         });
       const busStopRoute = await store
-        .dispatch('bus/fetchBusStopOfRoute', city.value)
+        .dispatch('bus/fetchBusCityStopOfRoute', city.value)
         .catch((err) => {
           console.log(err);
           router.push({ name: 'network-error' });
@@ -72,6 +72,7 @@ export default {
         );
         return { ...bus, detail: stopRoute };
       });
+      console.log(busTotalResult);
       busCityResult.value = busTotalResult;
       busResult.value = busTotalResult;
     }
