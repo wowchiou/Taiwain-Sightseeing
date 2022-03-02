@@ -2,6 +2,7 @@ import L from 'leaflet';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet.markercluster';
+import { antPath } from 'leaflet-ant-path';
 import Wkt from 'wicket';
 
 const wkt = new Wkt.Wkt();
@@ -67,6 +68,10 @@ const formateStationName = (name) => {
     : stationName[0];
 };
 
+const stopsFeatureGroup = L.featureGroup();
+const busFeatureGroup = L.featureGroup();
+let pathLayer = null;
+
 export default {
   namespaced: true,
   state: {
@@ -117,11 +122,11 @@ export default {
       commit('SET_MARKER', marker.addTo(state.OSM));
     },
 
-    clearMarker({ state }) {
-      if (state.marker) {
-        state.OSM.removeLayer(state.marker);
-      }
-    },
+    // clearMarker({ state }) {
+    //   if (state.marker) {
+    //     state.OSM.removeLayer(state.marker);
+    //   }
+    // },
 
     clearMarkersCluster({ state }) {
       if (state.markersCluster) {
@@ -206,6 +211,77 @@ export default {
       });
       commit('SET_MARKERS_CLUSTER', markersCluster);
       state.OSM.addLayer(markersCluster);
+    },
+
+    setBusStopsMarker({ state }, stops) {
+      // console.log(stops);
+      stopsFeatureGroup.clearLayers();
+      stops.forEach((stop, idx) => {
+        const lat = stop.StopPosition.PositionLat;
+        const lng = stop.StopPosition.PositionLon;
+        if (idx === 0) {
+          state.OSM.setView([lat, lng], 14);
+        }
+        const html = `<div class="stop-marker"><span>${idx + 1}</span></div>`;
+        const marker = createMarker([lat, lng], {
+          icon: L.divIcon({
+            html,
+            className: 'stop-icon',
+            iconSize: L.point(20, 20),
+          }),
+        });
+        const popup = L.popup({
+          minWidth: 150,
+          className: 'stop-popup',
+        }).setContent(`<p>${stop.StopName.Zh_tw}</p>`);
+        marker.bindPopup(popup).on('click', () => {
+          marker.openPopup();
+        });
+        stopsFeatureGroup.addLayer(marker);
+      });
+      state.OSM.addLayer(stopsFeatureGroup);
+    },
+
+    setBusMarker({ state }, busRealTimeData) {
+      busFeatureGroup.clearLayers();
+      busRealTimeData.forEach((bus) => {
+        const lat = bus.BusPosition.PositionLat;
+        const lng = bus.BusPosition.PositionLon;
+        const html = `<div class="bus-marker"><i class="fas fa-bus"></i><span>${bus.PlateNumb}</span></div>`;
+        const marker = createMarker([lat, lng], {
+          icon: L.divIcon({
+            html,
+            className: 'bus-icon',
+            iconSize: L.point(40, 40),
+          }),
+        });
+        busFeatureGroup.addLayer(marker);
+      });
+      state.OSM.addLayer(busFeatureGroup);
+    },
+
+    setBusRouteShape({ state }, busShape) {
+      if (pathLayer) {
+        state.OSM.removeLayer(pathLayer);
+      }
+      const shapeGEO = busShape.Geometry;
+      const wktShapeGEO = wkt
+        .read(shapeGEO)
+        .toJson()
+        .coordinates.map((itm) => itm.reverse());
+      pathLayer = antPath(wktShapeGEO, {
+        delay: 800,
+        dashArray: [15, 30],
+        weight: 5,
+        color: '#58c5d7',
+        pulseColor: '#FFFFFF',
+        paused: false,
+        reverse: false,
+        hardwareAccelerated: true,
+        opacity: 0.9,
+      });
+      state.OSM.addLayer(pathLayer);
+      state.OSM.fitBounds(pathLayer.getBounds());
     },
   },
 };

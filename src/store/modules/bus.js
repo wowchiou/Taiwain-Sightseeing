@@ -24,8 +24,8 @@ export default {
     },
 
     // 獲取指定路線上各個客運當前位置
-    fetchBusTimeOfArrival(context, bus) {
-      return Api.getBusTimeOfArrival(bus.city, bus.route)
+    fetchRealTimeOfArrival(context, bus) {
+      return Api.getRealTimeOfArrival(bus.city, bus.route)
         .then((res) => res.data)
         .catch((err) => {
           throw err;
@@ -44,6 +44,15 @@ export default {
     // 獲取指定客運路線的預估到站資料
     fetchEstimatedTimeOfArrival(context, bus) {
       return Api.getEstimatedTimeOfArrival(bus.city, bus.route)
+        .then((res) => res.data)
+        .catch((err) => {
+          throw err;
+        });
+    },
+
+    // 獲取指定客運路線線型
+    fetchBusShape(context, bus) {
+      return Api.getBusShape(bus.city, bus.route)
         .then((res) => res.data)
         .catch((err) => {
           throw err;

@@ -50,7 +50,7 @@ export default {
     return httpTDX.get(`/v2/Bus/StopOfRoute/City/${city}`);
   },
 
-  getBusTimeOfArrival(city, routeName) {
+  getRealTimeOfArrival(city, routeName) {
     return httpTDX.get(`/v2/Bus/RealTimeByFrequency/City/${city}/${routeName}`);
   },
 
@@ -62,5 +62,9 @@ export default {
     return httpTDX.get(
       `/v2/Bus/EstimatedTimeOfArrival/City/${city}/${routeName}`
     );
+  },
+
+  getBusShape(city, routeName) {
+    return httpTDX.get(`/v2/Bus/Shape/City/${city}/${routeName}`);
   },
 };

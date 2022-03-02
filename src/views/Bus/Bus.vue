@@ -54,6 +54,7 @@ export default {
     const busCityResult = ref([]);
 
     async function searchHandler() {
+      store.dispatch('showLoader', true);
       const busRoute = await store
         .dispatch('bus/fetchBusCityRoute', city.value)
         .catch((err) => {
@@ -72,9 +73,10 @@ export default {
         );
         return { ...bus, detail: stopRoute };
       });
-      console.log(busTotalResult);
       busCityResult.value = busTotalResult;
       busResult.value = busTotalResult;
+
+      store.dispatch('showLoader', false);
     }
 
     function keywordSearch() {

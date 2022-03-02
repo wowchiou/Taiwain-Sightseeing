@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { watch } from 'vue';
 import AppLink from '@/components/AppLink';
 
 export default {
@@ -27,7 +28,14 @@ export default {
       type: String,
     },
   },
-  setup() {
+  setup(props) {
+    watch(
+      () => props.busResult,
+      () => {
+        window.scrollTo({ top: 0 });
+      }
+    );
+
     function formateBusName(bus) {
       let startName = bus.DepartureStopNameZh;
       let endName = bus.DestinationStopNameZh;

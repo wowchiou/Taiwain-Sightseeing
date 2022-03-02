@@ -73,3 +73,40 @@
     }
   }
 }
+
+.bus-result {
+  padding: 0 1rem;
+  font-size: 1.8rem;
+  text-align: center;
+  .bus-stop {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 1rem;
+  }
+  .stop-number {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: $c-grey;
+    color: #fff;
+    font-size: 1.5rem;
+  }
+  .stop-status {
+    width: 50%;
+  }
+  .stop-detail {
+    span {
+      // display: block;
+      & + span {
+        margin-left: 0.5rem;
+      }
+    }
+  }
+  .stop-name {
+    flex: 1;
+  }
+}
