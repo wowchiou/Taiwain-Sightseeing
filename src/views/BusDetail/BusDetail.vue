@@ -36,15 +36,14 @@
           :key="stop.StopUID"
         >
           <div class="stop-number">{{ stopIDX + 1 }}</div>
-          <div class="stop-status" v-if="stop.detail.length > 0">
+
+          <div class="stop-status">
             <div
               class="stop-detail"
-              v-for="(detail, detailIDX) in stop.detail"
-              :key="`${id}${stopIDX}${detailIDX}`"
-              v-html="formateEstimateTime(detail)"
+              v-html="formateEstimateTime(stop.detail)"
             ></div>
           </div>
-          <div v-else class="stop-status"><span>尚未發車</span></div>
+
           <div class="stop-name">{{ stop.StopName.Zh_tw }}</div>
         </li>
       </ul>
@@ -116,26 +115,47 @@ export default {
     );
 
     function formateEstimateTime(bus) {
-      if (typeof bus === 'undefined') {
-        return '<span>尚未發車</span>';
+      if (bus.length < 1) {
+        return '<span class="error">無出車資料</span>';
       }
-      if (bus.StopStatus === 0) {
-        const minutes = Math.floor(bus.EstimateTime / 60);
-        return `<span>${minutes}分鐘</span>`;
+      let statusString = '';
+      for (let i = 0; i < bus.length; i++) {
+        const { StopStatus, EstimateTime, PlateNumb } = bus[i];
+
+        if (StopStatus === 2) {
+          statusString = '<span class="error">交管不停靠</span>';
+          break;
+        }
+
+        if (StopStatus === 3) {
+          statusString = '<span class="error">末班車已過</span>';
+          break;
+        }
+
+        if (StopStatus === 4) {
+          statusString = '<span class="error">今日未營運</span>';
+          break;
+        }
+
+        if (StopStatus === 1 && PlateNumb !== '-1') {
+          if (EstimateTime) {
+            const minutes = Math.floor(EstimateTime / 60);
+            return (statusString += `<span class="notYet">${PlateNumb} ${minutes}分鐘</span>`);
+          }
+          return (statusString += `<span class="notYet">${PlateNumb} 尚未發車</span>`);
+        }
+
+        if (StopStatus === 0 && PlateNumb !== '-1') {
+          const minutes = Math.floor(EstimateTime / 60);
+          if (minutes === 0) {
+            return (statusString += `<span class="now">${PlateNumb} 即將到站</span>`);
+          }
+          return (statusString += `<span class="almost">${PlateNumb} ${minutes}分鐘</span>`);
+        }
+
+        // statusString = '<span class="error">無出車資料</span>';
       }
-      if (bus.StopStatus === 1) {
-        console.log(bus.Estimates);
-        return '<span>尚未發車</span>';
-      }
-      // switch (bus.StopStatus) {
-      //   case 0:
-      //     const minutes = Math.floor(bus.EstimateTime / 60);
-      //     return `<span>${minutes}分鐘</span>`;
-      //   case 1:
-      //     return '<span>尚未發車</span>';
-      //   default:
-      //     break;
-      // }
+      return statusString;
     }
 
     function setStopsMarker() {
@@ -151,6 +171,7 @@ export default {
       const busData = busTimeResponse.filter(
         (itm) => itm.Direction === currentDirection.value
       );
+      console.log(busData);
       store.dispatch('map/setBusMarker', busData);
     }
 
@@ -207,16 +228,16 @@ export default {
         (bus) => bus.RouteUID === props.id
       );
       console.log(busStopsResult.value);
-      getBusEstimatedTime();
+      await getBusEstimatedTime();
       setBusShape();
       setStopsMarker();
       setBusMarker();
     }
 
-    function changeDirection(direction) {
+    async function changeDirection(direction) {
       if (!endName.value) return;
       currentDirection.value = direction;
-      getBusEstimatedTime();
+      await getBusEstimatedTime();
       setBusShape();
       setStopsMarker();
       setBusMarker();
@@ -236,6 +257,6 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import './BusDetail.scss';
 </style>

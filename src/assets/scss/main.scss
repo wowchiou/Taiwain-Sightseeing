@@ -347,6 +347,27 @@ select {
   z-index: 5;
 }
 
+.bus-icon {
+  &.start {
+    .bus-marker {
+      color: $c-warn;
+      border-color: $c-warn;
+      span {
+        background-color: $c-warn;
+      }
+    }
+  }
+  &.finish {
+    .bus-marker {
+      color: $c-light;
+      border-color: $c-light;
+      span {
+        background-color: $c-light;
+      }
+    }
+  }
+}
+
 .bus-marker {
   width: 40px;
   height: 40px;

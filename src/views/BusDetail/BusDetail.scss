@@ -80,13 +80,20 @@
   text-align: center;
   .bus-stop {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-start;
     padding: 1rem;
+    background-color: #fff;
+    border-radius: 5px;
+    line-height: 1.3;
+    box-shadow: 0 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
+    &:not(:first-child) {
+      margin-top: 1rem;
+    }
   }
   .stop-number {
-    width: 30px;
-    height: 30px;
+    width: 3rem;
+    height: 3rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -94,19 +101,37 @@
     background-color: $c-grey;
     color: #fff;
     font-size: 1.5rem;
+    font-weight: 700;
   }
   .stop-status {
     width: 50%;
+    padding: 0 1rem;
   }
-  .stop-detail {
-    span {
-      // display: block;
-      & + span {
-        margin-left: 0.5rem;
-      }
+  .stop-detail span {
+    display: block;
+    color: #fff;
+    padding: 0.46rem 1rem;
+    border-radius: 9999px;
+    font-size: 1.6rem;
+    & + span {
+      margin-top: 0.5rem;
+    }
+    &.error {
+      background-color: $c-primary;
+    }
+    &.notYet {
+      background-color: $c-grey;
+    }
+    &.now {
+      background-color: $c-secondary;
+    }
+    &.almost {
+      background-color: $c-dark-green;
     }
   }
   .stop-name {
     flex: 1;
+    font-size: 1.6rem;
+    padding: 0.46rem 0;
   }
 }
