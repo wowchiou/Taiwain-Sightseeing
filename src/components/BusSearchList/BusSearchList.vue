@@ -7,7 +7,7 @@
           params: { city, route: bus.RouteName.Zh_tw, id: bus.RouteUID },
         }"
       >
-        <p class="route">[ {{ bus.RouteName.Zh_tw }} ]</p>
+        <p class="route">{{ bus.RouteName.Zh_tw }}</p>
         <p class="name">{{ formateBusName(bus) }}</p>
       </AppLink>
     </li>

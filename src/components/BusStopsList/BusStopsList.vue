@@ -67,46 +67,6 @@ export default {
       return { class: 'almost', text: `${plateNumb} ${minutes}分鐘` };
     }
 
-    // function formateEstimateTime(detail) {
-    //   if (detail.length < 1) {
-    //     return '<span class="error">無出車資料</span>';
-    //   }
-    //   let statusString = '';
-    //   detail.forEach((bus) => {
-    //     const { EstimateTime, PlateNumb, Estimates } = bus;
-    //     if (Estimates && Estimates.length > 0) {
-    //       const times = Estimates.filter((time) => time.EstimateTime);
-    //       if (times.length === 0) {
-    //         return (statusString += `<span class="notYet">尚未發車</span>`);
-    //       }
-    //       times.forEach((time) => {
-    //         const estimateText = renderEstimateText(
-    //           time.EstimateTime,
-    //           time.PlateNumb
-    //         );
-    //         return (statusString += estimateText);
-    //       });
-    //     } else if (EstimateTime) {
-    //       const estimateText = renderEstimateText(EstimateTime, PlateNumb);
-    //       return (statusString += estimateText);
-    //     }
-    //     if (!statusString) {
-    //       return (statusString += `<span class="notYet">尚未發車</span>`);
-    //     }
-    //   });
-    //   return statusString;
-    // }
-    // function renderEstimateText(time, plate) {
-    //   const minutes = Math.floor(time / 60);
-    //   const plateNumb = plate || '';
-    //   if (time <= 0) {
-    //     return `<span class="now"><p>${plateNumb} 抵達</p></span>`;
-    //   }
-    //   if (minutes === 0) {
-    //     return `<span class="now"><p>${plateNumb} 即將到站</p></span>`;
-    //   }
-    //   return `<span class="almost">${plateNumb} ${minutes}分鐘</span>`;
-    // }
     return { formateEstimateTime };
   },
 };

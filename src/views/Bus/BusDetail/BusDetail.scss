@@ -5,11 +5,15 @@
   .top {
     text-align: center;
     padding: 1rem;
+    position: sticky;
+    top: 0;
+    background-color: $c-light-grey;
   }
   .title {
     display: flex;
     align-items: baseline;
     justify-content: flex-start;
+
     .city {
       background-color: $c-dark-green;
       color: #fff;

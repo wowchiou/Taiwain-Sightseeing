@@ -2,6 +2,7 @@
   <div class="busDetail" v-if="busStopsResult.length > 0">
     <div class="top">
       <div class="title">
+        <ButtonBackToFrontPage />
         <div class="city">{{ cityName }}</div>
         <div class="route-name">
           <span>{{ route }}</span>
@@ -38,9 +39,10 @@ import { ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import cityData from '@/utils/city.json';
 import BusStopsList from '@/components/BusStopsList';
+import ButtonBackToFrontPage from '@/components/ButtonBackToFrontPage';
 
 export default {
-  components: { BusStopsList },
+  components: { BusStopsList, ButtonBackToFrontPage },
   props: {
     city: {
       type: String,

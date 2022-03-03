@@ -53,6 +53,17 @@ export default {
       store.dispatch('map/clearBusMap');
     }
 
+    if (store.state.bus.busRoutes) {
+      busCityResult.value = store.state.bus.busRoutes;
+      city.value = store.state.bus.busCity;
+      if (store.state.bus.busKeyWords) {
+        keyword.value = store.state.bus.busKeyWords;
+        keywordSearch();
+      } else {
+        busResult.value = store.state.bus.busRoutes;
+      }
+    }
+
     async function searchHandler() {
       store.dispatch('showLoader', true);
       const busRoute = await store
@@ -76,6 +87,9 @@ export default {
       busCityResult.value = busTotalResult;
       busResult.value = busTotalResult;
 
+      store.commit('bus/SET_BUS_CITY', city.value);
+      store.commit('bus/SET_BUS_ROUTES', busTotalResult);
+
       store.dispatch('showLoader', false);
     }
 
@@ -83,6 +97,7 @@ export default {
       if (keyword.value === '') {
         return (busResult.value = busCityResult.value);
       }
+      store.commit('bus/SET_BUS_KEYWORDS', keyword.value);
       let result = [];
       busCityResult.value.forEach((itm) => {
         if (itm.RouteName.Zh_tw.indexOf(keyword.value) !== -1) {

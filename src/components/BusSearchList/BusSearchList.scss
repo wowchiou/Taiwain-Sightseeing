@@ -5,29 +5,37 @@
   li {
     border-radius: 5px;
     overflow: hidden;
-    background-color: transparent;
-    border: 1px solid $c-primary;
+    background-color: #fff;
     line-height: 1.4;
+    box-shadow: 0 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
     & + li {
       margin-top: 1rem;
     }
   }
   .appLink {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: flex-start;
-    flex-wrap: wrap;
-    padding: 1rem;
   }
   p {
+    display: flex;
+    align-items: center;
     &:first-child {
       margin-right: 1rem;
     }
     &.route {
-      color: $c-dark-green;
+      color: #fff;
+      background-color: $c-dark-green;
+      padding: 0.5rem 1rem;
+      font-weight: 700;
+      width: 30%;
+      justify-content: center;
     }
     &.name {
       color: $c-primary;
+      flex: 1;
+      padding-right: 1rem;
+      justify-content: flex-start;
     }
   }
 }

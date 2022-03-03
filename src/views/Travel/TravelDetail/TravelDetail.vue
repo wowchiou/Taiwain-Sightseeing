@@ -1,9 +1,7 @@
 <template>
   <div v-if="data" class="detail">
     <div class="title">
-      <AppButton @click="backHandler">
-        <i class="fas fa-arrow-left"></i>
-      </AppButton>
+      <ButtonBackToFrontPage />
       <h1>{{ data[`${page}Name`] }}</h1>
     </div>
 
@@ -31,7 +29,7 @@
 import { ref, watchEffect, computed } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import AppButton from '@/components/AppButton';
+import ButtonBackToFrontPage from '@/components/ButtonBackToFrontPage';
 import TravelDetailItem from '@/components/TravelDetailItem';
 
 export default {
@@ -46,7 +44,7 @@ export default {
     },
   },
   components: {
-    AppButton,
+    ButtonBackToFrontPage,
     TravelDetailItem,
   },
   setup(props) {
@@ -86,15 +84,15 @@ export default {
       }
     });
 
-    function backHandler() {
-      router.back();
-    }
+    // function backHandler() {
+    //   router.back();
+    // }
 
     function isEmptyObject(data) {
       return JSON.stringify(data) === '{}';
     }
 
-    return { data, backHandler, isEmptyObject };
+    return { data, isEmptyObject };
   },
 };
 </script>

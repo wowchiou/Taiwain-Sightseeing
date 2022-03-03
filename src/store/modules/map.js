@@ -245,10 +245,12 @@ export default {
     setBusMarker({ state }, busRealTimeData) {
       busFeatureGroup.clearLayers();
       busRealTimeData.forEach((bus) => {
-        const { BusPosition, PlateNumb } = bus;
+        const { BusPosition, PlateNumb, DutyStatus } = bus;
         const lat = BusPosition.PositionLat;
         const lng = BusPosition.PositionLon;
         let busStatus = '';
+        if (DutyStatus === 1) busStatus = 'start';
+        if (DutyStatus === 2) busStatus = 'finish';
         const html = `<div class="bus-marker"><i class="fas fa-bus"></i><span>${PlateNumb}</span></div>`;
         const marker = createMarker([lat, lng], {
           icon: L.divIcon({

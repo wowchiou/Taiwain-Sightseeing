@@ -1,0 +1,12 @@
+@import '@/assets/scss/_var.scss';
+
+.back-button {
+  margin-right: 1rem;
+  border-radius: 50%;
+  width: 3.5rem;
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}

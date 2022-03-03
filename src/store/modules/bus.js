@@ -2,9 +2,29 @@ import Api from '@/service';
 
 export default {
   namespaced: true,
-  state: {},
-  mutations: {},
+  state: {
+    busCity: null,
+    busRoutes: null,
+    busKeyWords: '',
+  },
+  mutations: {
+    SET_BUS_CITY(state, city) {
+      state.busCity = city;
+    },
+    SET_BUS_ROUTES(state, routes) {
+      state.busRoutes = routes;
+    },
+    SET_BUS_KEYWORDS(state, keywords) {
+      state.busKeyWords = keywords;
+    },
+  },
   actions: {
+    resetBusState({ commit }) {
+      commit('SET_BUS_CITY', null);
+      commit('SET_BUS_ROUTES', null);
+      commit('SET_BUS_KEYWORDS', '');
+    },
+
     // 獲取指定城市所有客運路線
     fetchBusCityRoute(context, city) {
       return Api.getBusCityRoute(city)
