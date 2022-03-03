@@ -1,66 +1,46 @@
 <template>
-  <MapLayout>
-    <div class="busDetail" v-if="busStopsResult.length > 0">
-      <div class="top">
-        <div class="title">
-          <div class="city">{{ cityName }}</div>
-          <div class="route-name">
-            <span>{{ route }}</span>
-          </div>
+  <div class="busDetail" v-if="busStopsResult.length > 0">
+    <div class="top">
+      <div class="title">
+        <div class="city">{{ cityName }}</div>
+        <div class="route-name">
+          <span>{{ route }}</span>
         </div>
-        <div class="station-name">
-          <div class="start-name">{{ startName }}</div>
-          <div v-if="endName" class="station-arrow">&#8693;</div>
-          <div v-if="endName" class="end-name">{{ endName }}</div>
-        </div>
-        <ul class="direction">
-          <li
-            :class="{ active: currentDirection === 0 }"
-            @click="changeDirection(0)"
-          >
-            前往<span>{{ startName }}</span>
-          </li>
-          <li
-            :class="{ active: currentDirection === 1 }"
-            @click="changeDirection(1)"
-          >
-            前往<span>{{ endName || '無返程' }}</span>
-          </li>
-        </ul>
       </div>
-
-      <ul v-if="busStopTime" class="bus-result">
+      <div class="station-name">
+        <div class="start-name">{{ startName || endName }}</div>
+        <div class="station-arrow">&#8693;</div>
+        <div class="end-name">{{ endName }}</div>
+      </div>
+      <ul class="direction">
         <li
-          class="bus-stop"
-          v-for="(stop, stopIDX) in busStopTime"
-          :key="stop.StopUID"
+          :class="{ active: currentDirection === 0 }"
+          @click="changeDirection(0)"
         >
-          <div class="stop-number">{{ stopIDX + 1 }}</div>
-
-          <div class="stop-status">
-            <div
-              class="stop-detail"
-              v-html="formateEstimateTime(stop.detail)"
-            ></div>
-          </div>
-
-          <div class="stop-name">{{ stop.StopName.Zh_tw }}</div>
+          前往<span>{{ startName || endName }}</span>
+        </li>
+        <li
+          v-if="startName"
+          :class="{ active: currentDirection === 1 }"
+          @click="changeDirection(1)"
+        >
+          前往<span>{{ endName || '無返程' }}</span>
         </li>
       </ul>
     </div>
-  </MapLayout>
+
+    <BusStopsList :busStopTime="busStopTime" />
+  </div>
 </template>
 
 <script>
 import { ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
-import MapLayout from '@/layouts/MapLayout';
 import cityData from '@/utils/city.json';
+import BusStopsList from '@/components/BusStopsList';
 
 export default {
-  components: {
-    MapLayout,
-  },
+  components: { BusStopsList },
   props: {
     city: {
       type: String,
@@ -78,27 +58,22 @@ export default {
   setup(props) {
     const store = useStore();
     const currentDirection = ref(0);
-    const busStopsResult = ref([]);
     const busStopTime = ref(null);
-
+    const busStopsResult = ref([]);
     const busStops = computed(() =>
       busStopsResult.value.find(
         (itm) => itm.Direction === currentDirection.value
       )
     );
-
     const startName = computed(() => {
       return busStopsResult.value[1]
         ? busStopsResult.value[1].Stops[0].StopName.Zh_tw
         : null;
     });
-
     const endName = computed(
       () => busStopsResult.value[0].Stops[0].StopName.Zh_tw
     );
-
     const cityName = cityData.find((city) => city.City === props.city).CityName;
-
     const apiPostData = {
       city: props.city,
       route: props.route,
@@ -114,50 +89,6 @@ export default {
       { immediate: true }
     );
 
-    function formateEstimateTime(bus) {
-      if (bus.length < 1) {
-        return '<span class="error">無出車資料</span>';
-      }
-      let statusString = '';
-      for (let i = 0; i < bus.length; i++) {
-        const { StopStatus, EstimateTime, PlateNumb } = bus[i];
-
-        if (StopStatus === 2) {
-          statusString = '<span class="error">交管不停靠</span>';
-          break;
-        }
-
-        if (StopStatus === 3) {
-          statusString = '<span class="error">末班車已過</span>';
-          break;
-        }
-
-        if (StopStatus === 4) {
-          statusString = '<span class="error">今日未營運</span>';
-          break;
-        }
-
-        if (StopStatus === 1 && PlateNumb !== '-1') {
-          if (EstimateTime) {
-            const minutes = Math.floor(EstimateTime / 60);
-            return (statusString += `<span class="notYet">${PlateNumb} ${minutes}分鐘</span>`);
-          }
-          return (statusString += `<span class="notYet">${PlateNumb} 尚未發車</span>`);
-        }
-
-        if (StopStatus === 0 && PlateNumb !== '-1') {
-          const minutes = Math.floor(EstimateTime / 60);
-          if (minutes === 0) {
-            return (statusString += `<span class="now">${PlateNumb} 即將到站</span>`);
-          }
-          return (statusString += `<span class="almost">${PlateNumb} ${minutes}分鐘</span>`);
-        }
-
-        // statusString = '<span class="error">無出車資料</span>';
-      }
-      return statusString;
-    }
-
     function setStopsMarker() {
       store.dispatch('map/setBusStopsMarker', busStops.value.Stops);
     }
@@ -171,7 +102,6 @@ export default {
       const busData = busTimeResponse.filter(
         (itm) => itm.Direction === currentDirection.value
       );
-      console.log(busData);
       store.dispatch('map/setBusMarker', busData);
     }
 
@@ -201,20 +131,15 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-      console.log('busEstimatedTime', busEstimatedTime);
-
-      console.log(busStops.value);
       const result = busStops.value.Stops.map((stop) => {
         let busTime = busEstimatedTime.filter(
           (bus) =>
             bus.StopName.Zh_tw === stop.StopName.Zh_tw &&
             (String(bus.Direction) === 'undefined' ||
-              bus.Direction === currentDirection.value) &&
-            bus.PlateNumb
+              bus.Direction === currentDirection.value)
         );
         return { ...stop, detail: busTime };
       });
-      console.log(result);
       busStopTime.value = result;
     }
 
@@ -227,7 +152,6 @@ export default {
       busStopsResult.value = busStopsResponse.filter(
         (bus) => bus.RouteUID === props.id
       );
-      console.log(busStopsResult.value);
       await getBusEstimatedTime();
       setBusShape();
       setStopsMarker();
@@ -251,7 +175,6 @@ export default {
       busStopTime,
       startName,
       endName,
-      formateEstimateTime,
     };
   },
 };

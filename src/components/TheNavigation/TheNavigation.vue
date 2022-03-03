@@ -51,7 +51,7 @@
       </li>
       <li>
         <AppLink
-          :to="{ name: 'bus' }"
+          :to="{ name: 'bus-index' }"
           @click="toggleNavigation(false)"
           title="公車/客運時間查詢"
         >

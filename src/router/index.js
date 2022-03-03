@@ -26,6 +26,11 @@ const routes = [
         props: true,
         component: () => import('@/views/Travel/TravelDetail'),
       },
+      {
+        path: '/:pathMatch(.*)*',
+        name: 'not-found',
+        component: () => import('@/views/NotFound'),
+      },
     ],
   },
   {
@@ -37,12 +42,24 @@ const routes = [
     path: '/bus',
     name: 'bus',
     component: () => import('@/views/Bus'),
-  },
-  {
-    path: '/bus/:city/:route/:id',
-    name: 'bus-detail',
-    props: true,
-    component: () => import('@/views/BusDetail'),
+    children: [
+      {
+        path: '',
+        name: 'bus-index',
+        component: () => import('@/views/Bus/BusIndex'),
+      },
+      {
+        path: ':city/:route/:id',
+        name: 'bus-detail',
+        props: true,
+        component: () => import('@/views/Bus/BusDetail'),
+      },
+      {
+        path: '/:pathMatch(.*)*',
+        name: 'not-found',
+        component: () => import('@/views/NotFound'),
+      },
+    ],
   },
   {
     path: '/network-error',

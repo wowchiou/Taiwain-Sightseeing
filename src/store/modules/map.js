@@ -245,19 +245,11 @@ export default {
     setBusMarker({ state }, busRealTimeData) {
       busFeatureGroup.clearLayers();
       busRealTimeData.forEach((bus) => {
-        const { BusPosition, DutyStatus, PlateNumb } = bus;
+        const { BusPosition, PlateNumb } = bus;
         const lat = BusPosition.PositionLat;
         const lng = BusPosition.PositionLon;
         let busStatus = '';
-        let busString = PlateNumb;
-        if (DutyStatus === 1) {
-          busStatus = 'start';
-          busString += ' 未營運';
-        } else if (DutyStatus === 2) {
-          busStatus = 'finish';
-          busString += ' 結束服務';
-        }
-        const html = `<div class="bus-marker"><i class="fas fa-bus"></i><span>${busString}</span></div>`;
+        const html = `<div class="bus-marker"><i class="fas fa-bus"></i><span>${PlateNumb}</span></div>`;
         const marker = createMarker([lat, lng], {
           icon: L.divIcon({
             html,
@@ -292,6 +284,14 @@ export default {
       });
       state.OSM.addLayer(pathLayer);
       state.OSM.fitBounds(pathLayer.getBounds());
+    },
+
+    clearBusMap({ state }) {
+      if (pathLayer) {
+        state.OSM.removeLayer(pathLayer);
+      }
+      busFeatureGroup.clearLayers();
+      stopsFeatureGroup.clearLayers();
     },
   },
 };
