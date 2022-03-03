@@ -94,10 +94,10 @@ export default {
     }
 
     function keywordSearch() {
+      store.commit('bus/SET_BUS_KEYWORDS', keyword.value);
       if (keyword.value === '') {
         return (busResult.value = busCityResult.value);
       }
-      store.commit('bus/SET_BUS_KEYWORDS', keyword.value);
       let result = [];
       busCityResult.value.forEach((itm) => {
         if (itm.RouteName.Zh_tw.indexOf(keyword.value) !== -1) {
