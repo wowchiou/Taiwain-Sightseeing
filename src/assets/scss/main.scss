@@ -162,9 +162,9 @@ select {
 }
 
 .cluster-circle {
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: $c-secondary;
+  color: #fff;
   border-color: $c-secondary;
-  color: $c-secondary;
   &::after,
   &::before {
     position: absolute;
@@ -199,8 +199,8 @@ select {
 
 .marker-circle {
   background-color: rgba(255, 255, 255, 0.8);
-  color: $c-primary;
   border-color: $c-secondary;
+  color: $c-secondary;
 }
 
 .current-circle {
