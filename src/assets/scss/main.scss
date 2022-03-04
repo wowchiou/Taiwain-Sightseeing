@@ -136,10 +136,10 @@ select {
   font-size: 1.8rem;
   color: $c-dark-green;
   text-align: center;
-  animation: shiny 0.5s infinite alternate;
+  animation: shiny2 0.5s infinite alternate;
 }
 
-@keyframes shiny {
+@keyframes shiny2 {
   form {
     opacity: 1;
   }
