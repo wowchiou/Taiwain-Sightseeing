@@ -72,7 +72,7 @@ export default {
         return { ...station, detail: bikeDetail };
       });
 
-      store.dispatch('map/setBikeMarkers', bikeTotalData);
+      await store.dispatch('map/setBikeMarkers', bikeTotalData);
 
       // 抓取市中心位置
       const cityName = cityStation.find(

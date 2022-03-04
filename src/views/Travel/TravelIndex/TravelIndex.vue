@@ -70,7 +70,7 @@ export default {
           city.value = selectCity.value;
           keyword.value = store.state.travel.keywords;
           searchResult.value = store.state.travel.travelData;
-          setMarkers(store.state.travel.travelData);
+          await setMarkers(store.state.travel.travelData);
         }
         store.dispatch('showLoader', false);
       },
@@ -98,12 +98,12 @@ export default {
       setSearchResult(result);
 
       // 繪製地圖marker
-      setMarkers(result);
+      await setMarkers(result);
 
       store.dispatch('showLoader', false);
     }
 
-    function setMarkers(result) {
+    async function setMarkers(result) {
       const page = props.page;
       const markersData = result.map((itm) => {
         return {
@@ -112,7 +112,10 @@ export default {
           id: itm[`${page}ID`],
         };
       });
-      store.dispatch('map/setTravelMarkers', { page, markers: markersData });
+      await store.dispatch('map/setTravelMarkers', {
+        page,
+        markers: markersData,
+      });
     }
 
     function keywordSearch() {

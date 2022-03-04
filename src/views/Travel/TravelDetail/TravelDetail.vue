@@ -55,6 +55,7 @@ export default {
 
     watchEffect(async () => {
       if (isMapInit.value) {
+        store.dispatch('showLoader', true);
         const result = await store.dispatch(
           'travel/fetchTravelData',
           props.page
@@ -65,7 +66,7 @@ export default {
         // 繪製地圖marker
         const lat = data.value.Position.PositionLat;
         const lng = data.value.Position.PositionLon;
-        store.dispatch('map/setTravelMarkers', {
+        await store.dispatch('map/setTravelMarkers', {
           page: props.page,
           markers: [
             {
@@ -78,6 +79,7 @@ export default {
 
         // 設定地圖位置
         store.state.map.OSM.setView([lat, lng], 15);
+        store.dispatch('showLoader', false);
       }
     });
 

@@ -103,7 +103,7 @@ export default {
       busStopsResult.value = busStopsResponse.filter(
         (bus) => bus.RouteUID === props.id
       );
-      setMap();
+      await setMap();
     }
 
     async function setMap() {
@@ -145,7 +145,7 @@ export default {
             String(shape.Direction) === 'undefined' ||
             shape.Direction === currentDirection.value
           ) {
-            store.dispatch('map/setBusRouteShape', shape);
+            await store.dispatch('map/setBusRouteShape', shape);
             break;
           }
         }
@@ -164,7 +164,7 @@ export default {
       const busData = busTimeResponse.filter(
         (itm) => itm.Direction === currentDirection.value
       );
-      store.dispatch('map/setBusMarker', busData);
+      await store.dispatch('map/setBusMarker', busData);
     }
 
     async function changeDirection(direction) {
