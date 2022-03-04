@@ -13,6 +13,9 @@ export default {
   components: {
     MapLayout,
   },
+  created() {
+    this.$store.dispatch('travel/clearSearchBar');
+  },
 };
 </script>
 

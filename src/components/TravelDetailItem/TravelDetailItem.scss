@@ -3,6 +3,10 @@
 .travelDetailItem {
   line-height: 1.5;
   color: $c-primary;
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 5px;
+  box-shadow: 0 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
   h3 {
     color: $c-dark-green;
     font-weight: 500;

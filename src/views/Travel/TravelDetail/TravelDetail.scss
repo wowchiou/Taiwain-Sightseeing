@@ -2,7 +2,7 @@
 
 .detail {
   width: 100%;
-  padding: 0 1rem 5rem;
+  padding: 0 0 5rem;
   .title {
     position: sticky;
     top: 0;
@@ -11,7 +11,7 @@
     align-items: baseline;
     justify-content: flex-start;
     margin-bottom: 1rem;
-    padding: 1rem 0;
+    padding: 1rem;
     h1 {
       font-size: 2rem;
       font-weight: 700;
@@ -19,6 +19,9 @@
       line-height: 1.4;
       flex: 1;
     }
+  }
+  .content {
+    padding: 0 1rem;
   }
 }
 

@@ -4,24 +4,25 @@
       <ButtonBackToFrontPage />
       <h1>{{ data[`${page}Name`] }}</h1>
     </div>
-
-    <TravelDetailItem title="地址" :content="data.Address" />
-    <TravelDetailItem title="電話" :content="data.Phone" />
-    <TravelDetailItem title="營業時間" :content="data.OpenTime" />
-    <TravelDetailItem title="旅遊資訊" :content="data.TravelInfo" />
-    <TravelDetailItem
-      v-if="!isEmptyObject(data.Picture)"
-      title="旅遊圖片"
-      :content="{
-        src: data.Picture.PictureUrl1,
-        alt: data.Picture.PictureDescription1,
-      }"
-    />
-    <TravelDetailItem
-      v-if="data.DescriptionDetail"
-      title="地點說明"
-      :content="data.DescriptionDetail"
-    />
+    <div class="content">
+      <TravelDetailItem title="地址" :content="data.Address" />
+      <TravelDetailItem title="電話" :content="data.Phone" />
+      <TravelDetailItem title="營業時間" :content="data.OpenTime" />
+      <TravelDetailItem title="旅遊資訊" :content="data.TravelInfo" />
+      <TravelDetailItem
+        v-if="!isEmptyObject(data.Picture)"
+        title="旅遊圖片"
+        :content="{
+          src: data.Picture.PictureUrl1,
+          alt: data.Picture.PictureDescription1,
+        }"
+      />
+      <TravelDetailItem
+        v-if="data.DescriptionDetail"
+        title="地點說明"
+        :content="data.DescriptionDetail"
+      />
+    </div>
   </div>
 </template>
 

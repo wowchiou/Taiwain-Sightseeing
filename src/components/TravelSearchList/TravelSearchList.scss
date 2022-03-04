@@ -12,13 +12,16 @@
   align-items: stretch;
   justify-content: flex-start;
   border-radius: 5px;
-  border: 1px solid $c-primary;
+  background-color: #fff;
+  overflow: hidden;
+  box-shadow: 0 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
   p {
     flex: 1;
     padding: 1rem;
   }
   a {
-    color: $c-primary;
+    color: #fff;
+    background-color: $c-dark-green;
   }
   .appLink {
     display: flex;

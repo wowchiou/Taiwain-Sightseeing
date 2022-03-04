@@ -27,7 +27,7 @@ const routes = [
         component: () => import('@/views/Travel/TravelDetail'),
       },
       {
-        path: '/:pathMatch(.*)*',
+        path: ':pathMatch(.*)*',
         name: 'not-found',
         component: () => import('@/views/NotFound'),
       },
@@ -55,7 +55,7 @@ const routes = [
         component: () => import('@/views/Bus/BusDetail'),
       },
       {
-        path: '/:pathMatch(.*)*',
+        path: ':pathMatch(.*)*',
         name: 'not-found',
         component: () => import('@/views/NotFound'),
       },

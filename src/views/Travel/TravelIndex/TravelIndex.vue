@@ -60,6 +60,7 @@ export default {
           // 換頁時清除之前搜尋紀錄
           city.value = '';
           searchResult.value = [];
+
           // 清空marker
           store.dispatch('map/clearMarkersCluster');
 
@@ -70,19 +71,22 @@ export default {
               console.log(err);
               router.push({ name: 'network-error' });
             });
-
-          // 從詳細頁回來重新搜尋之前縣市資料
-          if (selectCity.value) {
-            city.value = selectCity.value;
-            searchHandler();
-          }
         }
       },
       { immediate: true }
     );
 
+    // 從詳細頁回來重新搜尋之前縣市資料
+    if (selectCity.value) {
+      city.value = selectCity.value;
+      keyword.value = store.state.travel.keywords;
+      searchResult.value = store.state.travel.travelData;
+      setMarkers(travelData);
+    }
+
     async function searchHandler() {
       store.dispatch('showLoader', true);
+      resetSearchHistory();
 
       // 儲存目前選擇的城市，從詳細頁回來時以此重抓資料
       store.commit('travel/SET_SELECT_CITY', city.value);
@@ -102,11 +106,18 @@ export default {
         .dispatch('map/readCityGeometry', cityPosition[0].Geometry)
         .then((res) => store.state.map.OSM.setView(res, 12));
 
-      // 繪製地圖marker
-      const page = props.page;
       const result = travelData.filter((itm) => itm.City === cityName);
       citySearchResult.value = result;
-      searchResult.value = result;
+      setSearchResult(result);
+
+      // 繪製地圖marker
+      setMarkers(result);
+
+      store.dispatch('showLoader', false);
+    }
+
+    function setMarkers(result) {
+      const page = props.page;
       const markersData = result.map((itm) => {
         return {
           name: itm[`${page}Name`],
@@ -115,18 +126,28 @@ export default {
         };
       });
       store.dispatch('map/setTravelMarkers', { page, markers: markersData });
-
-      store.dispatch('showLoader', false);
     }
 
     function keywordSearch() {
+      store.commit('travel/SET_KEYWORDS', keyword.value);
       if (keyword.value === '') {
         return (searchResult.value = citySearchResult.value);
       }
       const result = citySearchResult.value.filter(
         (itm) => itm[`${props.page}Name`].indexOf(keyword.value) !== -1
       );
+      setSearchResult(result);
+    }
+
+    function setSearchResult(result) {
       searchResult.value = result;
+      store.commit('travel/SET_TRAVEL_DATA', result);
+    }
+
+    function resetSearchHistory() {
+      keyword.value = '';
+      store.commit('travel/SET_KEYWORDS', '');
+      store.commit('travel/SET_ACTIVE_ID', '');
     }
 
     return {

@@ -155,15 +155,18 @@ export default {
         (bus) => bus.RouteUID === props.id
       );
       await getBusEstimatedTime();
-      setBusShape();
-      setStopsMarker();
-      setBusMarker();
+      setMap();
     }
 
     async function changeDirection(direction) {
       if (!endName.value) return;
       currentDirection.value = direction;
       await getBusEstimatedTime();
+      setMap();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function setMap() {
       setBusShape();
       setStopsMarker();
       setBusMarker();

@@ -179,11 +179,11 @@ select {
     transform-origin: center center;
   }
   &::after {
-    animation: shrink1 1.8s infinite;
+    animation: shrink1 1.5s infinite;
   }
-  &::before {
-    animation: shrink1 1.8s 1.2s infinite;
-  }
+  // &::before {
+  //   animation: shrink1 1.8s 1.2s infinite;
+  // }
 }
 
 @keyframes shrink1 {

@@ -66,6 +66,9 @@ export default {
 
     async function searchHandler() {
       store.dispatch('showLoader', true);
+      keyword.value = '';
+      store.commit('bus/SET_BUS_KEYWORDS', '');
+
       const busRoute = await store
         .dispatch('bus/fetchBusCityRoute', city.value)
         .catch((err) => {

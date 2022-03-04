@@ -8,6 +8,8 @@ export default {
     scenicSpotData: null,
     restaurantData: null,
     hotelData: null,
+    keywords: '',
+    activeID: '',
   },
   mutations: {
     SET_TRAVEL_DATA(state, data) {
@@ -25,8 +27,21 @@ export default {
     SET_SELECT_CITY(state, city) {
       state.selectCity = city;
     },
+    SET_KEYWORDS(state, keywords) {
+      state.keywords = keywords;
+    },
+    SET_ACTIVE_ID(state, id) {
+      state.activeID = id;
+    },
   },
   actions: {
+    clearSearchBar({ commit }) {
+      commit('SET_SELECT_CITY', '');
+      commit('SET_KEYWORDS', '');
+      commit('SET_TRAVEL_DATA', null);
+      commit('SET_ACTIVE_ID', '');
+    },
+
     fetchTravelData({ state, dispatch }, page) {
       switch (page) {
         case 'ScenicSpot':

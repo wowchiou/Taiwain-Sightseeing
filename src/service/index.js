@@ -1,15 +1,57 @@
 import axios from 'axios';
 import { GetAuthorizationHeader } from '@/utils';
 
+const getAuthorizationHeader = GetAuthorizationHeader();
+let counterFor403 = 0;
+
 export const httpTDX = axios.create({
   baseURL: 'https://ptx.transportdata.tw/MOTC',
-  headers: GetAuthorizationHeader(),
+  headers: getAuthorizationHeader,
 });
 
 export const httpGIST = axios.create({
   baseURL: 'https://gist.motc.gov.tw/gist_api',
-  headers: GetAuthorizationHeader(),
+  headers: getAuthorizationHeader,
 });
+
+// Add a request interceptor
+httpTDX.interceptors.request.use(
+  function (config) {
+    // Do something before request is sent
+    return config;
+  },
+  function (error) {
+    // Do something with request error
+    console.log(error);
+    return Promise.reject(error);
+  }
+);
+
+// Add a response interceptor
+httpTDX.interceptors.response.use(
+  function (response) {
+    // Any status code that lie within the range of 2xx cause this function to trigger
+    // Do something with response data
+    counterFor403 = 0;
+    return response;
+  },
+  function (error) {
+    // Any status codes that falls outside the range of 2xx cause this function to trigger
+    // Do something with response error
+    const res = error.response;
+    console.log(res);
+    const config = res.config;
+    if (res.status === 403) {
+      if (counterFor403 < 4) {
+        counterFor403++;
+        httpTDX(config);
+      } else {
+        counterFor403 = 0;
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default {
   getCity() {

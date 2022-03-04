@@ -3,7 +3,7 @@
     <li
       v-for="result in searchResult"
       class="search-item"
-      :class="{ active: activeItem === result[`${page}ID`] }"
+      :class="{ active: activeID === result[`${page}ID`] }"
       :key="result[`${page}ID`]"
       @click="listActiveHandler(result)"
     >
@@ -37,10 +37,18 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      activeItem: '',
-    };
+  created() {
+    if (this.activeID) {
+      const result = this.searchResult.find(
+        (itm) => itm[`${this.page}ID`] === this.activeID
+      );
+      this.listActiveHandler(result);
+    }
+  },
+  computed: {
+    activeID() {
+      return this.$store.state.travel.activeID;
+    },
   },
   watch: {
     searchResult() {
@@ -51,7 +59,7 @@ export default {
     listActiveHandler(itemData) {
       const lat = itemData.Position.PositionLat;
       const lng = itemData.Position.PositionLon;
-      this.activeItem = itemData[`${this.page}ID`];
+      this.$store.commit('travel/SET_ACTIVE_ID', itemData[`${this.page}ID`]);
       this.$store.state.map.OSM.setView([lat, lng], 18);
       this.$store.state.map.markersCluster.eachLayer((layer) => {
         const layerPosition = layer._latlng;
