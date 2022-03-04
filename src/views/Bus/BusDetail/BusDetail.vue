@@ -34,7 +34,7 @@
 
     <div class="refresh" @click="setMap">
       <span>
-        <img src="/images/refresh.svg" alt="" />
+        <img src="images/refresh.svg" alt="" />
       </span>
     </div>
   </div>
