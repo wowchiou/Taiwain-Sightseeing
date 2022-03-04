@@ -62,6 +62,7 @@ export default {
 
     function setMap(position) {
       if (store.state.map.OSM) {
+        console.log('map clear');
         store.dispatch('map/clearBusMap');
         store.dispatch('map/clearMarkersCluster');
       }

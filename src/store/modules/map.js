@@ -208,7 +208,6 @@ export default {
     },
 
     setBusStopsMarker({ state }, stops) {
-      // console.log(stops);
       stopsFeatureGroup.clearLayers();
       stops.forEach((stop, idx) => {
         const lat = stop.StopPosition.PositionLat;
