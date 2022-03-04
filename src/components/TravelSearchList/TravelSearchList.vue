@@ -12,6 +12,7 @@
           name: 'travel-detail',
           params: { id: result[`${page}ID`], name: result[`${page}Name`] },
         }"
+        @click="listActiveHandler(result)"
       >
         <i class="fas fa-link"></i>
       </AppLink>

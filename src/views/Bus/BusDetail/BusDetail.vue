@@ -31,6 +31,10 @@
     </div>
 
     <BusStopsList :busStopTime="busStopTime" />
+
+    <div class="refresh" @click="setMap">
+      <span>&#x27F2;</span>
+    </div>
   </div>
 </template>
 
@@ -151,19 +155,18 @@ export default {
       busStopsResult.value = busStopsResponse.filter(
         (bus) => bus.RouteUID === props.id
       );
-      await getBusEstimatedTime();
       setMap();
     }
 
     async function changeDirection(direction) {
       if (!endName.value) return;
       currentDirection.value = direction;
-      await getBusEstimatedTime();
-      setMap();
+      await setMap();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function setMap() {
+    async function setMap() {
+      await getBusEstimatedTime();
       setBusShape();
       setStopsMarker();
       setBusMarker();
@@ -177,6 +180,7 @@ export default {
       busStopTime,
       startName,
       endName,
+      setMap,
     };
   },
 };

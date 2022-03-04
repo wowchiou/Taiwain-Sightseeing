@@ -70,7 +70,7 @@ export default {
           city.value = selectCity.value;
           keyword.value = store.state.travel.keywords;
           searchResult.value = store.state.travel.travelData;
-          setMarkers(travelData);
+          setMarkers(store.state.travel.travelData);
         }
         store.dispatch('showLoader', false);
       },
@@ -117,13 +117,15 @@ export default {
 
     function keywordSearch() {
       store.commit('travel/SET_KEYWORDS', keyword.value);
-      if (keyword.value === '') {
-        return (searchResult.value = citySearchResult.value);
-      }
-      const result = citySearchResult.value.filter(
-        (itm) => itm[`${props.page}Name`].indexOf(keyword.value) !== -1
-      );
-      setSearchResult(result);
+      store.dispatch('travel/fetchTravelData', props.page).then((res) => {
+        if (keyword.value === '') {
+          return setSearchResult(res);
+        }
+        const result = res.filter(
+          (itm) => itm[`${props.page}Name`].indexOf(keyword.value) !== -1
+        );
+        setSearchResult(result);
+      });
     }
 
     function setSearchResult(result) {
