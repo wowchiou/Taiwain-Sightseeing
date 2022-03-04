@@ -122,12 +122,6 @@ export default {
       commit('SET_MARKER', marker.addTo(state.OSM));
     },
 
-    // clearMarker({ state }) {
-    //   if (state.marker) {
-    //     state.OSM.removeLayer(state.marker);
-    //   }
-    // },
-
     clearMarkersCluster({ state }) {
       if (state.markersCluster) {
         state.markersCluster.clearLayers();

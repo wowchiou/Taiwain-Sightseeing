@@ -61,6 +61,10 @@ export default {
       });
 
     function setMap(position) {
+      if (store.state.map.OSM) {
+        store.dispatch('map/clearBusMap');
+        store.dispatch('map/clearMarkersCluster');
+      }
       const OSM = L.map('map', {
         center: position,
         zoom: 15,
