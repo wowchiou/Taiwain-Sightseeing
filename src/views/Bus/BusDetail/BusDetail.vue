@@ -33,7 +33,9 @@
     <BusStopsList :busStopTime="busStopTime" />
 
     <div class="refresh" @click="setMap">
-      <span>&#x27F2;</span>
+      <span>
+        <img src="/images/refresh.svg" alt="" />
+      </span>
     </div>
   </div>
 </template>

@@ -4,6 +4,7 @@
       class="bus-stop"
       v-for="(stop, stopIDX) in busStopTime"
       :key="stop.StopUID"
+      @click="setStopView(stop.StopPosition)"
     >
       <div class="stop-number">{{ stopIDX + 1 }}</div>
 
@@ -24,9 +25,13 @@
 </template>
 
 <script>
+import { useStore } from 'vuex';
+
 export default {
   props: ['busStopTime'],
   setup() {
+    const store = useStore();
+
     function formateEstimateTime(detail) {
       const detailTimeResult = [];
       if (detail.length <= 0) {
@@ -55,6 +60,7 @@ export default {
       }
       return detailTimeResult;
     }
+
     function renderEstimateText(time, plate) {
       const minutes = Math.floor(time / 60);
       const plateNumb = plate || '';
@@ -67,7 +73,13 @@ export default {
       return { class: 'almost', text: `${plateNumb} ${minutes}分鐘` };
     }
 
-    return { formateEstimateTime };
+    function setStopView(position) {
+      const { PositionLat, PositionLon } = position;
+      store.state.map.OSM.setView([PositionLat, PositionLon], 18);
+      store.commit('SET_MAP_ACTIVE', true);
+    }
+
+    return { formateEstimateTime, setStopView };
   },
 };
 </script>
