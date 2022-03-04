@@ -1,4 +1,6 @@
 import axios from 'axios';
+import router from '@/router';
+import store from '@/store';
 import { GetAuthorizationHeader } from '@/utils';
 
 const getAuthorizationHeader = GetAuthorizationHeader();
@@ -14,44 +16,47 @@ export const httpGIST = axios.create({
   headers: getAuthorizationHeader,
 });
 
-// Add a request interceptor
-httpTDX.interceptors.request.use(
-  function (config) {
-    // Do something before request is sent
-    return config;
-  },
-  function (error) {
-    // Do something with request error
-    console.log(error);
-    return Promise.reject(error);
-  }
-);
-
 // Add a response interceptor
-httpTDX.interceptors.response.use(
-  function (response) {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
+httpGIST.interceptors.response.use(
+  function onSuccess(response) {
     counterFor403 = 0;
     return response;
   },
-  function (error) {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
-    const res = error.response;
-    console.log(res);
-    const config = res.config;
-    if (res.status === 403) {
-      if (counterFor403 < 4) {
-        counterFor403++;
-        httpTDX(config);
-      } else {
-        counterFor403 = 0;
-      }
+  function onFailed(error) {
+    console.log(error);
+    const { status, config } = error.response;
+    if (status === 403) {
+      http403Error(httpGIST, config);
     }
     return Promise.reject(error);
   }
 );
+
+httpTDX.interceptors.response.use(
+  function onSuccess(response) {
+    counterFor403 = 0;
+    return response;
+  },
+  function onFailed(error) {
+    console.log(error);
+    const { status, config } = error.response;
+    if (status === 403) {
+      http403Error(httpTDX, config);
+    }
+    return Promise.reject(error);
+  }
+);
+
+function http403Error(instance, config) {
+  if (counterFor403 < 4) {
+    counterFor403++;
+    instance(config);
+  } else {
+    counterFor403 = 0;
+    store.dispatch('showLoader', false);
+    router.push({ name: 'network-error' });
+  }
+}
 
 export default {
   getCity() {

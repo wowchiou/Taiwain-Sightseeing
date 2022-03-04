@@ -29,7 +29,6 @@
 <script>
 import { ref, watchEffect, computed } from 'vue';
 import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
 import ButtonBackToFrontPage from '@/components/ButtonBackToFrontPage';
 import TravelDetailItem from '@/components/TravelDetailItem';
 
@@ -50,19 +49,16 @@ export default {
   },
   setup(props) {
     const store = useStore();
-    const router = useRouter();
 
     const data = ref(null);
     const isMapInit = computed(() => store.state.map.OSM || null);
 
     watchEffect(async () => {
       if (isMapInit.value) {
-        const result = await store
-          .dispatch('travel/fetchTravelData', props.page)
-          .catch((err) => {
-            console.log(err);
-            router.push({ name: 'network-error' });
-          });
+        const result = await store.dispatch(
+          'travel/fetchTravelData',
+          props.page
+        );
 
         data.value = result.find((itm) => itm[`${props.page}ID`] === props.id);
 
@@ -84,10 +80,6 @@ export default {
         store.state.map.OSM.setView([lat, lng], 15);
       }
     });
-
-    // function backHandler() {
-    //   router.back();
-    // }
 
     function isEmptyObject(data) {
       return JSON.stringify(data) === '{}';

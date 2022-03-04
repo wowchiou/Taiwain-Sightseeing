@@ -18,6 +18,11 @@ const routes = [
         path: '',
         name: 'travel-index',
         props: true,
+        beforeEnter: (to, from) => {
+          if (to.params.page === from.params.page) {
+            to.query.prev = true;
+          }
+        },
         component: () => import('@/views/Travel/TravelIndex'),
       },
       {

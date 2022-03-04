@@ -31,7 +31,6 @@
 <script>
 import { ref } from 'vue';
 import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
 import MapLayout from '@/layouts/MapLayout';
 import CitySelector from '@/components/CitySelector';
 import CityKeywordInput from '@/components/CityKeywordInput';
@@ -47,7 +46,6 @@ export default {
   },
   setup() {
     const store = useStore();
-    const router = useRouter();
 
     const city = ref('');
     const keyword = ref('');
@@ -59,20 +57,14 @@ export default {
       keyword.value = '';
 
       store.dispatch('showLoader', true);
-      const bikeStation = await store
-        .dispatch('bike/fetchBikeStation', city.value)
-        .catch((err) => {
-          console.log(err);
-          store.dispatch('showLoader', false);
-          router.push({ name: 'network-error' });
-        });
-      const bikeAvailability = await store
-        .dispatch('bike/fetchBikeAvailability', city.value)
-        .catch((err) => {
-          console.log(err);
-          store.dispatch('showLoader', false);
-          router.push({ name: 'network-error' });
-        });
+      const bikeStation = await store.dispatch(
+        'bike/fetchBikeStation',
+        city.value
+      );
+      const bikeAvailability = await store.dispatch(
+        'bike/fetchBikeAvailability',
+        city.value
+      );
       const bikeTotalData = bikeStation.map((station) => {
         const bikeDetail = bikeAvailability.find(
           (bike) => bike.StationUID === station.StationUID
@@ -86,13 +78,7 @@ export default {
       const cityName = cityStation.find(
         (itm) => itm.City === city.value
       ).CityName;
-      const cityPosition = await store
-        .dispatch('fetchCityAddress', cityName)
-        .catch((err) => {
-          console.log(err);
-          store.dispatch('showLoader', false);
-          router.push({ name: 'network-error' });
-        });
+      const cityPosition = await store.dispatch('fetchCityAddress', cityName);
 
       // 讀取市中心經緯度
       await store

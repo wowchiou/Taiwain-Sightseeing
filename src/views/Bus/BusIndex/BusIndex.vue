@@ -29,7 +29,6 @@
 <script>
 import { ref } from 'vue';
 import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
 import CitySelector from '@/components/CitySelector';
 import CityKeywordInput from '@/components/CityKeywordInput';
 import BusSearchList from '@/components/BusSearchList';
@@ -43,7 +42,6 @@ export default {
   },
   setup() {
     const store = useStore();
-    const router = useRouter();
     const city = ref('');
     const keyword = ref('');
     const busResult = ref([]);
@@ -69,18 +67,14 @@ export default {
       keyword.value = '';
       store.commit('bus/SET_BUS_KEYWORDS', '');
 
-      const busRoute = await store
-        .dispatch('bus/fetchBusCityRoute', city.value)
-        .catch((err) => {
-          console.log(err);
-          router.push({ name: 'network-error' });
-        });
-      const busStopRoute = await store
-        .dispatch('bus/fetchBusCityStopOfRoute', city.value)
-        .catch((err) => {
-          console.log(err);
-          router.push({ name: 'network-error' });
-        });
+      const busRoute = await store.dispatch(
+        'bus/fetchBusCityRoute',
+        city.value
+      );
+      const busStopRoute = await store.dispatch(
+        'bus/fetchBusCityStopOfRoute',
+        city.value
+      );
       const busTotalResult = busRoute.map((bus) => {
         const stopRoute = busStopRoute.find(
           (stop) => stop.RouteUID === bus.RouteUID

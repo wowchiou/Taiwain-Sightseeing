@@ -83,8 +83,8 @@ export default {
 
     watch(
       () => store.state.map.OSM,
-      () => {
-        if (store.state.map.OSM) {
+      (OSM) => {
+        if (OSM) {
           getBusData();
         }
       },
@@ -96,11 +96,10 @@ export default {
     }
 
     async function setBusMarker() {
-      const busTimeResponse = await store
-        .dispatch('bus/fetchRealTimeOfArrival', apiPostData)
-        .catch((err) => {
-          console.log(err);
-        });
+      const busTimeResponse = await store.dispatch(
+        'bus/fetchRealTimeOfArrival',
+        apiPostData
+      );
       const busData = busTimeResponse.filter(
         (itm) => itm.Direction === currentDirection.value
       );
@@ -108,11 +107,10 @@ export default {
     }
 
     async function setBusShape() {
-      const shapeResponse = await store
-        .dispatch('bus/fetchBusShape', apiPostData)
-        .catch((err) => {
-          console.log(err);
-        });
+      const shapeResponse = await store.dispatch(
+        'bus/fetchBusShape',
+        apiPostData
+      );
       for (let i = 0; i < shapeResponse.length; i++) {
         const shape = shapeResponse[i];
         if (shape.RouteUID === props.id) {
@@ -146,11 +144,10 @@ export default {
     }
 
     async function getBusData() {
-      const busStopsResponse = await store
-        .dispatch('bus/fetchBusStopOfRoute', apiPostData)
-        .catch((err) => {
-          console.log(err);
-        });
+      const busStopsResponse = await store.dispatch(
+        'bus/fetchBusStopOfRoute',
+        apiPostData
+      );
       busStopsResult.value = busStopsResponse.filter(
         (bus) => bus.RouteUID === props.id
       );

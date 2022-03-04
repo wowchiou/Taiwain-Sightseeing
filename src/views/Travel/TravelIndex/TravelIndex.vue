@@ -27,7 +27,6 @@
 <script>
 import { ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
 import CitySelector from '@/components/CitySelector';
 import CityKeywordInput from '@/components/CityKeywordInput';
 import TravelSearchList from '@/components/TravelSearchList';
@@ -40,7 +39,6 @@ export default {
 
   setup(props) {
     const store = useStore();
-    const router = useRouter();
 
     const city = ref('');
     const keyword = ref('');
@@ -55,34 +53,29 @@ export default {
 
     watch(
       () => props.page,
-      async (page, prevPage) => {
-        if (page !== prevPage) {
-          // 換頁時清除之前搜尋紀錄
-          city.value = '';
-          searchResult.value = [];
+      async () => {
+        store.dispatch('showLoader', true);
+        // 換頁時清除之前搜尋紀錄
+        city.value = '';
+        searchResult.value = [];
 
-          // 清空marker
-          store.dispatch('map/clearMarkersCluster');
+        // 清空marker
+        store.dispatch('map/clearMarkersCluster');
 
-          // 獲取景點、餐飲、旅宿資料
-          travelData = await store
-            .dispatch('travel/fetchTravelData', page)
-            .catch((err) => {
-              console.log(err);
-              router.push({ name: 'network-error' });
-            });
+        // 獲取景點、餐飲、旅宿資料
+        travelData = await store.dispatch('travel/fetchTravelData', props.page);
+
+        // 從詳細頁回來重新搜尋之前縣市資料
+        if (selectCity.value) {
+          city.value = selectCity.value;
+          keyword.value = store.state.travel.keywords;
+          searchResult.value = store.state.travel.travelData;
+          setMarkers(travelData);
         }
+        store.dispatch('showLoader', false);
       },
       { immediate: true }
     );
-
-    // 從詳細頁回來重新搜尋之前縣市資料
-    if (selectCity.value) {
-      city.value = selectCity.value;
-      keyword.value = store.state.travel.keywords;
-      searchResult.value = store.state.travel.travelData;
-      setMarkers(travelData);
-    }
 
     async function searchHandler() {
       store.dispatch('showLoader', true);
@@ -93,13 +86,7 @@ export default {
 
       // 抓取市中心位置
       const cityName = cityData.find((itm) => itm.City === city.value).CityName;
-      const cityPosition = await store
-        .dispatch('fetchCityAddress', cityName)
-        .catch((err) => {
-          console.log(err);
-          store.dispatch('showLoader', false);
-          router.push({ name: 'network-error' });
-        });
+      const cityPosition = await store.dispatch('fetchCityAddress', cityName);
 
       // 讀取市中心經緯度
       await store

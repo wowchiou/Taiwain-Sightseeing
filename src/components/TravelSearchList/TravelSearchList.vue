@@ -5,9 +5,8 @@
       class="search-item"
       :class="{ active: activeID === result[`${page}ID`] }"
       :key="result[`${page}ID`]"
-      @click="listActiveHandler(result)"
     >
-      <p>{{ result[`${page}Name`] }}</p>
+      <p @click="listActiveHandler(result)">{{ result[`${page}Name`] }}</p>
       <AppLink
         :to="{
           name: 'travel-detail',
