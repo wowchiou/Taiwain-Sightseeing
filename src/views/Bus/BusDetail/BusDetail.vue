@@ -95,19 +95,42 @@ export default {
       { immediate: true }
     );
 
-    function setStopsMarker() {
-      store.dispatch('map/setBusStopsMarker', busStops.value.Stops);
-    }
-
-    async function setBusMarker() {
-      const busTimeResponse = await store.dispatch(
-        'bus/fetchRealTimeOfArrival',
+    async function getBusData() {
+      const busStopsResponse = await store.dispatch(
+        'bus/fetchBusStopOfRoute',
         apiPostData
       );
-      const busData = busTimeResponse.filter(
-        (itm) => itm.Direction === currentDirection.value
+      busStopsResult.value = busStopsResponse.filter(
+        (bus) => bus.RouteUID === props.id
       );
-      store.dispatch('map/setBusMarker', busData);
+      setMap();
+    }
+
+    async function setMap() {
+      store.dispatch('showLoader', true);
+      await getBusEstimatedTime();
+      await setBusShape();
+      await setStopsMarker();
+      await setBusMarker();
+      store.dispatch('showLoader', false);
+    }
+
+    async function getBusEstimatedTime() {
+      const busEstimatedTime = await store
+        .dispatch('bus/fetchEstimatedTimeOfArrival', apiPostData)
+        .catch((err) => {
+          console.log(err);
+        });
+      const result = busStops.value.Stops.map((stop) => {
+        let busTime = busEstimatedTime.filter(
+          (bus) =>
+            bus.StopName.Zh_tw === stop.StopName.Zh_tw &&
+            (String(bus.Direction) === 'undefined' ||
+              bus.Direction === currentDirection.value)
+        );
+        return { ...stop, detail: busTime };
+      });
+      busStopTime.value = result;
     }
 
     async function setBusShape() {
@@ -129,33 +152,19 @@ export default {
       }
     }
 
-    async function getBusEstimatedTime() {
-      const busEstimatedTime = await store
-        .dispatch('bus/fetchEstimatedTimeOfArrival', apiPostData)
-        .catch((err) => {
-          console.log(err);
-        });
-      const result = busStops.value.Stops.map((stop) => {
-        let busTime = busEstimatedTime.filter(
-          (bus) =>
-            bus.StopName.Zh_tw === stop.StopName.Zh_tw &&
-            (String(bus.Direction) === 'undefined' ||
-              bus.Direction === currentDirection.value)
-        );
-        return { ...stop, detail: busTime };
-      });
-      busStopTime.value = result;
+    async function setStopsMarker() {
+      await store.dispatch('map/setBusStopsMarker', busStops.value.Stops);
     }
 
-    async function getBusData() {
-      const busStopsResponse = await store.dispatch(
-        'bus/fetchBusStopOfRoute',
+    async function setBusMarker() {
+      const busTimeResponse = await store.dispatch(
+        'bus/fetchRealTimeOfArrival',
         apiPostData
       );
-      busStopsResult.value = busStopsResponse.filter(
-        (bus) => bus.RouteUID === props.id
+      const busData = busTimeResponse.filter(
+        (itm) => itm.Direction === currentDirection.value
       );
-      setMap();
+      store.dispatch('map/setBusMarker', busData);
     }
 
     async function changeDirection(direction) {
@@ -163,13 +172,6 @@ export default {
       currentDirection.value = direction;
       await setMap();
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    async function setMap() {
-      await getBusEstimatedTime();
-      setBusShape();
-      setStopsMarker();
-      setBusMarker();
     }
 
     return {
