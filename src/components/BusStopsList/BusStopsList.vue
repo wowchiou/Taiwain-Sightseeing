@@ -76,12 +76,14 @@ export default {
         detailTimeResult.push({ class: 'error', text: '無發車資料' });
       }
 
+      detailTimeResult.sort((a, b) => a.time - b.time);
       return detailTimeResult;
     }
 
     function renderNextBusTime(nextBusTime, plateNumb) {
       const date = new Date(nextBusTime);
-      if (date.getTime() < Date.now()) return false;
+      const time = date.getTime();
+      if (time < Date.now()) return false;
       let hours = date.getHours();
       let minutes = date.getMinutes();
       const plateNumber = `${plateNumb}` || '';
@@ -90,7 +92,7 @@ export default {
       return {
         class: 'almost',
         text: `${plateNumber}${hours}:${minutes}`,
-        time: date,
+        time,
       };
     }
 
