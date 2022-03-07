@@ -55,7 +55,9 @@ export default {
                 timeNextBusTime,
                 PlateNumb
               );
-              detailTimeResult.push(nextBustTime);
+              if (nextBustTime) {
+                detailTimeResult.push(nextBustTime);
+              }
               break;
             }
           }
@@ -64,7 +66,9 @@ export default {
           detailTimeResult.push(estimateText);
         } else if (NextBusTime && !EstimateTime && !Estimates) {
           const nextBustTime = renderNextBusTime(NextBusTime, PlateNumb);
-          detailTimeResult.push(nextBustTime);
+          if (nextBustTime) {
+            detailTimeResult.push(nextBustTime);
+          }
         }
       });
 
@@ -72,12 +76,12 @@ export default {
         detailTimeResult.push({ class: 'error', text: '無發車資料' });
       }
 
-      // console.log(detailTimeResult.sort((a, b) => a.time - b.time));
       return detailTimeResult;
     }
 
     function renderNextBusTime(nextBusTime, plateNumb) {
       const date = new Date(nextBusTime);
+      if (date.getTime() < Date.now()) return false;
       let hours = date.getHours();
       let minutes = date.getMinutes();
       const plateNumber = `${plateNumb}` || '';
