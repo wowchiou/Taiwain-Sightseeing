@@ -14,12 +14,12 @@
   }
   p {
     font-size: 2rem;
-    .appLink,
-    span {
+    .appLink {
       cursor: pointer;
-      margin: 0 0.5rem;
-      color: $c-secondary;
-      border-bottom: 2px solid $c-secondary;
+      margin-right: 0.5rem;
+      color: $c-light;
+      border-bottom: 1px solid $c-light;
+      font-weight: 700;
     }
   }
 }
