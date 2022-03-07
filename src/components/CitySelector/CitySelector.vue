@@ -10,7 +10,7 @@
           searchHandler();
         },
       }"
-      :disabled="!$store.state.map.OSM"
+      :disabled="!initMap"
     >
       <option disabled value="">-- 請選擇城市 --</option>
       <option v-for="city in cities" :key="city.City" :value="city.City">
@@ -39,6 +39,11 @@ export default {
     cities: {
       type: Array,
       required: true,
+    },
+  },
+  computed: {
+    initMap() {
+      return this.$store.state.map.OSM;
     },
   },
 };

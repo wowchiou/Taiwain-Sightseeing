@@ -33,44 +33,73 @@ export default {
     const store = useStore();
 
     function formateEstimateTime(detail) {
-      const detailTimeResult = [];
-      if (detail.length <= 0) {
-        detailTimeResult.push({ class: 'error', text: '無預估資料' });
-        return detailTimeResult;
-      }
+      let detailTimeResult = [];
+
       detail.forEach((bus) => {
-        const { EstimateTime, PlateNumb, Estimates } = bus;
+        const { EstimateTime, PlateNumb, Estimates, NextBusTime } = bus;
         if (Estimates && Estimates.length > 0) {
-          const times = Estimates.filter((time) => time.EstimateTime);
-          if (times.length === 0) return;
-          times.forEach((time) => {
-            const estimateText = renderEstimateText(
-              time.EstimateTime,
-              time.PlateNumb
-            );
-            return detailTimeResult.push(estimateText);
-          });
+          for (const time of Estimates) {
+            const {
+              timeEstimateTime = EstimateTime,
+              timeNextBusTime = NextBusTime,
+            } = time;
+            if (timeEstimateTime || timeEstimateTime === 0) {
+              const estimateText = renderEstimateText(
+                timeEstimateTime,
+                PlateNumb
+              );
+              detailTimeResult.push(estimateText);
+              break;
+            } else if (timeNextBusTime) {
+              const nextBustTime = renderNextBusTime(
+                timeNextBusTime,
+                PlateNumb
+              );
+              detailTimeResult.push(nextBustTime);
+              break;
+            }
+          }
         } else if (EstimateTime || EstimateTime === 0) {
           const estimateText = renderEstimateText(EstimateTime, PlateNumb);
-          return detailTimeResult.push(estimateText);
+          detailTimeResult.push(estimateText);
+        } else if (NextBusTime && !EstimateTime && !Estimates) {
+          const nextBustTime = renderNextBusTime(NextBusTime, PlateNumb);
+          detailTimeResult.push(nextBustTime);
         }
       });
+
       if (detailTimeResult.length === 0) {
-        detailTimeResult.push({ class: 'notYet', text: '尚未發車' });
+        detailTimeResult.push({ class: 'error', text: '無發車資料' });
       }
+
+      // console.log(detailTimeResult.sort((a, b) => a.time - b.time));
       return detailTimeResult;
+    }
+
+    function renderNextBusTime(nextBusTime, plateNumb) {
+      const date = new Date(nextBusTime);
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      const plateNumber = `${plateNumb}` || '';
+      if (hours < 10) hours = `0${hours}`;
+      if (minutes < 10) minutes = `0${minutes}`;
+      return {
+        class: 'almost',
+        text: `${plateNumber}${hours}:${minutes}`,
+        time: date,
+      };
     }
 
     function renderEstimateText(time, plate) {
       const minutes = Math.floor(time / 60);
       const plateNumb = plate || '';
       if (time <= 0) {
-        return { class: 'now', text: '抵達' };
+        return { class: 'now', text: '抵達', time };
       }
       if (minutes === 0) {
-        return { class: 'now', text: '即將到站' };
+        return { class: 'now', text: '即將到站', time };
       }
-      return { class: 'almost', text: `${plateNumb} ${minutes}分鐘` };
+      return { class: 'almost', text: `${plateNumb} ${minutes}分鐘`, time };
     }
 
     function setStopView(position) {

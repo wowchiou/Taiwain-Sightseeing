@@ -44,8 +44,8 @@ export default {
     },
 
     // 獲取指定路線上各個客運當前位置
-    fetchRealTimeOfArrival(context, bus) {
-      return Api.getRealTimeOfArrival(bus.city, bus.route)
+    fetchRealTimeOfArrival(context, { city, route }) {
+      return Api.getRealTimeOfArrival(city, route)
         .then((res) => res.data)
         .catch((err) => {
           throw err;
@@ -53,8 +53,8 @@ export default {
     },
 
     // 獲取指定客運路線的站牌資訊
-    fetchBusStopOfRoute(context, bus) {
-      return Api.getBusStopOfRoute(bus.city, bus.route)
+    fetchBusStopOfRoute(context, { city, route }) {
+      return Api.getBusStopOfRoute(city, route)
         .then((res) => res.data)
         .catch((err) => {
           throw err;
@@ -62,8 +62,8 @@ export default {
     },
 
     // 獲取指定客運路線的預估到站資料
-    fetchEstimatedTimeOfArrival(context, bus) {
-      return Api.getEstimatedTimeOfArrival(bus.city, bus.route)
+    fetchEstimatedTimeOfArrival(context, { city, route }) {
+      return Api.getEstimatedTimeOfArrival(city, route)
         .then((res) => res.data)
         .catch((err) => {
           throw err;
@@ -71,8 +71,8 @@ export default {
     },
 
     // 獲取指定客運路線線型
-    fetchBusShape(context, bus) {
-      return Api.getBusShape(bus.city, bus.route)
+    fetchBusShape(context, { city, route }) {
+      return Api.getBusShape(city, route)
         .then((res) => res.data)
         .catch((err) => {
           throw err;

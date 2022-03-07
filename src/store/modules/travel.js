@@ -43,20 +43,23 @@ export default {
     },
 
     fetchTravelData({ state, dispatch }, page) {
+      const scenicSpotData = state.scenicSpotData;
+      const restaurantData = state.restaurantData;
+      const hotelData = state.hotelData;
       switch (page) {
         case 'ScenicSpot':
-          if (state.scenicSpotData) {
-            return state.scenicSpotData;
+          if (scenicSpotData) {
+            return scenicSpotData;
           }
           return dispatch('fetchScenicSpot');
         case 'Restaurant':
-          if (state.restaurantData) {
-            return state.restaurantData;
+          if (restaurantData) {
+            return restaurantData;
           }
           return dispatch('fetchRestaurant');
         case 'Hotel':
-          if (state.hotelData) {
-            return state.hotelData;
+          if (hotelData) {
+            return hotelData;
           }
           return dispatch('fetchHotel');
       }

@@ -49,7 +49,6 @@ export default {
   },
   setup(props) {
     const store = useStore();
-
     const data = ref(null);
     const isMapInit = computed(() => store.state.map.OSM || null);
 

@@ -3,7 +3,7 @@
     <router-view></router-view>
 
     <teleport to="#portal-loader">
-      <AppLoader v-if="loader" />
+      <AppLoader v-if="loader && initMap" />
     </teleport>
   </div>
 </template>
@@ -18,6 +18,9 @@ export default {
   computed: {
     loader() {
       return this.$store.state.loader;
+    },
+    initMap() {
+      return this.$store.state.map.OSM;
     },
   },
 };

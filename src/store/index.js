@@ -24,8 +24,8 @@ export default createStore({
     SET_CITIES(state, cities) {
       state.cities = cities;
     },
-    SET_CITY_ADDRESS(state, address) {
-      state.cityAddress[address.name] = address.data;
+    SET_CITY_ADDRESS(state, { name, data }) {
+      state.cityAddress[name] = data;
     },
     SET_MAP_ACTIVE(state, active) {
       state.mapActive = active;

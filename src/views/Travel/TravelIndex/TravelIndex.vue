@@ -55,6 +55,7 @@ export default {
       () => props.page,
       async () => {
         store.dispatch('showLoader', true);
+
         // 換頁時清除之前搜尋紀錄
         city.value = '';
         searchResult.value = [];
@@ -72,6 +73,7 @@ export default {
           searchResult.value = store.state.travel.travelData;
           await setMarkers(store.state.travel.travelData);
         }
+
         store.dispatch('showLoader', false);
       },
       { immediate: true }

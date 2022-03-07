@@ -45,8 +45,6 @@ export default {
 
     clearData();
 
-    store.dispatch('showLoader', true);
-
     getUserPosition()
       .then((position) => {
         setMap(position);
@@ -55,14 +53,10 @@ export default {
       })
       .catch(() => {
         setMap([25.0467351, 121.5119929]);
-      })
-      .finally(() => {
-        store.dispatch('showLoader', false);
       });
 
     function setMap(position) {
       if (store.state.map.OSM) {
-        console.log('map clear');
         store.dispatch('map/clearBusMap');
         store.dispatch('map/clearMarkersCluster');
       }

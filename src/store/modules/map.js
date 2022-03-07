@@ -123,18 +123,20 @@ export default {
     },
 
     clearMarkersCluster({ state }) {
-      if (state.markersCluster) {
-        state.markersCluster.clearLayers();
+      const markersCluster = state.markersCluster;
+      if (markersCluster) {
+        markersCluster.clearLayers();
       }
     },
 
-    setTravelMarkers({ state, commit, dispatch }, data) {
+    setTravelMarkers({ state, commit, dispatch }, { page, markers }) {
       dispatch('clearMarkersCluster');
       const markersCluster = createMarkersCluster();
-      const travelIcon = getTravelIcon(data.page);
-      data.markers.forEach((itm) => {
+      const travelIcon = getTravelIcon(page);
+      markers.forEach((itm) => {
+        const { position, name, id } = itm;
         const html = `<div class="map-circle marker-circle">${travelIcon}</div>`;
-        const layer = createMarker(itm.position, {
+        const layer = createMarker(position, {
           icon: L.divIcon({
             html,
             className: 'travelIcon',
@@ -146,8 +148,8 @@ export default {
           className: 'travel-popup',
         }).setContent(
           `
-          <p class="popup-name">${itm.name}</p>
-          <a class="popup-link" href="#/travel/${data.page}/${itm.id}/${itm.name}">
+          <p class="popup-name">${name}</p>
+          <a class="popup-link" href="#/travel/${page}/${id}/${name}">
             <i class="fas fa-link"></i>
           </a>
           `
@@ -165,10 +167,11 @@ export default {
       dispatch('clearMarkersCluster');
       const markersCluster = createMarkersCluster();
       data.forEach((bike) => {
+        const { StationPosition, detail, ServiceType, StationName } = bike;
         const html = `<div class="map-circle marker-circle"><i class="fas fa-bicycle"></i></div>`;
         const bikePosition = [
-          bike.StationPosition.PositionLat,
-          bike.StationPosition.PositionLon,
+          StationPosition.PositionLat,
+          StationPosition.PositionLon,
         ];
         const layer = createMarker(bikePosition, {
           icon: L.divIcon({
@@ -177,9 +180,9 @@ export default {
             iconSize: L.point(40, 40),
           }),
         });
-        const status = stationStatus(bike.detail.ServiceStatus);
-        const type = bikeType(bike.ServiceType);
-        const name = formateStationName(bike.StationName.Zh_tw);
+        const status = stationStatus(detail.ServiceStatus);
+        const type = bikeType(ServiceType);
+        const name = formateStationName(StationName.Zh_tw);
         const popup = L.popup({
           minWidth: 250,
           className: 'bike-popup',
@@ -193,8 +196,8 @@ export default {
             <p class="bike-name">${name}</p>
           </div>
           <div class="bike-body">
-            <p class="bike-rent">可出借<span>${bike.detail.AvailableRentBikes}</span>輛</p>
-            <p class="bike-return">可歸還<span>${bike.detail.AvailableReturnBikes}</span>輛</p>
+            <p class="bike-rent">可出借<span>${detail.AvailableRentBikes}</span>輛</p>
+            <p class="bike-return">可歸還<span>${detail.AvailableReturnBikes}</span>輛</p>
           </div>
           `
         );
@@ -210,8 +213,9 @@ export default {
     setBusStopsMarker({ state }, stops) {
       stopsFeatureGroup.clearLayers();
       stops.forEach((stop, idx) => {
-        const lat = stop.StopPosition.PositionLat;
-        const lng = stop.StopPosition.PositionLon;
+        const { StopPosition, StopName } = stop;
+        const lat = StopPosition.PositionLat;
+        const lng = StopPosition.PositionLon;
         if (idx === 0) {
           state.OSM.setView([lat, lng], 14);
         }
@@ -226,7 +230,7 @@ export default {
         const popup = L.popup({
           minWidth: 150,
           className: 'stop-popup',
-        }).setContent(`<p>${stop.StopName.Zh_tw}</p>`);
+        }).setContent(`<p>${StopName.Zh_tw}</p>`);
         marker.bindPopup(popup).on('click', () => {
           marker.openPopup();
         });

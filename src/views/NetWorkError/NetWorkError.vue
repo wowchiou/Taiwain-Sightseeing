@@ -4,11 +4,7 @@
       <h1>Network Error</h1>
       <p>抱歉！網路連結異常，請稍後再試！</p>
       <p>
-        您可嘗試回到<span @click="$router.go(-1)">上一頁</span>或<AppLink
-          :to="{ name: 'home' }"
-          replace
-          >返回首頁</AppLink
-        >繼續瀏覽。
+        <AppLink :to="{ name: 'home' }" replace>返回首頁</AppLink>繼續瀏覽。
       </p>
     </div>
   </div>

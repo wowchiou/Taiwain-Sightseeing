@@ -118,18 +118,19 @@ export default {
     }
 
     async function getBusEstimatedTime() {
-      const busEstimatedTime = await store
-        .dispatch('bus/fetchEstimatedTimeOfArrival', apiPostData)
-        .catch((err) => {
-          console.log(err);
-        });
+      const busEstimatedTime = await store.dispatch(
+        'bus/fetchEstimatedTimeOfArrival',
+        apiPostData
+      );
       const result = busStops.value.Stops.map((stop) => {
-        let busTime = busEstimatedTime.filter(
-          (bus) =>
-            bus.StopName.Zh_tw === stop.StopName.Zh_tw &&
-            (String(bus.Direction) === 'undefined' ||
-              bus.Direction === currentDirection.value)
-        );
+        let busTime = busEstimatedTime.filter((bus) => {
+          const { StopName, Direction } = bus;
+          return (
+            StopName.Zh_tw === stop.StopName.Zh_tw &&
+            (String(Direction) === 'undefined' ||
+              Direction === currentDirection.value)
+          );
+        });
         return { ...stop, detail: busTime };
       });
       busStopTime.value = result;
