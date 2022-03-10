@@ -1,24 +1,11 @@
-# taiwain-sightseeing
+# 台灣觀光查詢網
 
-## Project setup
-```
-npm install
-```
+使用 Vue 搭配 TDX api 製作台灣觀光各項資訊的查詢
+技術：<br>
+Vue3、vue-cli4、vuex、scss、RWD、Leaflet.js
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+網站：<br>
+https://wowchiou.github.io/Taiwain-Sightseeing/#/
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+程式碼：<br>
+https://github.com/wowchiou/Taiwain-Sightseeing/tree/dev
