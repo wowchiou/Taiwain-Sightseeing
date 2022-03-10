@@ -1,4 +1,5 @@
 # 台灣觀光查詢網
+nodejs-version: v12.14.0
 
 使用 Vue 搭配 TDX api 製作台灣觀光各項資訊的查詢
 技術：<br>
