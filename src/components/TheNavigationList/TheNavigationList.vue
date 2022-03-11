@@ -1,10 +1,10 @@
 <template>
-  <li class="theNavigationList" data-testId="menu-list">
+  <li class="theNavigationList">
     <AppLink :to="path" :title="title">
       <div>
-        <i :class="iconClass"></i>
+        <i data-testId="icon" :class="iconClass"></i>
       </div>
-      <span v-if="menuActive">{{ title }}</span>
+      <span data-testId="title" v-if="menuActive">{{ title }}</span>
     </AppLink>
   </li>
 </template>

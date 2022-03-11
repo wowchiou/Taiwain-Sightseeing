@@ -6,6 +6,7 @@
   >
     <ul class="menu">
       <TheNavigationList
+        data-testId="menu-list"
         v-for="list in menuList"
         :key="list.title"
         :title="list.title"
@@ -15,7 +16,11 @@
         @click="toggleNavigation(false)"
       />
     </ul>
-    <div class="active-button" @click="toggleNavigation(!menuActive)">
+    <div
+      class="active-button"
+      data-testId="active-button"
+      @click="toggleNavigation(!menuActive)"
+    >
       <i class="fas fa-arrow-right"></i>
     </div>
   </div>

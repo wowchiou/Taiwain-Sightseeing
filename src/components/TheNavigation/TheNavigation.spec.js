@@ -3,9 +3,10 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import { createStore } from '@/store/index.js';
 import { routes } from '@/router';
 import TheNavigation from './TheNavigation.vue';
+import menuList from '@/utils/menu-list.json';
 
 const router = createRouter({
-  history: createWebHashHistory(process.env.BASE_URL),
+  history: createWebHashHistory(),
   routes,
 });
 
@@ -27,9 +28,18 @@ describe('TheNavigation', () => {
     wrapper = mountComponent();
   });
 
-  it('Navigation full page', () => {
-    wrapper.setData({ menuActive: true });
-    // const navigation = wrapper.find('[data-testId="navigation"]');
+  it('toggleNavigation open', async () => {
+    await wrapper.vm.toggleNavigation(true);
     expect(wrapper.classes('active')).toBe(true);
+  });
+
+  it('toggleNavigation close', async () => {
+    await wrapper.vm.toggleNavigation(false);
+    expect(wrapper.classes('active')).toBe(false);
+  });
+
+  it('render navigation menu list', () => {
+    const MENU_LIST = wrapper.findAll('[data-testId="menu-list"]');
+    expect(MENU_LIST).toHaveLength(menuList.length);
   });
 });
