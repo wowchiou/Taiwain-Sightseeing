@@ -1,2 +1,2 @@
-import Bus from './Bus.vue';
+import Bus from "./Bus.vue";
 export default Bus;

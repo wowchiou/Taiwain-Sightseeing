@@ -1,2 +1,2 @@
-import BusIndex from './BusIndex.vue';
+import BusIndex from "./BusIndex.vue";
 export default BusIndex;

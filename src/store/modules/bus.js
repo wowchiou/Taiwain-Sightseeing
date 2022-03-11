@@ -1,11 +1,11 @@
-import Api from '@/service';
+import Api from "@/service";
 
 export default {
   namespaced: true,
   state: {
     busCity: null,
     busRoutes: null,
-    busKeyWords: '',
+    busKeyWords: "",
   },
   mutations: {
     SET_BUS_CITY(state, city) {
@@ -20,9 +20,9 @@ export default {
   },
   actions: {
     resetBusState({ commit }) {
-      commit('SET_BUS_CITY', null);
-      commit('SET_BUS_ROUTES', null);
-      commit('SET_BUS_KEYWORDS', '');
+      commit("SET_BUS_CITY", null);
+      commit("SET_BUS_ROUTES", null);
+      commit("SET_BUS_KEYWORDS", "");
     },
 
     // 獲取指定城市所有客運路線

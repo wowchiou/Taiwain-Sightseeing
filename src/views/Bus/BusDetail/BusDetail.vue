@@ -25,7 +25,7 @@
           :class="{ active: currentDirection === 1 }"
           @click="changeDirection(1)"
         >
-          前往<span>{{ endName || '無返程' }}</span>
+          前往<span>{{ endName || "無返程" }}</span>
         </li>
       </ul>
     </div>
@@ -41,11 +41,11 @@
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue';
-import { useStore } from 'vuex';
-import cityData from '@/utils/city.json';
-import BusStopsList from '@/components/BusStopsList';
-import ButtonBackToFrontPage from '@/components/ButtonBackToFrontPage';
+import { ref, computed, watch } from "vue";
+import { useStore } from "vuex";
+import cityData from "@/utils/city.json";
+import BusStopsList from "@/components/BusStopsList";
+import ButtonBackToFrontPage from "@/components/ButtonBackToFrontPage";
 
 export default {
   components: { BusStopsList, ButtonBackToFrontPage },
@@ -99,7 +99,7 @@ export default {
 
     async function getBusData() {
       const busStopsResponse = await store.dispatch(
-        'bus/fetchBusStopOfRoute',
+        "bus/fetchBusStopOfRoute",
         apiPostData
       );
       busStopsResult.value = busStopsResponse.filter(
@@ -109,17 +109,17 @@ export default {
     }
 
     async function setMap() {
-      store.dispatch('showLoader', true);
+      store.dispatch("showLoader", true);
       await getBusEstimatedTime();
       await setBusShape();
       await setStopsMarker();
       await setBusMarker();
-      store.dispatch('showLoader', false);
+      store.dispatch("showLoader", false);
     }
 
     async function getBusEstimatedTime() {
       const busEstimatedTime = await store.dispatch(
-        'bus/fetchEstimatedTimeOfArrival',
+        "bus/fetchEstimatedTimeOfArrival",
         apiPostData
       );
       const result = busStops.value.Stops.map((stop) => {
@@ -127,7 +127,7 @@ export default {
           const { StopName, Direction } = bus;
           return (
             StopName.Zh_tw === stop.StopName.Zh_tw &&
-            (String(Direction) === 'undefined' ||
+            (String(Direction) === "undefined" ||
               Direction === currentDirection.value)
           );
         });
@@ -138,17 +138,17 @@ export default {
 
     async function setBusShape() {
       const shapeResponse = await store.dispatch(
-        'bus/fetchBusShape',
+        "bus/fetchBusShape",
         apiPostData
       );
       for (let i = 0; i < shapeResponse.length; i++) {
         const shape = shapeResponse[i];
         if (shape.RouteUID === props.id) {
           if (
-            String(shape.Direction) === 'undefined' ||
+            String(shape.Direction) === "undefined" ||
             shape.Direction === currentDirection.value
           ) {
-            await store.dispatch('map/setBusRouteShape', shape);
+            await store.dispatch("map/setBusRouteShape", shape);
             break;
           }
         }
@@ -156,25 +156,25 @@ export default {
     }
 
     async function setStopsMarker() {
-      await store.dispatch('map/setBusStopsMarker', busStops.value.Stops);
+      await store.dispatch("map/setBusStopsMarker", busStops.value.Stops);
     }
 
     async function setBusMarker() {
       const busTimeResponse = await store.dispatch(
-        'bus/fetchRealTimeOfArrival',
+        "bus/fetchRealTimeOfArrival",
         apiPostData
       );
       const busData = busTimeResponse.filter(
         (itm) => itm.Direction === currentDirection.value
       );
-      await store.dispatch('map/setBusMarker', busData);
+      await store.dispatch("map/setBusMarker", busData);
     }
 
     async function changeDirection(direction) {
       if (!endName.value) return;
       currentDirection.value = direction;
       await setMap();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     return {
@@ -192,5 +192,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import './BusDetail.scss';
+@import "./BusDetail.scss";
 </style>

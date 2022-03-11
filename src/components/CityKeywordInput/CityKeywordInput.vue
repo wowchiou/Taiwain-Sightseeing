@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import InputGroup from '@/components/InputGroup';
+import InputGroup from "@/components/InputGroup";
 
 export default {
   components: {
@@ -24,7 +24,7 @@ export default {
   props: {
     modelValue: {
       type: [String, Number],
-      default: '',
+      default: "",
     },
     result: {
       type: Array,
@@ -42,5 +42,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './CityKeywordInput.scss';
+@import "./CityKeywordInput.scss";
 </style>

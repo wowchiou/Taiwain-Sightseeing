@@ -7,18 +7,18 @@
 </template>
 
 <script>
-import MapLayout from '@/layouts/MapLayout';
+import MapLayout from "@/layouts/MapLayout";
 
 export default {
   components: {
     MapLayout,
   },
   created() {
-    this.$store.dispatch('travel/clearSearchBar');
+    this.$store.dispatch("travel/clearSearchBar");
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import './Travel.scss';
+@import "./Travel.scss";
 </style>

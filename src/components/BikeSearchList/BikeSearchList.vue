@@ -37,8 +37,8 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue';
-import { useStore } from 'vuex';
+import { ref, watch } from "vue";
+import { useStore } from "vuex";
 
 export default {
   props: {
@@ -68,11 +68,11 @@ export default {
           layer.openPopup();
         }
       });
-      store.commit('SET_MAP_ACTIVE', true);
+      store.commit("SET_MAP_ACTIVE", true);
     }
 
     function formateStationName(name) {
-      const stationName = name.split('_');
+      const stationName = name.split("_");
       return stationName.length > 1
         ? stationName[stationName.length - 1]
         : stationName[0];
@@ -81,20 +81,20 @@ export default {
     function stationStatus(status) {
       switch (status) {
         case 0:
-          return { class: 'error', text: '停止營運' };
+          return { class: "error", text: "停止營運" };
         case 1:
-          return { class: 'success', text: '正常營運' };
+          return { class: "success", text: "正常營運" };
         case 2:
-          return { class: 'warn', text: '暫停營運' };
+          return { class: "warn", text: "暫停營運" };
       }
     }
 
     function bikeType(type) {
       switch (type) {
         case 1:
-          return 'YouBike1.0';
+          return "YouBike1.0";
         case 2:
-          return 'YouBike2.0';
+          return "YouBike2.0";
       }
     }
 
@@ -110,5 +110,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './BikeSearchList.scss';
+@import "./BikeSearchList.scss";
 </style>

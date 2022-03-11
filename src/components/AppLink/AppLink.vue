@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { RouterLink } from 'vue-router';
+import { RouterLink } from "vue-router";
 
 export default {
   props: {
@@ -25,8 +25,8 @@ export default {
   computed: {
     isExternal() {
       return (
-        typeof this.to === 'string' &&
-        (this.to.startsWith('http') || this.to === 'false')
+        typeof this.to === "string" &&
+        (this.to.startsWith("http") || this.to === "false")
       );
     },
   },
@@ -34,5 +34,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './AppLink.scss';
+@import "./AppLink.scss";
 </style>

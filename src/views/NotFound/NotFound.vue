@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import AppLink from '@/components/AppLink';
+import AppLink from "@/components/AppLink";
 
 export default {
   components: {
@@ -21,5 +21,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './NotFound.scss';
+@import "./NotFound.scss";
 </style>

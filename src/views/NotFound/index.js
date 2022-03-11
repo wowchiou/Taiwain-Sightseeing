@@ -1,2 +1,2 @@
-import NotFound from './NotFound.vue';
+import NotFound from "./NotFound.vue";
 export default NotFound;

@@ -25,23 +25,23 @@
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue';
-import { useStore } from 'vuex';
-import CitySelector from '@/components/CitySelector';
-import CityKeywordInput from '@/components/CityKeywordInput';
-import TravelSearchList from '@/components/TravelSearchList';
-import cityData from '@/utils/city.json';
+import { ref, computed, watch } from "vue";
+import { useStore } from "vuex";
+import CitySelector from "@/components/CitySelector";
+import CityKeywordInput from "@/components/CityKeywordInput";
+import TravelSearchList from "@/components/TravelSearchList";
+import cityData from "@/utils/city.json";
 
 export default {
-  props: ['page'],
+  props: ["page"],
 
   components: { CitySelector, CityKeywordInput, TravelSearchList },
 
   setup(props) {
     const store = useStore();
 
-    const city = ref('');
-    const keyword = ref('');
+    const city = ref("");
+    const keyword = ref("");
     const searchResult = ref([]);
     const citySearchResult = ref([]);
 
@@ -54,17 +54,17 @@ export default {
     watch(
       () => props.page,
       async () => {
-        store.dispatch('showLoader', true);
+        store.dispatch("showLoader", true);
 
         // 換頁時清除之前搜尋紀錄
-        city.value = '';
+        city.value = "";
         searchResult.value = [];
 
         // 清空marker
-        store.dispatch('map/clearMarkersCluster');
+        store.dispatch("map/clearMarkersCluster");
 
         // 獲取景點、餐飲、旅宿資料
-        travelData = await store.dispatch('travel/fetchTravelData', props.page);
+        travelData = await store.dispatch("travel/fetchTravelData", props.page);
 
         // 從詳細頁回來重新搜尋之前縣市資料
         if (selectCity.value) {
@@ -74,25 +74,25 @@ export default {
           await setMarkers(store.state.travel.travelData);
         }
 
-        store.dispatch('showLoader', false);
+        store.dispatch("showLoader", false);
       },
       { immediate: true }
     );
 
     async function searchHandler() {
-      store.dispatch('showLoader', true);
+      store.dispatch("showLoader", true);
       resetSearchHistory();
 
       // 儲存目前選擇的城市，從詳細頁回來時以此重抓資料
-      store.commit('travel/SET_SELECT_CITY', city.value);
+      store.commit("travel/SET_SELECT_CITY", city.value);
 
       // 抓取市中心位置
       const cityName = cityData.find((itm) => itm.City === city.value).CityName;
-      const cityPosition = await store.dispatch('fetchCityAddress', cityName);
+      const cityPosition = await store.dispatch("fetchCityAddress", cityName);
 
       // 讀取市中心經緯度
       await store
-        .dispatch('map/readCityGeometry', cityPosition[0].Geometry)
+        .dispatch("map/readCityGeometry", cityPosition[0].Geometry)
         .then((res) => store.state.map.OSM.setView(res, 12));
 
       const result = travelData.filter((itm) => itm.City === cityName);
@@ -102,7 +102,7 @@ export default {
       // 繪製地圖marker
       await setMarkers(result);
 
-      store.dispatch('showLoader', false);
+      store.dispatch("showLoader", false);
     }
 
     async function setMarkers(result) {
@@ -114,16 +114,16 @@ export default {
           id: itm[`${page}ID`],
         };
       });
-      await store.dispatch('map/setTravelMarkers', {
+      await store.dispatch("map/setTravelMarkers", {
         page,
         markers: markersData,
       });
     }
 
     function keywordSearch() {
-      store.commit('travel/SET_KEYWORDS', keyword.value);
-      store.dispatch('travel/fetchTravelData', props.page).then((res) => {
-        if (keyword.value === '') {
+      store.commit("travel/SET_KEYWORDS", keyword.value);
+      store.dispatch("travel/fetchTravelData", props.page).then((res) => {
+        if (keyword.value === "") {
           return setSearchResult(res);
         }
         const result = res.filter(
@@ -135,13 +135,13 @@ export default {
 
     function setSearchResult(result) {
       searchResult.value = result;
-      store.commit('travel/SET_TRAVEL_DATA', result);
+      store.commit("travel/SET_TRAVEL_DATA", result);
     }
 
     function resetSearchHistory() {
-      keyword.value = '';
-      store.commit('travel/SET_KEYWORDS', '');
-      store.commit('travel/SET_ACTIVE_ID', '');
+      keyword.value = "";
+      store.commit("travel/SET_KEYWORDS", "");
+      store.commit("travel/SET_ACTIVE_ID", "");
     }
 
     return {
@@ -159,5 +159,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './TravelIndex.scss';
+@import "./TravelIndex.scss";
 </style>

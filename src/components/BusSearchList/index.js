@@ -1,2 +1,2 @@
-import BusSearchList from './BusSearchList.vue';
+import BusSearchList from "./BusSearchList.vue";
 export default BusSearchList;

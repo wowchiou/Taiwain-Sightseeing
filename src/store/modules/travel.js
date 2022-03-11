@@ -1,15 +1,15 @@
-import Api from '@/service';
+import Api from "@/service";
 
 export default {
   namespaced: true,
   state: {
-    selectCity: '',
+    selectCity: "",
     travelData: null,
     scenicSpotData: null,
     restaurantData: null,
     hotelData: null,
-    keywords: '',
-    activeID: '',
+    keywords: "",
+    activeID: "",
   },
   mutations: {
     SET_TRAVEL_DATA(state, data) {
@@ -36,10 +36,10 @@ export default {
   },
   actions: {
     clearSearchBar({ commit }) {
-      commit('SET_SELECT_CITY', '');
-      commit('SET_KEYWORDS', '');
-      commit('SET_TRAVEL_DATA', null);
-      commit('SET_ACTIVE_ID', '');
+      commit("SET_SELECT_CITY", "");
+      commit("SET_KEYWORDS", "");
+      commit("SET_TRAVEL_DATA", null);
+      commit("SET_ACTIVE_ID", "");
     },
 
     fetchTravelData({ state, dispatch }, page) {
@@ -47,28 +47,28 @@ export default {
       const restaurantData = state.restaurantData;
       const hotelData = state.hotelData;
       switch (page) {
-        case 'ScenicSpot':
+        case "ScenicSpot":
           if (scenicSpotData) {
             return scenicSpotData;
           }
-          return dispatch('fetchScenicSpot');
-        case 'Restaurant':
+          return dispatch("fetchScenicSpot");
+        case "Restaurant":
           if (restaurantData) {
             return restaurantData;
           }
-          return dispatch('fetchRestaurant');
-        case 'Hotel':
+          return dispatch("fetchRestaurant");
+        case "Hotel":
           if (hotelData) {
             return hotelData;
           }
-          return dispatch('fetchHotel');
+          return dispatch("fetchHotel");
       }
     },
 
     fetchScenicSpot({ commit }) {
       return Api.getScenicSpot()
         .then((res) => {
-          commit('SET_SCENIC_SPOT_DATA', res.data);
+          commit("SET_SCENIC_SPOT_DATA", res.data);
           return res.data;
         })
         .catch((err) => {
@@ -79,7 +79,7 @@ export default {
     fetchRestaurant({ commit }) {
       return Api.getRestaurant()
         .then((res) => {
-          commit('SET_RESTAURANT_DATA', res.data);
+          commit("SET_RESTAURANT_DATA", res.data);
           return res.data;
         })
         .catch((err) => {
@@ -90,7 +90,7 @@ export default {
     fetchHotel({ commit }) {
       return Api.getHotel()
         .then((res) => {
-          commit('SET_HOTEL_DATA', res.data);
+          commit("SET_HOTEL_DATA", res.data);
           return res.data;
         })
         .catch((err) => {

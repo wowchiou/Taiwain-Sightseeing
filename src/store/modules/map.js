@@ -1,7 +1,4 @@
 import L from 'leaflet';
-import 'leaflet.markercluster/dist/MarkerCluster.css';
-import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
-import 'leaflet.markercluster';
 import { antPath } from 'leaflet-ant-path';
 import Wkt from 'wicket';
 

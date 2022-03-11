@@ -7,14 +7,14 @@
 </template>
 
 <script>
-import AppLink from '@/components/AppLink';
+import AppLink from "@/components/AppLink";
 
 export default {
   components: { AppLink },
   props: {
     to: {
       type: [String, Object],
-      default: 'false',
+      default: "false",
     },
     icon: {
       type: Boolean,
@@ -24,5 +24,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './AppButton.scss';
+@import "./AppButton.scss";
 </style>

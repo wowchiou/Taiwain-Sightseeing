@@ -27,10 +27,10 @@
 </template>
 
 <script>
-import { ref, watchEffect, computed } from 'vue';
-import { useStore } from 'vuex';
-import ButtonBackToFrontPage from '@/components/ButtonBackToFrontPage';
-import TravelDetailItem from '@/components/TravelDetailItem';
+import { ref, watchEffect, computed } from "vue";
+import { useStore } from "vuex";
+import ButtonBackToFrontPage from "@/components/ButtonBackToFrontPage";
+import TravelDetailItem from "@/components/TravelDetailItem";
 
 export default {
   props: {
@@ -54,9 +54,9 @@ export default {
 
     watchEffect(async () => {
       if (isMapInit.value) {
-        store.dispatch('showLoader', true);
+        store.dispatch("showLoader", true);
         const result = await store.dispatch(
-          'travel/fetchTravelData',
+          "travel/fetchTravelData",
           props.page
         );
 
@@ -65,7 +65,7 @@ export default {
         // 繪製地圖marker
         const lat = data.value.Position.PositionLat;
         const lng = data.value.Position.PositionLon;
-        await store.dispatch('map/setTravelMarkers', {
+        await store.dispatch("map/setTravelMarkers", {
           page: props.page,
           markers: [
             {
@@ -78,12 +78,12 @@ export default {
 
         // 設定地圖位置
         store.state.map.OSM.setView([lat, lng], 15);
-        store.dispatch('showLoader', false);
+        store.dispatch("showLoader", false);
       }
     });
 
     function isEmptyObject(data) {
-      return JSON.stringify(data) === '{}';
+      return JSON.stringify(data) === "{}";
     }
 
     return { data, isEmptyObject };
@@ -92,5 +92,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './TravelDetail.scss';
+@import "./TravelDetail.scss";
 </style>

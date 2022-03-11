@@ -1,2 +1,2 @@
-import Bike from './Bike.vue';
+import Bike from "./Bike.vue";
 export default Bike;

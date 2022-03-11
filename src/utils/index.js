@@ -1,8 +1,8 @@
-import jsSHA from 'jssha';
+import jsSHA from "jssha";
 
 export function getUserPosition() {
   return new Promise((resolve, reject) => {
-    if ('geolocation' in window.navigator) {
+    if ("geolocation" in window.navigator) {
       /* geolocation is available */
       window.navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -24,18 +24,18 @@ export const StopBodyScroll = (function () {
   function StopBodyScroll() {
     this.pageTop = 0;
     this.body = document.body;
-    this.html = document.querySelector('html');
+    this.html = document.querySelector("html");
   }
   StopBodyScroll.prototype.fixedBody = function () {
     this.pageTop = window.scrollY;
-    this.html.style.height = window.screen.availHeight + 'px';
-    this.body.style.position = 'fixed';
-    this.body.style.top = -this.pageTop + 'px';
+    this.html.style.height = window.screen.availHeight + "px";
+    this.body.style.position = "fixed";
+    this.body.style.top = -this.pageTop + "px";
   };
   StopBodyScroll.prototype.scrollBody = function () {
-    this.html.style.height = 'auto';
-    this.body.style.position = '';
-    this.body.style.top = '';
+    this.html.style.height = "auto";
+    this.body.style.position = "";
+    this.body.style.top = "";
     window.scrollTo(0, this.pageTop);
   };
   return function () {
@@ -50,10 +50,10 @@ export const GetAuthorizationHeader = () => {
   var AppID = process.env.VUE_APP_TDX_ID;
   var AppKey = process.env.VUE_APP_TDX_KEY;
   var GMTString = new Date().toGMTString();
-  var ShaObj = new jsSHA('SHA-1', 'TEXT');
-  ShaObj.setHMACKey(AppKey, 'TEXT');
-  ShaObj.update('x-date: ' + GMTString);
-  var HMAC = ShaObj.getHMAC('B64');
+  var ShaObj = new jsSHA("SHA-1", "TEXT");
+  ShaObj.setHMACKey(AppKey, "TEXT");
+  ShaObj.update("x-date: " + GMTString);
+  var HMAC = ShaObj.getHMAC("B64");
   var Authorization =
     'hmac username="' +
     AppID +
@@ -62,7 +62,7 @@ export const GetAuthorizationHeader = () => {
     '"';
   return {
     Authorization: Authorization,
-    'X-Date': GMTString,
+    "X-Date": GMTString,
     /*,'Accept-Encoding': 'gzip'*/
   };
 };

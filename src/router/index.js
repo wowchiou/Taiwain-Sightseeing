@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import store from '@/store';
 import Home from '@/views/Home';
 
-const routes = [
+export const routes = [
   {
     path: '/',
     name: 'home',

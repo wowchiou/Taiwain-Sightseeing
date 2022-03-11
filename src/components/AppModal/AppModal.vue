@@ -21,12 +21,12 @@
 
 <script>
 export default {
-  props: ['header', 'body', 'footer', 'close'],
+  props: ["header", "body", "footer", "close"],
 };
 </script>
 
 <style lang="scss" scoped>
-@import './AppModal.scss';
+@import "./AppModal.scss";
 
 .popup .content {
   animation: slideUp 0.5s;

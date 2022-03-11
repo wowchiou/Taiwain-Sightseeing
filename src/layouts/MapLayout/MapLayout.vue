@@ -13,11 +13,11 @@
 </template>
 
 <script>
-import TheNavigation from '@/components/TheNavigation';
-import { watch, computed } from 'vue';
-import { useStore } from 'vuex';
-import { getUserPosition } from '@/utils';
-import L from 'leaflet';
+import TheNavigation from "@/components/TheNavigation";
+import { watch, computed } from "vue";
+import { useStore } from "vuex";
+import { getUserPosition } from "@/utils";
+import L from "leaflet";
 
 export default {
   components: { TheNavigation },
@@ -48,8 +48,8 @@ export default {
     getUserPosition()
       .then((position) => {
         setMap(position);
-        store.dispatch('map/setCurrentPositionMarker', position);
-        store.commit('map/SET_CURRENT_POSITION', position);
+        store.dispatch("map/setCurrentPositionMarker", position);
+        store.commit("map/SET_CURRENT_POSITION", position);
       })
       .catch(() => {
         setMap([25.0467351, 121.5119929]);
@@ -57,26 +57,26 @@ export default {
 
     function setMap(position) {
       if (store.state.map.OSM) {
-        store.dispatch('map/clearBusMap');
-        store.dispatch('map/clearMarkersCluster');
+        store.dispatch("map/clearBusMap");
+        store.dispatch("map/clearMarkersCluster");
       }
-      const OSM = L.map('map', {
+      const OSM = L.map("map", {
         center: position,
         zoom: 15,
         zoomAnimation: false,
         zoomControl: true,
         markerZoomAnimation: true,
       });
-      store.dispatch('map/buildMap', OSM);
+      store.dispatch("map/buildMap", OSM);
     }
 
     function handleMapActive(toggle) {
-      store.commit('SET_MAP_ACTIVE', toggle);
+      store.commit("SET_MAP_ACTIVE", toggle);
     }
 
     function clearData() {
-      store.commit('travel/SET_SELECT_CITY', '');
-      store.commit('travel/SET_TRAVEL_DATA', null);
+      store.commit("travel/SET_SELECT_CITY", "");
+      store.commit("travel/SET_TRAVEL_DATA", null);
       handleMapActive(false);
     }
 
@@ -86,5 +86,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import './MapLayout.scss';
+@import "./MapLayout.scss";
 </style>

@@ -57,7 +57,20 @@ const getSassContent = (componentName) => {
     const data = fs.readFileSync('./template/component.scss', 'utf8');
     const componentClassName =
       componentName.charAt(0).toLowerCase() + componentName.slice(1);
-    return data.toString().replace(/COMPONENT_NAME/g, componentClassName);
+    return data
+      .toString()
+      .replace(/COMPONENT_NAME/g, componentName)
+      .replace(/COMPONENT_CLASS_NAME/g, componentClassName);
+  } catch (error) {
+    console.log('getComponentStyleContent error', error);
+  }
+};
+
+// 獲取unit-test模板
+const getUnitTestContent = (componentName) => {
+  try {
+    const data = fs.readFileSync('./template/component.spec.js', 'utf8');
+    return data.toString().replace(/COMPONENT_NAME/g, componentName);
   } catch (error) {
     console.log('getComponentStyleContent error', error);
   }
@@ -125,6 +138,10 @@ const createComponentFolder = async ({ name, scope }) => {
       sass: {
         path: `${componentFolder}/${componentName}.scss`,
         getContent: () => getSassContent(componentName),
+      },
+      ['unit-test']: {
+        path: `${componentFolder}/${componentName}.spec.js`,
+        getContent: () => getUnitTestContent(componentName),
       },
       //   storybook: {
       //     path: `${componentFolder}/${componentName}.stories.js`,

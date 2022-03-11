@@ -1,2 +1,2 @@
-import AppSelect from './AppSelect.vue';
+import AppSelect from "./AppSelect.vue";
 export default AppSelect;

@@ -1,2 +1,2 @@
-import BikeSearchList from './BikeSearchList.vue';
+import BikeSearchList from "./BikeSearchList.vue";
 export default BikeSearchList;

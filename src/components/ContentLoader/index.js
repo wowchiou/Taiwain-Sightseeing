@@ -1,2 +1,2 @@
-import ContentLoader from './ContentLoader.vue';
+import ContentLoader from "./ContentLoader.vue";
 export default ContentLoader;

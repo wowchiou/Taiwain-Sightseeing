@@ -1,2 +1,2 @@
-import CityKeywordInput from './CityKeywordInput.vue';
+import CityKeywordInput from "./CityKeywordInput.vue";
 export default CityKeywordInput;

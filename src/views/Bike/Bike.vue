@@ -29,13 +29,13 @@
 </template>
 
 <script>
-import { ref } from 'vue';
-import { useStore } from 'vuex';
-import MapLayout from '@/layouts/MapLayout';
-import CitySelector from '@/components/CitySelector';
-import CityKeywordInput from '@/components/CityKeywordInput';
-import BikeSearchList from '@/components/BikeSearchList';
-import cityStation from '@/utils/bikeCityStations.json';
+import { ref } from "vue";
+import { useStore } from "vuex";
+import MapLayout from "@/layouts/MapLayout";
+import CitySelector from "@/components/CitySelector";
+import CityKeywordInput from "@/components/CityKeywordInput";
+import BikeSearchList from "@/components/BikeSearchList";
+import cityStation from "@/utils/bikeCityStations.json";
 
 export default {
   components: {
@@ -47,22 +47,22 @@ export default {
   setup() {
     const store = useStore();
 
-    const city = ref('');
-    const keyword = ref('');
+    const city = ref("");
+    const keyword = ref("");
     const cityBikeResult = ref([]);
     const bikeResult = ref([]);
 
     async function searchHandler() {
       if (!city.value) return;
-      keyword.value = '';
+      keyword.value = "";
 
-      store.dispatch('showLoader', true);
+      store.dispatch("showLoader", true);
       const bikeStation = await store.dispatch(
-        'bike/fetchBikeStation',
+        "bike/fetchBikeStation",
         city.value
       );
       const bikeAvailability = await store.dispatch(
-        'bike/fetchBikeAvailability',
+        "bike/fetchBikeAvailability",
         city.value
       );
       const bikeTotalData = bikeStation.map((station) => {
@@ -72,27 +72,27 @@ export default {
         return { ...station, detail: bikeDetail };
       });
 
-      await store.dispatch('map/setBikeMarkers', bikeTotalData);
+      await store.dispatch("map/setBikeMarkers", bikeTotalData);
 
       // 抓取市中心位置
       const cityName = cityStation.find(
         (itm) => itm.City === city.value
       ).CityName;
-      const cityPosition = await store.dispatch('fetchCityAddress', cityName);
+      const cityPosition = await store.dispatch("fetchCityAddress", cityName);
 
       // 讀取市中心經緯度
       await store
-        .dispatch('map/readCityGeometry', cityPosition[0].Geometry)
+        .dispatch("map/readCityGeometry", cityPosition[0].Geometry)
         .then((res) => {
           store.state.map.OSM.setView(res, 12);
         });
       cityBikeResult.value = bikeTotalData;
       bikeResult.value = bikeTotalData;
-      store.dispatch('showLoader', false);
+      store.dispatch("showLoader", false);
     }
 
     function keywordSearch() {
-      if (keyword.value === '') {
+      if (keyword.value === "") {
         return (bikeResult.value = cityBikeResult.value);
       }
       const result = cityBikeResult.value.filter(
@@ -114,5 +114,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './Bike.scss';
+@import "./Bike.scss";
 </style>

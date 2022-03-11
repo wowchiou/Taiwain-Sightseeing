@@ -12,14 +12,14 @@
 export default {
   computed: {
     baseUrl() {
-      return process.env.NODE_ENV === 'production'
-        ? '/Taiwain-Sightseeing/'
-        : '/';
+      return process.env.NODE_ENV === "production"
+        ? "/Taiwain-Sightseeing/"
+        : "/";
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import './NetWorkError.scss';
+@import "./NetWorkError.scss";
 </style>

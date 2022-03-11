@@ -1,2 +1,2 @@
-import MapLayout from './MapLayout.vue';
+import MapLayout from "./MapLayout.vue";
 export default MapLayout;

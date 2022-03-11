@@ -1,2 +1,2 @@
-import AppLink from './AppLink.vue';
+import AppLink from "./AppLink.vue";
 export default AppLink;

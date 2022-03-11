@@ -16,12 +16,12 @@ export default {
     label: { type: String },
     modelValue: {
       type: [String, Number],
-      default: '',
+      default: "",
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import './AppInput.scss';
+@import "./AppInput.scss";
 </style>

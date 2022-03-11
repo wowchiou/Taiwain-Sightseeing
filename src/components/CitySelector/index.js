@@ -1,2 +1,2 @@
-import CitySelector from './CitySelector.vue';
+import CitySelector from "./CitySelector.vue";
 export default CitySelector;

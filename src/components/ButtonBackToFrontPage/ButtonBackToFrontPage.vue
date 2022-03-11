@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import AppButton from '@/components/AppButton';
+import AppButton from "@/components/AppButton";
 
 export default {
   components: {
@@ -20,5 +20,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './ButtonBackToFrontPage.scss';
+@import "./ButtonBackToFrontPage.scss";
 </style>

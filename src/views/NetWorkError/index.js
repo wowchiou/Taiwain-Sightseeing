@@ -1,2 +1,2 @@
-import NetWorkError from './NetWorkError.vue';
+import NetWorkError from "./NetWorkError.vue";
 export default NetWorkError;

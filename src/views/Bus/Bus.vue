@@ -7,18 +7,18 @@
 </template>
 
 <script>
-import MapLayout from '@/layouts/MapLayout';
+import MapLayout from "@/layouts/MapLayout";
 
 export default {
   components: {
     MapLayout,
   },
   created() {
-    this.$store.dispatch('bus/resetBusState');
+    this.$store.dispatch("bus/resetBusState");
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import './Bus.scss';
+@import "./Bus.scss";
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="COMPONENT_NAME"></div>
+  <div class="COMPONENT_CLASS_NAME"></div>
 </template>
 
 <script>

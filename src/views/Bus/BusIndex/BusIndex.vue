@@ -27,12 +27,12 @@
 </template>
 
 <script>
-import { ref } from 'vue';
-import { useStore } from 'vuex';
-import CitySelector from '@/components/CitySelector';
-import CityKeywordInput from '@/components/CityKeywordInput';
-import BusSearchList from '@/components/BusSearchList';
-import cityData from '@/utils/city.json';
+import { ref } from "vue";
+import { useStore } from "vuex";
+import CitySelector from "@/components/CitySelector";
+import CityKeywordInput from "@/components/CityKeywordInput";
+import BusSearchList from "@/components/BusSearchList";
+import cityData from "@/utils/city.json";
 
 export default {
   components: {
@@ -42,13 +42,13 @@ export default {
   },
   setup() {
     const store = useStore();
-    const city = ref('');
-    const keyword = ref('');
+    const city = ref("");
+    const keyword = ref("");
     const busResult = ref([]);
     const busCityResult = ref([]);
 
     if (store.state.map.OSM) {
-      store.dispatch('map/clearBusMap');
+      store.dispatch("map/clearBusMap");
     }
 
     if (store.state.bus.busRoutes) {
@@ -63,16 +63,16 @@ export default {
     }
 
     async function searchHandler() {
-      store.dispatch('showLoader', true);
-      keyword.value = '';
-      store.commit('bus/SET_BUS_KEYWORDS', '');
+      store.dispatch("showLoader", true);
+      keyword.value = "";
+      store.commit("bus/SET_BUS_KEYWORDS", "");
 
       const busRoute = await store.dispatch(
-        'bus/fetchBusCityRoute',
+        "bus/fetchBusCityRoute",
         city.value
       );
       const busStopRoute = await store.dispatch(
-        'bus/fetchBusCityStopOfRoute',
+        "bus/fetchBusCityStopOfRoute",
         city.value
       );
       const busTotalResult = busRoute.map((bus) => {
@@ -84,15 +84,15 @@ export default {
       busCityResult.value = busTotalResult;
       busResult.value = busTotalResult;
 
-      store.commit('bus/SET_BUS_CITY', city.value);
-      store.commit('bus/SET_BUS_ROUTES', busTotalResult);
+      store.commit("bus/SET_BUS_CITY", city.value);
+      store.commit("bus/SET_BUS_ROUTES", busTotalResult);
 
-      store.dispatch('showLoader', false);
+      store.dispatch("showLoader", false);
     }
 
     function keywordSearch() {
-      store.commit('bus/SET_BUS_KEYWORDS', keyword.value);
-      if (keyword.value === '') {
+      store.commit("bus/SET_BUS_KEYWORDS", keyword.value);
+      if (keyword.value === "") {
         return (busResult.value = busCityResult.value);
       }
       let result = [];
@@ -129,5 +129,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './BusIndex.scss';
+@import "./BusIndex.scss";
 </style>

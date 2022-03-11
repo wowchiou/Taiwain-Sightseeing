@@ -1,18 +1,18 @@
-import axios from 'axios';
-import router from '@/router';
-import store from '@/store';
-import { GetAuthorizationHeader } from '@/utils';
+import axios from "axios";
+import router from "@/router";
+import store from "@/store";
+import { GetAuthorizationHeader } from "@/utils";
 
 const getAuthorizationHeader = GetAuthorizationHeader();
 let counterFor403 = 0;
 
 export const httpTDX = axios.create({
-  baseURL: 'https://ptx.transportdata.tw/MOTC',
+  baseURL: "https://ptx.transportdata.tw/MOTC",
   headers: getAuthorizationHeader,
 });
 
 export const httpGIST = axios.create({
-  baseURL: 'https://gist.motc.gov.tw/gist_api',
+  baseURL: "https://gist.motc.gov.tw/gist_api",
   headers: getAuthorizationHeader,
 });
 
@@ -53,32 +53,32 @@ function http403Error(instance, config) {
     instance(config);
   } else {
     counterFor403 = 0;
-    store.dispatch('showLoader', false);
-    router.push({ name: 'network-error' });
+    store.dispatch("showLoader", false);
+    router.push({ name: "network-error" });
   }
 }
 
 export default {
   getCity() {
-    return httpGIST.get('/V3/Map/Basic/City');
+    return httpGIST.get("/V3/Map/Basic/City");
   },
 
   getCityAddress(cityName) {
     return httpGIST.get(
-      '/V3/Map/GeoCode/Coordinate/Address/' + cityName + '政府'
+      "/V3/Map/GeoCode/Coordinate/Address/" + cityName + "政府"
     );
   },
 
   getScenicSpot() {
-    return httpTDX.get('/v2/Tourism/ScenicSpot');
+    return httpTDX.get("/v2/Tourism/ScenicSpot");
   },
 
   getRestaurant() {
-    return httpTDX.get('/v2/Tourism/Restaurant');
+    return httpTDX.get("/v2/Tourism/Restaurant");
   },
 
   getHotel() {
-    return httpTDX.get('/v2/Tourism/Hotel');
+    return httpTDX.get("/v2/Tourism/Hotel");
   },
 
   getBikeStation(city) {

@@ -1,2 +1,2 @@
-import AppModal from './AppModal.vue';
+import AppModal from "./AppModal.vue";
 export default AppModal;

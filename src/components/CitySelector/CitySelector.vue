@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import InputGroup from '@/components/InputGroup';
+import InputGroup from "@/components/InputGroup";
 
 export default {
   components: {
@@ -30,7 +30,7 @@ export default {
   props: {
     modelValue: {
       type: String,
-      default: '',
+      default: "",
     },
     searchHandler: {
       type: Function,
@@ -50,5 +50,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './CitySelector.scss';
+@import "./CitySelector.scss";
 </style>

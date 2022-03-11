@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import { watch } from 'vue';
-import AppLink from '@/components/AppLink';
+import { watch } from "vue";
+import AppLink from "@/components/AppLink";
 
 export default {
   components: { AppLink },
@@ -57,5 +57,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './BusSearchList.scss';
+@import "./BusSearchList.scss";
 </style>

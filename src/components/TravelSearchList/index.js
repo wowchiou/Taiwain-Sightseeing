@@ -1,2 +1,2 @@
-import TravelSearchList from './TravelSearchList.vue';
+import TravelSearchList from "./TravelSearchList.vue";
 export default TravelSearchList;

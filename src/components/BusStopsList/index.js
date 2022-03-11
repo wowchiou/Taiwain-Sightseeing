@@ -1,2 +1,2 @@
-import BusStopsList from './BusStopsList.vue';
+import BusStopsList from "./BusStopsList.vue";
 export default BusStopsList;

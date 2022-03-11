@@ -1,2 +1,2 @@
-import TravelDetail from './TravelDetail.vue';
+import TravelDetail from "./TravelDetail.vue";
 export default TravelDetail;

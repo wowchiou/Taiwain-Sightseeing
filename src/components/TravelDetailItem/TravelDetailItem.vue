@@ -14,10 +14,10 @@
 
 <script>
 export default {
-  props: ['title', 'content'],
+  props: ["title", "content"],
 };
 </script>
 
 <style lang="scss" scoped>
-@import './TravelDetailItem.scss';
+@import "./TravelDetailItem.scss";
 </style>

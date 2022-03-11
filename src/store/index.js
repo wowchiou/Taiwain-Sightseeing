@@ -1,4 +1,4 @@
-import { createStore } from 'vuex';
+import { createStore as vuexCreateStore } from 'vuex';
 import Api from '@/service';
 import { StopBodyScroll } from '@/utils';
 
@@ -9,7 +9,7 @@ import bus from './modules/bus';
 
 const stopBodyScroll = new StopBodyScroll();
 
-export default createStore({
+const storeConfiguration = {
   modules: { map, travel, bike, bus },
   state: {
     loader: false,
@@ -70,4 +70,29 @@ export default createStore({
         });
     },
   },
-});
+};
+
+const defaultOverrides = {
+  state: () => {
+    return {};
+  },
+};
+
+function makeState(initialState, overrideState) {
+  return {
+    ...(typeof initialState === 'function' ? initialState() : initialState),
+    ...overrideState(),
+  };
+}
+
+export function createStore(storeOverrides = defaultOverrides) {
+  return vuexCreateStore({
+    ...storeConfiguration,
+    ...storeOverrides,
+    ...{
+      state: makeState(storeConfiguration.state, storeOverrides.state),
+    },
+  });
+}
+
+export default createStore();
