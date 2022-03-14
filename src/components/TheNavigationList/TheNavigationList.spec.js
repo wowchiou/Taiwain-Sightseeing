@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { createRouter, createWebHashHistory } from 'vue-router';
-import { createStore } from '@/store/index.js';
+import { createVuexStore } from '@/store';
 import { routes } from '@/router';
 import TheNavigationList from './TheNavigationList.vue';
 import menuList from '@/utils/menu-list.json';
@@ -24,7 +24,7 @@ function mountComponent(config = {}) {
   config.plugins = config.plugins || {};
   return mount(TheNavigationList, {
     global: {
-      plugins: [createStore(config.plugins.store), router],
+      plugins: [createVuexStore(config.plugins.store), router],
     },
     propsData,
     ...config.mountOptions,
@@ -38,21 +38,19 @@ describe('TheNavigationList', () => {
     wrapper = mountComponent({ propsData });
   });
 
-  describe('render TheNavigationList', () => {
-    it('TheNavigationList has icon', async () => {
-      const ICON = wrapper.find('[data-testId="icon"]');
-      expect(ICON.classes()).toEqual(menuData.iconClass.split(' '));
-    });
+  it('list has menu icon', async () => {
+    const ICON = wrapper.find('[data-test="icon"]');
+    expect(ICON.classes()).toEqual(menuData.iconClass.split(' '));
+  });
 
-    it('TheNavigation show title', () => {
-      const TITLE = wrapper.find('[data-testId="title"]');
-      expect(TITLE.isVisible()).toBe(true);
-    });
+  it('list show menu title', () => {
+    const TITLE = wrapper.find('[data-test="title"]');
+    expect(TITLE.isVisible()).toBe(true);
+  });
 
-    it('TheNavigation do not show title', async () => {
-      await wrapper.setProps({ menuActive: false });
-      const TITLE = wrapper.find('[data-testId="title"]');
-      expect(TITLE.exists()).toBe(false);
-    });
+  it('list do not show menu title', async () => {
+    await wrapper.setProps({ menuActive: false });
+    const TITLE = wrapper.find('[data-test="title"]');
+    expect(TITLE.exists()).toBe(false);
   });
 });

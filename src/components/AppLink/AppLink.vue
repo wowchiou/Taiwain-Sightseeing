@@ -6,16 +6,17 @@
     rel="noopener"
     class="appLink"
     v-bind="$props"
+    data-test="external-link"
   >
     <slot />
   </a>
-  <RouterLink v-else v-bind="$props" class="appLink">
+  <RouterLink v-else data-test="internal-link" v-bind="$props" class="appLink">
     <slot />
   </RouterLink>
 </template>
 
 <script>
-import { RouterLink } from "vue-router";
+import { RouterLink } from 'vue-router';
 
 export default {
   props: {
@@ -25,8 +26,8 @@ export default {
   computed: {
     isExternal() {
       return (
-        typeof this.to === "string" &&
-        (this.to.startsWith("http") || this.to === "false")
+        typeof this.to === 'string' &&
+        (this.to.startsWith('http') || this.to === 'false')
       );
     },
   },
@@ -34,5 +35,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "./AppLink.scss";
+@import './AppLink.scss';
 </style>

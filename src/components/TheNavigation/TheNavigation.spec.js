@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { createRouter, createWebHashHistory } from 'vue-router';
-import { createStore } from '@/store/index.js';
+import { createVuexStore } from '@/store/index.js';
 import { routes } from '@/router';
 import TheNavigation from './TheNavigation.vue';
 import menuList from '@/utils/menu-list.json';
@@ -15,7 +15,7 @@ function mountComponent(config = {}) {
   config.plugins = config.plugins || {};
   return mount(TheNavigation, {
     global: {
-      plugins: [createStore(config.plugins.store), router],
+      plugins: [createVuexStore(config.plugins.store), router],
     },
     ...config.mountOptions,
   });
@@ -28,18 +28,23 @@ describe('TheNavigation', () => {
     wrapper = mountComponent();
   });
 
-  it('toggleNavigation open', async () => {
-    await wrapper.vm.toggleNavigation(true);
+  it('click [active-button] toggle navigation open or close', async () => {
+    const ACTIVE_BUTTON = wrapper.find('[data-test="active-button"]');
+    await ACTIVE_BUTTON.trigger('click');
     expect(wrapper.classes('active')).toBe(true);
-  });
 
-  it('toggleNavigation close', async () => {
-    await wrapper.vm.toggleNavigation(false);
+    await ACTIVE_BUTTON.trigger('click');
     expect(wrapper.classes('active')).toBe(false);
   });
 
-  it('render navigation menu list', () => {
-    const MENU_LIST = wrapper.findAll('[data-testId="menu-list"]');
+  it('render navigation [menu-list]', () => {
+    const MENU_LIST = wrapper.findAll('[data-test="menu-list"]');
     expect(MENU_LIST).toHaveLength(menuList.length);
+  });
+
+  it('click [menu-list] navigation close', async () => {
+    const MENU_LIST = wrapper.find('[data-test="menu-list"]');
+    await MENU_LIST.trigger('click');
+    expect(wrapper.classes('active')).toBe(false);
   });
 });

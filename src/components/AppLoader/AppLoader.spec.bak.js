@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils';
-import { createStore } from '@/store/index.js';
+import { createVuexStore } from '@/store/index.js';
 import AppLoader from '@/components/AppLoader';
 
 function mountComponent(config = {}) {
@@ -7,7 +7,7 @@ function mountComponent(config = {}) {
   config.plugins = config.plugins || {};
   return mount(AppLoader, {
     global: {
-      plugins: [createStore(config.plugins.store)],
+      plugins: [createVuexStore(config.plugins.store)],
     },
     ...config.mountOptions,
   });

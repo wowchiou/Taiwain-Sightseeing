@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { createRouter, createWebHashHistory } from 'vue-router';
-import { createStore } from '@/store/index.js';
+import { createVuexStore } from '@/store/index.js';
 import { routes } from '@/router';
 import App from '@/App.vue';
 
@@ -14,7 +14,7 @@ function mountComponent(config = {}) {
   config.plugins = config.plugins || {};
   return mount(App, {
     global: {
-      plugins: [createStore(config.plugins.store), router],
+      plugins: [createVuexStore(config.plugins.store), router],
     },
     ...config.mountOptions,
   });
@@ -36,15 +36,15 @@ describe('App', () => {
     document.body.outerHTML = '';
   });
 
-  it('App router view', async () => {
+  it('App initial route', async () => {
     router.push('/');
     await router.isReady();
 
-    const homeTitle = wrapper.find('[data-testId="home-title"]');
+    const homeTitle = wrapper.find('[data-test="home-title"]');
     expect(homeTitle.text()).toContain('歡迎來到台灣觀光查詢網');
   });
 
-  it('teleport loader is exist', () => {
+  it('App teleport loader is exist', () => {
     expect(wrapper.exists()).toBeTruthy();
   });
 });

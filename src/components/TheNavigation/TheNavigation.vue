@@ -1,12 +1,12 @@
 <template>
   <div
     class="theNavigation"
-    data-testId="navigation"
+    data-test="navigation"
     :class="{ active: menuActive }"
   >
     <ul class="menu">
       <TheNavigationList
-        data-testId="menu-list"
+        data-test="menu-list"
         v-for="list in menuList"
         :key="list.title"
         :title="list.title"
@@ -18,7 +18,7 @@
     </ul>
     <div
       class="active-button"
-      data-testId="active-button"
+      data-test="active-button"
       @click="toggleNavigation(!menuActive)"
     >
       <i class="fas fa-arrow-right"></i>
