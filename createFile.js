@@ -139,10 +139,10 @@ const createComponentFolder = async ({ name, scope }) => {
         path: `${componentFolder}/${componentName}.scss`,
         getContent: () => getSassContent(componentName),
       },
-      ['unit-test']: {
-        path: `${componentFolder}/${componentName}.spec.js`,
-        getContent: () => getUnitTestContent(componentName),
-      },
+      // ['unit-test']: {
+      //   path: `${componentFolder}/${componentName}.spec.js`,
+      //   getContent: () => getUnitTestContent(componentName),
+      // },
       //   storybook: {
       //     path: `${componentFolder}/${componentName}.stories.js`,
       //     getContent: () => getStorybookContent(componentName, scope),

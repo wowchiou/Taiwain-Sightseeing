@@ -1,163 +1,152 @@
+<script setup>
+import { ref, watch, computed, defineProps } from 'vue';
+import { useStore } from 'vuex';
+import CITY from '@/utils/city.json';
+
+import AppSearchBar from '@/components/AppSearchBar';
+import CitySelector from '@/components/CitySelector';
+import CityKeywordInput from '@/components/CityKeywordInput';
+import TravelSearchList from '@/components/TravelSearchList';
+
+const props = defineProps({
+  page: { type: String, required: true },
+});
+
+const { state, commit, dispatch } = useStore();
+
+const searchedCity = ref('');
+const keyword = ref('');
+const searchedResults = ref([]);
+
+const title = computed(() => props.page.toUpperCase());
+const travelData = computed(() => state.travel.travelData);
+const selectedCityRecord = computed(() => state.travel.selectCity);
+const searchedCityName = computed(
+  () => CITY.find((itm) => itm.City === searchedCity.value).CityName
+);
+
+watch(
+  () => props.page,
+  async () => {
+    dispatch('showLoader', true);
+    clearSearchedData();
+
+    await dispatch('travel/fetchTravelData', props.page);
+    dispatch('travel/setTravelData', props.page);
+
+    if (selectedCityRecord.value) {
+      // 如從詳細頁回來並且搜尋過城市、關鍵字
+      // 回復原來搜尋過的紀錄
+      setSearchedRecords();
+    }
+
+    dispatch('showLoader', false);
+
+    function clearSearchedData() {
+      searchedCity.value = '';
+      keyword.value = '';
+      searchedResults.value = [];
+      dispatch('map/clearMarkersCluster');
+    }
+
+    function setSearchedRecords() {
+      searchedCity.value = selectedCityRecord.value;
+      keyword.value = state.travel.keywords;
+      let filterSearchData = filterSearchCity();
+      if (keyword.value) {
+        filterSearchData = filterSearchCityKeywords(
+          filterSearchData,
+          keyword.value
+        );
+      }
+      searchedResults.value = filterSearchData;
+      setMarkers(filterSearchData);
+    }
+  },
+  { immediate: true }
+);
+
+function setMarkers(locations) {
+  const page = props.page;
+  dispatch('map/setTravelMarkers', {
+    page,
+    markers: locations.map((location) => {
+      return {
+        name: location[`${page}Name`],
+        position: [
+          location.Position.PositionLat,
+          location.Position.PositionLon,
+        ],
+        id: location[`${page}ID`],
+      };
+    }),
+  });
+}
+
+async function searchHandler() {
+  dispatch('showLoader', true);
+  searchedResults.value = filterSearchCity(travelData.value);
+  setMarkers(searchedResults.value);
+  await dispatch('map/setLocationOfCityOnMap', searchedCityName.value);
+  recordSelectedCity();
+  resetKeywords();
+  dispatch('showLoader', false);
+}
+
+function keywordSearch() {
+  searchedResults.value = filterSearchCityKeywords(keyword.value);
+  recordSearchKeywords();
+}
+
+function filterSearchCity() {
+  return travelData.value.filter((itm) => itm.City === searchedCityName.value);
+}
+
+function filterSearchCityKeywords(keywords) {
+  return searchedResults.value.filter(
+    (itm) => itm[`${props.page}Name`].indexOf(keywords) !== -1
+  );
+}
+
+function recordSelectedCity() {
+  commit('travel/SET_SELECT_CITY', searchedCity.value);
+}
+
+function recordSearchKeywords() {
+  commit('travel/SET_KEYWORDS', keyword.value);
+}
+
+function resetKeywords() {
+  keyword.value = '';
+  commit('travel/SET_KEYWORDS', '');
+}
+</script>
+
 <template>
   <div class="travelIndex">
-    <div class="page-top">
-      <h1 class="pageTitle">{{ title }}</h1>
-      <form class="search-form" @submit.prevent>
-        <CitySelector
-          v-model="city"
-          :cities="cityData"
-          :searchHandler="searchHandler"
-        />
-        <CityKeywordInput
-          v-model="keyword"
-          :disabled="!city"
-          :result="searchResult"
-          :keywordSearch="keywordSearch"
-        />
-      </form>
-    </div>
+    <AppSearchBar :title="title">
+      <CitySelector
+        v-model="searchedCity"
+        :cities="CITY"
+        :searchHandler="searchHandler"
+      />
+      <CityKeywordInput
+        v-model="keyword"
+        :disabled="!searchedCity"
+        :result="searchedResults"
+        :keywordSearch="keywordSearch"
+      />
+    </AppSearchBar>
 
     <div class="page-search-content">
-      <p v-if="!hasSearchResult" class="page-search-remind">請選擇城市</p>
-      <TravelSearchList v-else :searchResult="searchResult" :page="page" />
+      <p v-if="searchedResults.length === 0" class="page-search-remind">
+        請選擇城市
+      </p>
+      <TravelSearchList v-else :searchResult="searchedResults" :page="page" />
     </div>
   </div>
 </template>
 
-<script>
-import { ref, computed, watch } from "vue";
-import { useStore } from "vuex";
-import CitySelector from "@/components/CitySelector";
-import CityKeywordInput from "@/components/CityKeywordInput";
-import TravelSearchList from "@/components/TravelSearchList";
-import cityData from "@/utils/city.json";
-
-export default {
-  props: ["page"],
-
-  components: { CitySelector, CityKeywordInput, TravelSearchList },
-
-  setup(props) {
-    const store = useStore();
-
-    const city = ref("");
-    const keyword = ref("");
-    const searchResult = ref([]);
-    const citySearchResult = ref([]);
-
-    const hasSearchResult = computed(() => searchResult.value.length !== 0);
-    const selectCity = computed(() => store.state.travel.selectCity);
-    const title = computed(() => props.page.toUpperCase());
-
-    let travelData = [];
-
-    watch(
-      () => props.page,
-      async () => {
-        store.dispatch("showLoader", true);
-
-        // 換頁時清除之前搜尋紀錄
-        city.value = "";
-        searchResult.value = [];
-
-        // 清空marker
-        store.dispatch("map/clearMarkersCluster");
-
-        // 獲取景點、餐飲、旅宿資料
-        travelData = await store.dispatch("travel/fetchTravelData", props.page);
-
-        // 從詳細頁回來重新搜尋之前縣市資料
-        if (selectCity.value) {
-          city.value = selectCity.value;
-          keyword.value = store.state.travel.keywords;
-          searchResult.value = store.state.travel.travelData;
-          await setMarkers(store.state.travel.travelData);
-        }
-
-        store.dispatch("showLoader", false);
-      },
-      { immediate: true }
-    );
-
-    async function searchHandler() {
-      store.dispatch("showLoader", true);
-      resetSearchHistory();
-
-      // 儲存目前選擇的城市，從詳細頁回來時以此重抓資料
-      store.commit("travel/SET_SELECT_CITY", city.value);
-
-      // 抓取市中心位置
-      const cityName = cityData.find((itm) => itm.City === city.value).CityName;
-      const cityPosition = await store.dispatch("fetchCityAddress", cityName);
-
-      // 讀取市中心經緯度
-      await store
-        .dispatch("map/readCityGeometry", cityPosition[0].Geometry)
-        .then((res) => store.state.map.OSM.setView(res, 12));
-
-      const result = travelData.filter((itm) => itm.City === cityName);
-      citySearchResult.value = result;
-      setSearchResult(result);
-
-      // 繪製地圖marker
-      await setMarkers(result);
-
-      store.dispatch("showLoader", false);
-    }
-
-    async function setMarkers(result) {
-      const page = props.page;
-      const markersData = result.map((itm) => {
-        return {
-          name: itm[`${page}Name`],
-          position: [itm.Position.PositionLat, itm.Position.PositionLon],
-          id: itm[`${page}ID`],
-        };
-      });
-      await store.dispatch("map/setTravelMarkers", {
-        page,
-        markers: markersData,
-      });
-    }
-
-    function keywordSearch() {
-      store.commit("travel/SET_KEYWORDS", keyword.value);
-      store.dispatch("travel/fetchTravelData", props.page).then((res) => {
-        if (keyword.value === "") {
-          return setSearchResult(res);
-        }
-        const result = res.filter(
-          (itm) => itm[`${props.page}Name`].indexOf(keyword.value) !== -1
-        );
-        setSearchResult(result);
-      });
-    }
-
-    function setSearchResult(result) {
-      searchResult.value = result;
-      store.commit("travel/SET_TRAVEL_DATA", result);
-    }
-
-    function resetSearchHistory() {
-      keyword.value = "";
-      store.commit("travel/SET_KEYWORDS", "");
-      store.commit("travel/SET_ACTIVE_ID", "");
-    }
-
-    return {
-      city,
-      cityData,
-      searchHandler,
-      searchResult,
-      hasSearchResult,
-      title,
-      keyword,
-      keywordSearch,
-    };
-  },
-};
-</script>
-
 <style lang="scss" scoped>
-@import "./TravelIndex.scss";
+@import './TravelIndex.scss';
 </style>

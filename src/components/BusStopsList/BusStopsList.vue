@@ -1,8 +1,8 @@
 <template>
-  <ul v-if="busStopTime" class="bus-result">
+  <ul v-if="busStops" class="bus-result">
     <li
       class="bus-stop"
-      v-for="(stop, stopIDX) in busStopTime"
+      v-for="(stop, stopIDX) in busStops"
       :key="stop.StopUID"
       @click="setStopView(stop.StopPosition)"
     >
@@ -25,10 +25,10 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
+import { useStore } from 'vuex';
 
 export default {
-  props: ["busStopTime"],
+  props: ['busStops'],
   setup() {
     const store = useStore();
 
@@ -73,7 +73,7 @@ export default {
       });
 
       if (detailTimeResult.length === 0) {
-        detailTimeResult.push({ class: "error", text: "無發車資料" });
+        detailTimeResult.push({ class: 'error', text: '無發車資料' });
       }
 
       detailTimeResult.sort((a, b) => a.time - b.time);
@@ -86,11 +86,11 @@ export default {
       if (time < Date.now()) return false;
       let hours = date.getHours();
       let minutes = date.getMinutes();
-      const plateNumber = `${plateNumb}` || "";
+      const plateNumber = `${plateNumb}` || '';
       if (hours < 10) hours = `0${hours}`;
       if (minutes < 10) minutes = `0${minutes}`;
       return {
-        class: "almost",
+        class: 'almost',
         text: `${plateNumber}${hours}:${minutes}`,
         time,
       };
@@ -98,20 +98,20 @@ export default {
 
     function renderEstimateText(time, plate) {
       const minutes = Math.floor(time / 60);
-      const plateNumb = plate || "";
+      const plateNumb = plate || '';
       if (time <= 0) {
-        return { class: "now", text: "抵達", time };
+        return { class: 'now', text: '抵達', time };
       }
       if (minutes === 0) {
-        return { class: "now", text: "即將到站", time };
+        return { class: 'now', text: '即將到站', time };
       }
-      return { class: "almost", text: `${plateNumb} ${minutes}分鐘`, time };
+      return { class: 'almost', text: `${plateNumb} ${minutes}分鐘`, time };
     }
 
     function setStopView(position) {
       const { PositionLat, PositionLon } = position;
       store.state.map.OSM.setView([PositionLat, PositionLon], 18);
-      store.commit("SET_MAP_ACTIVE", true);
+      store.commit('SET_MAP_ACTIVE', true);
     }
 
     return { formateEstimateTime, setStopView };
@@ -120,5 +120,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import "./BusStopsList.scss";
+@import './BusStopsList.scss';
 </style>

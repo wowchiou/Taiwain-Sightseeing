@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import AppLink from "@/components/AppLink";
+import AppLink from '@/components/AppLink';
 
 export default {
   components: {
@@ -59,7 +59,7 @@ export default {
     listActiveHandler(itemData) {
       const lat = itemData.Position.PositionLat;
       const lng = itemData.Position.PositionLon;
-      this.$store.commit("travel/SET_ACTIVE_ID", itemData[`${this.page}ID`]);
+      this.$store.commit('travel/SET_ACTIVE_ID', itemData[`${this.page}ID`]);
       this.$store.state.map.OSM.setView([lat, lng], 18);
       this.$store.state.map.markersCluster.eachLayer((layer) => {
         const layerPosition = layer._latlng;
@@ -67,12 +67,12 @@ export default {
           layer.openPopup();
         }
       });
-      this.$store.commit("SET_MAP_ACTIVE", true);
+      this.$store.commit('SET_MAP_ACTIVE', true);
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import "./TravelSearchList.scss";
+@import './TravelSearchList.scss';
 </style>

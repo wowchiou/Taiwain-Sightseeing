@@ -160,10 +160,10 @@ export default {
       state.OSM.addLayer(markersCluster);
     },
 
-    setBikeMarkers({ state, commit, dispatch }, data) {
+    setBikeMarkers({ state, commit, dispatch }, bikeStations) {
       dispatch('clearMarkersCluster');
       const markersCluster = createMarkersCluster();
-      data.forEach((bike) => {
+      bikeStations.forEach((bike) => {
         const { StationPosition, detail, ServiceType, StationName } = bike;
         const html = `<div class="map-circle marker-circle"><i class="fas fa-bicycle"></i></div>`;
         const bikePosition = [
@@ -288,6 +288,17 @@ export default {
       }
       busFeatureGroup.clearLayers();
       stopsFeatureGroup.clearLayers();
+    },
+
+    async setLocationOfCityOnMap({ dispatch, rootState }, cityName) {
+      const cityPosition = await dispatch('fetchCityAddress', cityName, {
+        root: true,
+      });
+      const cityGeometry = await dispatch(
+        'readCityGeometry',
+        cityPosition[0].Geometry
+      );
+      rootState.map.OSM.setView(cityGeometry, 12);
     },
   },
 };

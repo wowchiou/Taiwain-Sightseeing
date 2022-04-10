@@ -1,5 +1,146 @@
+<script setup>
+import { ref, computed, watch, defineProps } from 'vue';
+import { useStore } from 'vuex';
+import CITY from '@/utils/city.json';
+
+import BusStationCard from '@/components/BusStationCard';
+import BusDirectionButtons from '@/components/BusDirectionButtons';
+import BusStopsList from '@/components/BusStopsList';
+import ButtonBackToFrontPage from '@/components/ButtonBackToFrontPage';
+import RefreshButton from '@/components/RefreshButton';
+
+const props = defineProps({
+  city: {
+    type: String,
+    required: true,
+  },
+  route: {
+    type: String,
+    required: true,
+  },
+  id: {
+    type: String,
+    required: true,
+  },
+});
+
+const { state, dispatch } = useStore();
+const currentDirection = ref(0);
+const timeOfBusStops = ref(null);
+const busStopsResults = ref([]);
+
+const busCurrentDirectionStops = computed(() => {
+  const filterResults = busStopsResults.value.find(
+    (itm) => itm.Direction === currentDirection.value
+  );
+  return filterResults.Stops;
+});
+
+const busStopName = computed(() => {
+  const [endStop, startStop] = busStopsResults.value;
+  const end = endStop.Stops[0].StopName.Zh_tw;
+  const start = startStop ? startStop.Stops[0].StopName.Zh_tw : null;
+  return { start, end };
+});
+
+const cityName = CITY.find((city) => city.City === props.city).CityName;
+
+const apiPostData = {
+  city: props.city,
+  route: props.route,
+};
+
+watch(
+  () => state.map.OSM,
+  async (OSM) => {
+    if (!OSM) return;
+    getBusStopsData();
+  },
+  { immediate: true }
+);
+
+function getBusStopsData() {
+  dispatch('showLoader', true);
+  dispatch('bus/fetchBusStopOfRoute', apiPostData).then(async (stops) => {
+    busStopsResults.value = stops.filter((stop) => stop.RouteUID === props.id);
+    await setMap();
+  });
+}
+
+async function setMap() {
+  dispatch('showLoader', true);
+  await getBusEstimatedTime();
+  await setBusShape();
+  dispatch('map/setBusStopsMarker', busCurrentDirectionStops.value);
+  setBusMarker();
+  dispatch('showLoader', false);
+}
+
+function getBusEstimatedTime() {
+  dispatch('bus/fetchEstimatedTimeOfArrival', apiPostData).then(
+    (estimatedTimeRes) => {
+      const results = busCurrentDirectionStops.value.map((stop) => {
+        const directionStopName = stop.StopName.Zh_tw;
+        let busEstimatedTime = estimatedTimeRes.filter(
+          ({ StopName, Direction }) => {
+            return isCurrentDirectionStop(StopName.Zh_tw, Direction);
+          }
+        );
+        return { ...stop, detail: busEstimatedTime };
+
+        function isCurrentDirectionStop(estimatedStopName, direction) {
+          estimatedStopName === directionStopName &&
+            (String(direction) === 'undefined' ||
+              direction === currentDirection.value);
+        }
+      });
+      timeOfBusStops.value = results;
+    }
+  );
+}
+
+function setBusShape() {
+  dispatch('bus/fetchBusShape', apiPostData).then((shapeResponse) => {
+    for (let i = 0; i < shapeResponse.length; i++) {
+      const shape = shapeResponse[i];
+      if (isCurrentDirectionShape(shape.RouteUID, shape.Direction)) {
+        dispatch('map/setBusRouteShape', shape);
+        break;
+      }
+    }
+
+    function isCurrentDirectionShape(shapeID, shapeDirection) {
+      return (
+        (shapeID === props.id && String(shapeDirection) === 'undefined') ||
+        shapeDirection === currentDirection.value
+      );
+    }
+  });
+}
+
+function setBusMarker() {
+  dispatch('bus/fetchRealTimeOfArrival', apiPostData).then(
+    (busTimeResponse) => {
+      dispatch(
+        'map/setBusMarker',
+        busTimeResponse.filter(
+          (itm) => itm.Direction === currentDirection.value
+        )
+      );
+    }
+  );
+}
+
+async function changeDirection(direction) {
+  if (!busStopName.value.end) return;
+  currentDirection.value = direction;
+  await setMap();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
 <template>
-  <div class="busDetail" v-if="busStopsResult.length > 0">
+  <div v-if="busStopsResults.length !== 0" class="busDetail">
     <div class="top">
       <div class="title">
         <ButtonBackToFrontPage />
@@ -8,189 +149,22 @@
           <span>{{ route }}</span>
         </div>
       </div>
-      <div class="station-name">
-        <div class="start-name">{{ startName || endName }}</div>
-        <div class="station-arrow">&#8693;</div>
-        <div class="end-name">{{ endName }}</div>
-      </div>
-      <ul class="direction">
-        <li
-          :class="{ active: currentDirection === 0 }"
-          @click="changeDirection(0)"
-        >
-          前往<span>{{ startName || endName }}</span>
-        </li>
-        <li
-          v-if="startName"
-          :class="{ active: currentDirection === 1 }"
-          @click="changeDirection(1)"
-        >
-          前往<span>{{ endName || "無返程" }}</span>
-        </li>
-      </ul>
+      <BusStationCard
+        :startName="busStopName.start"
+        :endName="busStopName.end"
+      />
+      <BusDirectionButtons
+        :currentDirection="currentDirection"
+        :changeDirection="changeDirection"
+        :startName="busStopName.start"
+        :endName="busStopName.end"
+      />
     </div>
-
-    <BusStopsList :busStopTime="busStopTime" />
-
-    <div class="refresh" @click="setMap">
-      <span>
-        <img src="images/refresh.svg" alt="" />
-      </span>
-    </div>
+    <BusStopsList :busStops="timeOfBusStops" />
+    <RefreshButton :refreshHandler="setMap" />
   </div>
 </template>
 
-<script>
-import { ref, computed, watch } from "vue";
-import { useStore } from "vuex";
-import cityData from "@/utils/city.json";
-import BusStopsList from "@/components/BusStopsList";
-import ButtonBackToFrontPage from "@/components/ButtonBackToFrontPage";
-
-export default {
-  components: { BusStopsList, ButtonBackToFrontPage },
-  props: {
-    city: {
-      type: String,
-      required: true,
-    },
-    route: {
-      type: String,
-      required: true,
-    },
-    id: {
-      type: String,
-      required: true,
-    },
-  },
-  setup(props) {
-    const store = useStore();
-    const currentDirection = ref(0);
-    const busStopTime = ref(null);
-    const busStopsResult = ref([]);
-    const busStops = computed(() =>
-      busStopsResult.value.find(
-        (itm) => itm.Direction === currentDirection.value
-      )
-    );
-    const startName = computed(() => {
-      return busStopsResult.value[1]
-        ? busStopsResult.value[1].Stops[0].StopName.Zh_tw
-        : null;
-    });
-    const endName = computed(
-      () => busStopsResult.value[0].Stops[0].StopName.Zh_tw
-    );
-    const cityName = cityData.find((city) => city.City === props.city).CityName;
-    const apiPostData = {
-      city: props.city,
-      route: props.route,
-    };
-
-    watch(
-      () => store.state.map.OSM,
-      (OSM) => {
-        if (OSM) {
-          getBusData();
-        }
-      },
-      { immediate: true }
-    );
-
-    async function getBusData() {
-      const busStopsResponse = await store.dispatch(
-        "bus/fetchBusStopOfRoute",
-        apiPostData
-      );
-      busStopsResult.value = busStopsResponse.filter(
-        (bus) => bus.RouteUID === props.id
-      );
-      await setMap();
-    }
-
-    async function setMap() {
-      store.dispatch("showLoader", true);
-      await getBusEstimatedTime();
-      await setBusShape();
-      await setStopsMarker();
-      await setBusMarker();
-      store.dispatch("showLoader", false);
-    }
-
-    async function getBusEstimatedTime() {
-      const busEstimatedTime = await store.dispatch(
-        "bus/fetchEstimatedTimeOfArrival",
-        apiPostData
-      );
-      const result = busStops.value.Stops.map((stop) => {
-        let busTime = busEstimatedTime.filter((bus) => {
-          const { StopName, Direction } = bus;
-          return (
-            StopName.Zh_tw === stop.StopName.Zh_tw &&
-            (String(Direction) === "undefined" ||
-              Direction === currentDirection.value)
-          );
-        });
-        return { ...stop, detail: busTime };
-      });
-      busStopTime.value = result;
-    }
-
-    async function setBusShape() {
-      const shapeResponse = await store.dispatch(
-        "bus/fetchBusShape",
-        apiPostData
-      );
-      for (let i = 0; i < shapeResponse.length; i++) {
-        const shape = shapeResponse[i];
-        if (shape.RouteUID === props.id) {
-          if (
-            String(shape.Direction) === "undefined" ||
-            shape.Direction === currentDirection.value
-          ) {
-            await store.dispatch("map/setBusRouteShape", shape);
-            break;
-          }
-        }
-      }
-    }
-
-    async function setStopsMarker() {
-      await store.dispatch("map/setBusStopsMarker", busStops.value.Stops);
-    }
-
-    async function setBusMarker() {
-      const busTimeResponse = await store.dispatch(
-        "bus/fetchRealTimeOfArrival",
-        apiPostData
-      );
-      const busData = busTimeResponse.filter(
-        (itm) => itm.Direction === currentDirection.value
-      );
-      await store.dispatch("map/setBusMarker", busData);
-    }
-
-    async function changeDirection(direction) {
-      if (!endName.value) return;
-      currentDirection.value = direction;
-      await setMap();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    return {
-      busStopsResult,
-      currentDirection,
-      cityName,
-      changeDirection,
-      busStopTime,
-      startName,
-      endName,
-      setMap,
-    };
-  },
-};
-</script>
-
 <style lang="scss">
-@import "./BusDetail.scss";
+@import './BusDetail.scss';
 </style>

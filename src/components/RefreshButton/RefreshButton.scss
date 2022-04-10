@@ -1,0 +1,26 @@
+@import '@/assets/scss/_var.scss';
+
+.refresh {
+  position: fixed;
+  width: 6rem;
+  height: 6rem;
+  background-color: $c-secondary;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  bottom: 2rem;
+  right: 2rem;
+  border-radius: 50%;
+  z-index: 50;
+  box-shadow: 0 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
+  font-size: 1.8rem;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  span {
+    img {
+      vertical-align: middle;
+    }
+  }
+}
