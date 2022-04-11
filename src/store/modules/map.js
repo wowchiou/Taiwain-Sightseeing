@@ -1,72 +1,10 @@
-import L from 'leaflet';
-import { antPath } from 'leaflet-ant-path';
-import Wkt from 'wicket';
+import Leaflet from '@/utils/leaflet.utils.js';
+import Wkt from '@/utils/wkt.utils.js';
+import helper from '@/helpers/store/map.helper.js';
 
-const wkt = new Wkt.Wkt();
+const stopsFeatureGroup = Leaflet.createFeatureGroup();
+const busFeatureGroup = Leaflet.createFeatureGroup();
 
-const createMarker = (position, icon) => {
-  return L.marker(position, icon);
-};
-
-const createMarkersCluster = () => {
-  return L.markerClusterGroup({
-    spiderfyOnMaxZoom: true,
-    showCoverageOnHover: false,
-    zoomToBoundsOnClick: true,
-    argumentsspiderfyOnMaxZoom: false,
-    maxClusterRadius: 120,
-    iconCreateFunction: (cluster) => {
-      const markers = cluster.getAllChildMarkers();
-      const html = `<div class="map-circle cluster-circle">${markers.length}</div>`;
-      return L.divIcon({
-        html,
-        className: 'clusterIcon',
-        iconSize: L.point(40, 40),
-      });
-    },
-  });
-};
-
-const getTravelIcon = (page) => {
-  switch (page) {
-    case 'ScenicSpot':
-      return `<i class="fas fa-binoculars"></i>`;
-    case 'Restaurant':
-      return `<i class="fas fa-utensils"></i>`;
-    case 'Hotel':
-      return `<i class="fas fa-bed"></i>`;
-  }
-};
-
-const stationStatus = (status) => {
-  switch (status) {
-    case 0:
-      return { class: 'error', text: '停止營運' };
-    case 1:
-      return { class: 'success', text: '正常營運' };
-    case 2:
-      return { class: 'warn', text: '暫停營運' };
-  }
-};
-
-const bikeType = (type) => {
-  switch (type) {
-    case 1:
-      return 'YouBike1.0';
-    case 2:
-      return 'YouBike2.0';
-  }
-};
-
-const formateStationName = (name) => {
-  const stationName = name.split('_');
-  return stationName.length > 1
-    ? stationName[stationName.length - 1]
-    : stationName[0];
-};
-
-const stopsFeatureGroup = L.featureGroup();
-const busFeatureGroup = L.featureGroup();
 let pathLayer = null;
 
 export default {
@@ -81,12 +19,15 @@ export default {
     SET_OSM(state, map) {
       state.OSM = map;
     },
+
     SET_MARKER(state, marker) {
       state.marker = marker;
     },
+
     SET_MARKERS_CLUSTER(state, markersCluster) {
       state.markersCluster = markersCluster;
     },
+
     SET_CURRENT_POSITION(state, position) {
       state.currentPosition = position;
     },
@@ -94,67 +35,45 @@ export default {
   actions: {
     buildMap({ commit }, map) {
       commit('SET_OSM', map);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?{foo}', {
-        foo: 'bar',
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }).addTo(map);
+      Leaflet.setTitleLayer(map);
     },
 
-    readCityGeometry(context, geometry) {
-      const cityGeometry = wkt.read(geometry).toJson().coordinates;
-      return [cityGeometry[1], cityGeometry[0]];
-    },
-
-    setCurrentPositionMarker({ state, dispatch, commit }, position) {
-      dispatch('clearMarkersCluster');
-      const html = `<div class="map-circle current-circle"><i class="fas fa-location-arrow"></i></div>`;
-      const marker = createMarker(position, {
-        icon: L.divIcon({
-          html,
-          className: 'currentIcon',
-          iconSize: L.point(40, 40),
-        }),
+    setLocationOfCityOnMap({ dispatch, rootState }, cityName) {
+      dispatch('fetchCityAddress', cityName, {
+        root: true,
+      }).then(([cityPosition]) => {
+        const cityGeometry = Wkt.getCityGeometry(cityPosition.Geometry);
+        rootState.map.OSM.setView(cityGeometry, 12);
       });
-      commit('SET_MARKER', marker.addTo(state.OSM));
     },
 
     clearMarkersCluster({ state }) {
       const markersCluster = state.markersCluster;
-      if (markersCluster) {
-        markersCluster.clearLayers();
-      }
+      if (markersCluster) markersCluster.clearLayers();
+    },
+
+    setCurrentPositionMarker({ state, dispatch, commit }, position) {
+      dispatch('clearMarkersCluster');
+      const markerHtml = helper.getCurrentMarkerHtml();
+      const icon = Leaflet.getDivIcon(markerHtml, 'currentIcon');
+      const marker = Leaflet.createMarker(position, { icon });
+      commit('SET_MARKER', marker.addTo(state.OSM));
     },
 
     setTravelMarkers({ state, commit, dispatch }, { page, markers }) {
       dispatch('clearMarkersCluster');
-      const markersCluster = createMarkersCluster();
-      const travelIcon = getTravelIcon(page);
+      const markersCluster = Leaflet.createMarkersCluster();
+      const travelIcon = helper.getTravelIcon(page);
       markers.forEach((itm) => {
         const { position, name, id } = itm;
-        const html = `<div class="map-circle marker-circle">${travelIcon}</div>`;
-        const layer = createMarker(position, {
-          icon: L.divIcon({
-            html,
-            className: 'travelIcon',
-            iconSize: L.point(40, 40),
-          }),
-        });
-        const popup = L.popup({
-          minWidth: 250,
-          className: 'travel-popup',
-        }).setContent(
-          `
-          <p class="popup-name">${name}</p>
-          <a class="popup-link" href="#/travel/${page}/${id}/${name}">
-            <i class="fas fa-link"></i>
-          </a>
-          `
-        );
-        layer.bindPopup(popup).on('click', () => {
-          layer.openPopup();
-        });
-        markersCluster.addLayer(layer);
+        const markerHtml = helper.getTravelMarkerHtml(travelIcon);
+        const icon = Leaflet.getDivIcon(markerHtml, 'travelIcon');
+        const marker = Leaflet.createMarker(position, { icon });
+        const popupOption = { minWidth: 250, className: 'travel-popup' };
+        const popupContent = helper.getPopupContent({ name, page, id });
+        const popup = Leaflet.getPopup(popupOption, popupContent);
+        marker.bindPopup(popup).on('click', () => marker.openPopup());
+        markersCluster.addLayer(marker);
       });
       commit('SET_MARKERS_CLUSTER', markersCluster);
       state.OSM.addLayer(markersCluster);
@@ -162,29 +81,27 @@ export default {
 
     setBikeMarkers({ state, commit, dispatch }, bikeStations) {
       dispatch('clearMarkersCluster');
-      const markersCluster = createMarkersCluster();
+      const markersCluster = Leaflet.createMarkersCluster();
       bikeStations.forEach((bike) => {
         const { StationPosition, detail, ServiceType, StationName } = bike;
-        const html = `<div class="map-circle marker-circle"><i class="fas fa-bicycle"></i></div>`;
         const bikePosition = [
           StationPosition.PositionLat,
           StationPosition.PositionLon,
         ];
-        const layer = createMarker(bikePosition, {
-          icon: L.divIcon({
-            html,
-            className: 'travelIcon',
-            iconSize: L.point(40, 40),
-          }),
-        });
-        const status = stationStatus(detail.ServiceStatus);
-        const type = bikeType(ServiceType);
-        const name = formateStationName(StationName.Zh_tw);
-        const popup = L.popup({
-          minWidth: 250,
-          className: 'bike-popup',
-        }).setContent(
-          `
+        const markerHtml = helper.getBikeMarkerHtml();
+        const icon = Leaflet.getDivIcon(markerHtml, 'travelIcon');
+        const marker = Leaflet.createMarker(bikePosition, { icon });
+        const status = helper.getBikeStationStatus(detail.ServiceStatus);
+        const type = helper.getBikeType(ServiceType);
+        const name = helper.formateBikeStationName(StationName.Zh_tw);
+        const popupOption = { minWidth: 250, className: 'bike-popup' };
+        const popupContent = getPopupContent();
+        const popup = Leaflet.getPopup(popupOption, popupContent);
+        marker.bindPopup(popup).on('click', () => marker.openPopup());
+        markersCluster.addLayer(marker);
+
+        function getPopupContent() {
+          return `
           <div class="bike-header">
             <div class="bike-top">
               <p class="bike-status ${status.class}">${status.text}</p>
@@ -195,13 +112,8 @@ export default {
           <div class="bike-body">
             <p class="bike-rent">可出借<span>${detail.AvailableRentBikes}</span>輛</p>
             <p class="bike-return">可歸還<span>${detail.AvailableReturnBikes}</span>輛</p>
-          </div>
-          `
-        );
-        layer.bindPopup(popup).on('click', () => {
-          layer.openPopup();
-        });
-        markersCluster.addLayer(layer);
+          </div>`;
+        }
       });
       commit('SET_MARKERS_CLUSTER', markersCluster);
       state.OSM.addLayer(markersCluster);
@@ -213,24 +125,14 @@ export default {
         const { StopPosition, StopName } = stop;
         const lat = StopPosition.PositionLat;
         const lng = StopPosition.PositionLon;
-        if (idx === 0) {
-          state.OSM.setView([lat, lng], 14);
-        }
-        const html = `<div class="stop-marker"><span>${idx + 1}</span></div>`;
-        const marker = createMarker([lat, lng], {
-          icon: L.divIcon({
-            html,
-            className: 'stop-icon',
-            iconSize: L.point(20, 20),
-          }),
-        });
-        const popup = L.popup({
-          minWidth: 150,
-          className: 'stop-popup',
-        }).setContent(`<p>${StopName.Zh_tw}</p>`);
-        marker.bindPopup(popup).on('click', () => {
-          marker.openPopup();
-        });
+        if (idx === 0) state.OSM.setView([lat, lng], 14);
+        const markerHtml = helper.getBusStopMarkerHtml(idx++);
+        const icon = Leaflet.getDivIcon(markerHtml, 'stop-icon', [20, 20]);
+        const marker = Leaflet.createMarker([lat, lng], { icon });
+        const popupOption = { minWidth: 150, className: 'stop-popup' };
+        const popupContent = `<p>${StopName.Zh_tw}</p>`;
+        const popup = Leaflet.getPopup(popupOption, popupContent);
+        marker.bindPopup(popup).on('click', () => marker.openPopup());
         stopsFeatureGroup.addLayer(marker);
       });
       state.OSM.addLayer(stopsFeatureGroup);
@@ -242,63 +144,28 @@ export default {
         const { BusPosition, PlateNumb, DutyStatus } = bus;
         const lat = BusPosition.PositionLat;
         const lng = BusPosition.PositionLon;
-        let busStatus = '';
-        if (DutyStatus === 1) busStatus = 'start';
-        if (DutyStatus === 2) busStatus = 'finish';
-        const html = `<div class="bus-marker"><i class="fas fa-bus"></i><span>${PlateNumb}</span></div>`;
-        const marker = createMarker([lat, lng], {
-          icon: L.divIcon({
-            html,
-            className: `bus-icon ${busStatus}`,
-            iconSize: L.point(40, 40),
-          }),
-        });
+        let busStatus = helper.getBusStatus(DutyStatus);
+        const markerHtml = helper.getBusMarkerHtml(PlateNumb);
+        const markerClass = `bus-icon ${busStatus}`;
+        const icon = Leaflet.getDivIcon(markerHtml, markerClass);
+        const marker = Leaflet.createMarker([lat, lng], { icon });
         busFeatureGroup.addLayer(marker);
       });
       state.OSM.addLayer(busFeatureGroup);
     },
 
-    setBusRouteShape({ state }, busShape) {
-      if (pathLayer) {
-        state.OSM.removeLayer(pathLayer);
-      }
-      const shapeGEO = busShape.Geometry;
-      const wktShapeGEO = wkt
-        .read(shapeGEO)
-        .toJson()
-        .coordinates.map((itm) => itm.reverse());
-      pathLayer = antPath(wktShapeGEO, {
-        delay: 800,
-        dashArray: [15, 30],
-        weight: 5,
-        color: '#58c5d7',
-        pulseColor: '#FFFFFF',
-        paused: false,
-        reverse: false,
-        hardwareAccelerated: true,
-        opacity: 0.9,
-      });
+    setBusRouteShape({ state }, { Geometry }) {
+      if (pathLayer) state.OSM.removeLayer(pathLayer);
+      const wktShapeGEO = Wkt.getShapeGeometry(Geometry);
+      pathLayer = Leaflet.getAntPathLayer(wktShapeGEO);
       state.OSM.addLayer(pathLayer);
       state.OSM.fitBounds(pathLayer.getBounds());
     },
 
     clearBusMap({ state }) {
-      if (pathLayer) {
-        state.OSM.removeLayer(pathLayer);
-      }
+      if (pathLayer) state.OSM.removeLayer(pathLayer);
       busFeatureGroup.clearLayers();
       stopsFeatureGroup.clearLayers();
-    },
-
-    async setLocationOfCityOnMap({ dispatch, rootState }, cityName) {
-      const cityPosition = await dispatch('fetchCityAddress', cityName, {
-        root: true,
-      });
-      const cityGeometry = await dispatch(
-        'readCityGeometry',
-        cityPosition[0].Geometry
-      );
-      rootState.map.OSM.setView(cityGeometry, 12);
     },
   },
 };

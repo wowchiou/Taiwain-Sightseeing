@@ -79,24 +79,33 @@ async function setMap() {
 function getBusEstimatedTime() {
   dispatch('bus/fetchEstimatedTimeOfArrival', apiPostData).then(
     (estimatedTimeRes) => {
-      const results = busCurrentDirectionStops.value.map((stop) => {
-        const directionStopName = stop.StopName.Zh_tw;
-        let busEstimatedTime = estimatedTimeRes.filter(
-          ({ StopName, Direction }) => {
-            return isCurrentDirectionStop(StopName.Zh_tw, Direction);
-          }
-        );
-        return { ...stop, detail: busEstimatedTime };
-
-        function isCurrentDirectionStop(estimatedStopName, direction) {
-          estimatedStopName === directionStopName &&
-            (String(direction) === 'undefined' ||
-              direction === currentDirection.value);
-        }
-      });
-      timeOfBusStops.value = results;
+      const estimatedTimeData = estimatedTimeRes.filter(
+        (bus) => bus.RouteName.Zh_tw === props.route
+      );
+      timeOfBusStops.value = formateBusEstimatedTime(estimatedTimeData);
     }
   );
+}
+
+function formateBusEstimatedTime(estimatedTime) {
+  return busCurrentDirectionStops.value.map((stop) => {
+    const directionStopName = stop.StopName.Zh_tw;
+
+    return {
+      ...stop,
+      detail: estimatedTime.filter(({ StopName, Direction }) => {
+        return isCurrentDirectionStop(StopName.Zh_tw, Direction);
+      }),
+    };
+
+    function isCurrentDirectionStop(estimatedStopName, direction) {
+      return (
+        estimatedStopName === directionStopName &&
+        (String(direction) === 'undefined' ||
+          direction === currentDirection.value)
+      );
+    }
+  });
 }
 
 function setBusShape() {
