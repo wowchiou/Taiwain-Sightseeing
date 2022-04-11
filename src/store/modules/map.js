@@ -70,7 +70,7 @@ export default {
         const icon = Leaflet.getDivIcon(markerHtml, 'travelIcon');
         const marker = Leaflet.createMarker(position, { icon });
         const popupOption = { minWidth: 250, className: 'travel-popup' };
-        const popupContent = helper.getPopupContent({ name, page, id });
+        const popupContent = helper.getTravelPopupContent({ name, page, id });
         const popup = Leaflet.getPopup(popupOption, popupContent);
         marker.bindPopup(popup).on('click', () => marker.openPopup());
         markersCluster.addLayer(marker);
