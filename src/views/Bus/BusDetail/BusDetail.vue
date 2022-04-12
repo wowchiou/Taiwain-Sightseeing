@@ -2,6 +2,7 @@
 import { ref, computed, watch, defineProps } from 'vue';
 import { useStore } from 'vuex';
 import CITY from '@/utils/city.json';
+import helper from '@/helpers/components/BusDetail.helper.js';
 
 import BusStationCard from '@/components/BusStationCard';
 import BusDirectionButtons from '@/components/BusDirectionButtons';
@@ -43,8 +44,6 @@ const busStopName = computed(() => {
   return { start, end };
 });
 
-const cityName = CITY.find((city) => city.City === props.city).CityName;
-
 const apiPostData = {
   city: props.city,
   route: props.route,
@@ -54,18 +53,14 @@ watch(
   () => state.map.OSM,
   async (OSM) => {
     if (!OSM) return;
-    getBusStopsData();
+    dispatch('showLoader', true);
+    dispatch('bus/fetchBusStopOfRoute', apiPostData).then((stops) => {
+      busStopsResults.value = helper.getCurrentRouteBusStops(stops, props.id);
+      setMap();
+    });
   },
   { immediate: true }
 );
-
-function getBusStopsData() {
-  dispatch('showLoader', true);
-  dispatch('bus/fetchBusStopOfRoute', apiPostData).then(async (stops) => {
-    busStopsResults.value = stops.filter((stop) => stop.RouteUID === props.id);
-    await setMap();
-  });
-}
 
 async function setMap() {
   dispatch('showLoader', true);
@@ -77,34 +72,26 @@ async function setMap() {
 }
 
 function getBusEstimatedTime() {
-  dispatch('bus/fetchEstimatedTimeOfArrival', apiPostData).then(
-    (estimatedTimeRes) => {
-      const estimatedTimeData = estimatedTimeRes.filter(
-        (bus) => bus.RouteName.Zh_tw === props.route
-      );
-      timeOfBusStops.value = formateBusEstimatedTime(estimatedTimeData);
-    }
-  );
+  dispatch('bus/fetchEstimatedTimeOfArrival', apiPostData).then((res) => {
+    const currentRoute = props.route;
+    const estimatedData = helper.getCurrentRouteEstimateTime(res, currentRoute);
+    timeOfBusStops.value = formateBusEstimatedTime(estimatedData);
+  });
 }
 
 function formateBusEstimatedTime(estimatedTime) {
   return busCurrentDirectionStops.value.map((stop) => {
-    const directionStopName = stop.StopName.Zh_tw;
-
     return {
       ...stop,
       detail: estimatedTime.filter(({ StopName, Direction }) => {
-        return isCurrentDirectionStop(StopName.Zh_tw, Direction);
+        return helper.isCurrentDirectionStop({
+          estimatedStopName: StopName.Zh_tw,
+          estimatedDirection: Direction,
+          currentStopName: stop.StopName.Zh_tw,
+          currentDirection: currentDirection.value,
+        });
       }),
     };
-
-    function isCurrentDirectionStop(estimatedStopName, direction) {
-      return (
-        estimatedStopName === directionStopName &&
-        (String(direction) === 'undefined' ||
-          direction === currentDirection.value)
-      );
-    }
   });
 }
 
@@ -112,17 +99,17 @@ function setBusShape() {
   dispatch('bus/fetchBusShape', apiPostData).then((shapeResponse) => {
     for (let i = 0; i < shapeResponse.length; i++) {
       const shape = shapeResponse[i];
-      if (isCurrentDirectionShape(shape.RouteUID, shape.Direction)) {
+      if (
+        helper.isCurrentDirectionShape({
+          shapeRouteID: shape.RouteUID,
+          shapeDirection: shape.Direction,
+          currentRouteID: props.id,
+          currentDirection: currentDirection.value,
+        })
+      ) {
         dispatch('map/setBusRouteShape', shape);
         break;
       }
-    }
-
-    function isCurrentDirectionShape(shapeID, shapeDirection) {
-      return (
-        (shapeID === props.id && String(shapeDirection) === 'undefined') ||
-        shapeDirection === currentDirection.value
-      );
     }
   });
 }
@@ -130,12 +117,11 @@ function setBusShape() {
 function setBusMarker() {
   dispatch('bus/fetchRealTimeOfArrival', apiPostData).then(
     (busTimeResponse) => {
-      dispatch(
-        'map/setBusMarker',
-        busTimeResponse.filter(
-          (itm) => itm.Direction === currentDirection.value
-        )
+      const currentBusTime = helper.getCurrentDirectionBusTime(
+        busTimeResponse,
+        currentDirection.value
       );
+      dispatch('map/setBusMarker', currentBusTime);
     }
   );
 }
@@ -153,7 +139,7 @@ async function changeDirection(direction) {
     <div class="top">
       <div class="title">
         <ButtonBackToFrontPage />
-        <div class="city">{{ cityName }}</div>
+        <div class="city">{{ helper.getCityChineseName(CITY, city) }}</div>
         <div class="route-name">
           <span>{{ route }}</span>
         </div>

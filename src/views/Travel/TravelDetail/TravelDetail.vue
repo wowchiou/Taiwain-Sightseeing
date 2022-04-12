@@ -1,96 +1,81 @@
+<script setup>
+import { ref, watchEffect, computed, defineProps } from 'vue';
+import { useStore } from 'vuex';
+
+import ButtonBackToFrontPage from '@/components/ButtonBackToFrontPage';
+import TravelDetailItem from '@/components/TravelDetailItem';
+
+const props = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+  page: {
+    type: String,
+    required: true,
+  },
+});
+
+const { state, dispatch } = useStore();
+
+const detailInfo = ref(null);
+const isMapInit = computed(() => state.map.OSM || null);
+
+watchEffect(async () => {
+  if (!isMapInit.value) return;
+  dispatch('showLoader', true);
+  const page = props.page;
+  dispatch('travel/fetchTravelData', page).then((travelData) => {
+    detailInfo.value = travelData.find((itm) => itm[`${page}ID`] === props.id);
+    const { PositionLat, PositionLon } = detailInfo.value.Position;
+    dispatch('map/setTravelMarkers', {
+      page,
+      markers: [
+        {
+          position: [PositionLat, PositionLon],
+          name: detailInfo.value[`${page}Name`],
+          id: detailInfo.value[`${page}ID`],
+        },
+      ],
+    });
+    state.map.OSM.setView([PositionLat, PositionLon], 15);
+    dispatch('showLoader', false);
+  });
+});
+
+function isEmptyObject(data) {
+  return JSON.stringify(data) === '{}';
+}
+</script>
+
 <template>
-  <div v-if="data" class="detail">
+  <div v-if="detailInfo" class="detail">
     <div class="title">
       <ButtonBackToFrontPage />
-      <h1>{{ data[`${page}Name`] }}</h1>
+      <h1>{{ detailInfo[`${page}Name`] }}</h1>
     </div>
     <div class="content">
-      <TravelDetailItem title="地址" :content="data.Address" />
-      <TravelDetailItem title="電話" :content="data.Phone" />
-      <TravelDetailItem title="營業時間" :content="data.OpenTime" />
-      <TravelDetailItem title="旅遊資訊" :content="data.TravelInfo" />
+      <TravelDetailItem title="地址" :content="detailInfo.Address" />
+      <TravelDetailItem title="電話" :content="detailInfo.Phone" />
+      <TravelDetailItem title="營業時間" :content="detailInfo.OpenTime" />
+      <TravelDetailItem title="旅遊資訊" :content="detailInfo.TravelInfo" />
       <TravelDetailItem
-        v-if="!isEmptyObject(data.Picture)"
+        v-if="!isEmptyObject(detailInfo.Picture)"
         title="旅遊圖片"
         :content="{
-          src: data.Picture.PictureUrl1,
-          alt: data.Picture.PictureDescription1,
+          src: detailInfo.Picture.PictureUrl1,
+          alt: detailInfo.Picture.PictureDescription1,
         }"
       />
       <TravelDetailItem
-        v-if="data.DescriptionDetail"
+        v-if="detailInfo.DescriptionDetail"
         title="地點說明"
-        :content="data.DescriptionDetail"
+        :content="detailInfo.DescriptionDetail"
       />
     </div>
   </div>
 </template>
 
-<script>
-import { ref, watchEffect, computed } from "vue";
-import { useStore } from "vuex";
-import ButtonBackToFrontPage from "@/components/ButtonBackToFrontPage";
-import TravelDetailItem from "@/components/TravelDetailItem";
-
-export default {
-  props: {
-    id: {
-      type: String,
-      required: true,
-    },
-    page: {
-      type: String,
-      required: true,
-    },
-  },
-  components: {
-    ButtonBackToFrontPage,
-    TravelDetailItem,
-  },
-  setup(props) {
-    const store = useStore();
-    const data = ref(null);
-    const isMapInit = computed(() => store.state.map.OSM || null);
-
-    watchEffect(async () => {
-      if (isMapInit.value) {
-        store.dispatch("showLoader", true);
-        const result = await store.dispatch(
-          "travel/fetchTravelData",
-          props.page
-        );
-
-        data.value = result.find((itm) => itm[`${props.page}ID`] === props.id);
-
-        // 繪製地圖marker
-        const lat = data.value.Position.PositionLat;
-        const lng = data.value.Position.PositionLon;
-        await store.dispatch("map/setTravelMarkers", {
-          page: props.page,
-          markers: [
-            {
-              position: [lat, lng],
-              name: data.value[`${props.page}Name`],
-              id: data.value[`${props.page}ID`],
-            },
-          ],
-        });
-
-        // 設定地圖位置
-        store.state.map.OSM.setView([lat, lng], 15);
-        store.dispatch("showLoader", false);
-      }
-    });
-
-    function isEmptyObject(data) {
-      return JSON.stringify(data) === "{}";
-    }
-
-    return { data, isEmptyObject };
-  },
-};
-</script>
-
 <style lang="scss" scoped>
-@import "./TravelDetail.scss";
+@import './TravelDetail.scss';
 </style>

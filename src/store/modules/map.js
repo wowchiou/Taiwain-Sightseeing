@@ -121,12 +121,12 @@ export default {
 
     setBusStopsMarker({ state }, stops) {
       stopsFeatureGroup.clearLayers();
-      stops.forEach((stop, idx) => {
+      stops.forEach((stop, stopIndex) => {
         const { StopPosition, StopName } = stop;
         const lat = StopPosition.PositionLat;
         const lng = StopPosition.PositionLon;
-        if (idx === 0) state.OSM.setView([lat, lng], 14);
-        const markerHtml = helper.getBusStopMarkerHtml(idx++);
+        if (stopIndex === 0) state.OSM.setView([lat, lng], 14);
+        const markerHtml = helper.getBusStopMarkerHtml(stopIndex + 1);
         const icon = Leaflet.getDivIcon(markerHtml, 'stop-icon', [20, 20]);
         const marker = Leaflet.createMarker([lat, lng], { icon });
         const popupOption = { minWidth: 150, className: 'stop-popup' };

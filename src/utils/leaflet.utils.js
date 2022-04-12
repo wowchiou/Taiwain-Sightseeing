@@ -1,7 +1,7 @@
 import L from 'leaflet';
 import { antPath } from 'leaflet-ant-path';
 
-const CLUSTER_OPRIONS = {
+const CLUSTER_OPTIONS = {
   spiderfyOnMaxZoom: true,
   showCoverageOnHover: false,
   zoomToBoundsOnClick: true,
@@ -40,7 +40,7 @@ export default {
 
   createMarkersCluster() {
     return L.markerClusterGroup({
-      ...CLUSTER_OPRIONS,
+      ...CLUSTER_OPTIONS,
       iconCreateFunction: (cluster) => {
         const markers = cluster.getAllChildMarkers();
         const html = `<div class="map-circle cluster-circle">${markers.length}</div>`;

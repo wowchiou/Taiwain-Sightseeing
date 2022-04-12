@@ -34,11 +34,9 @@ watch(
     await dispatch('travel/fetchTravelData', props.page);
     dispatch('travel/setTravelData', props.page);
 
-    if (selectedCityRecord.value) {
-      // 如從詳細頁回來並且搜尋過城市、關鍵字
-      // 回復原來搜尋過的紀錄
-      setSearchedRecords();
-    }
+    // 如從詳細頁回來並且搜尋過城市、關鍵字
+    // 復原原來搜尋過的紀錄
+    if (selectedCityRecord.value) setSearchedRecords();
 
     dispatch('showLoader', false);
 
@@ -53,13 +51,11 @@ watch(
       searchedCity.value = selectedCityRecord.value;
       keyword.value = state.travel.keywords;
       let filterSearchData = filterSearchCity();
-      if (keyword.value) {
-        filterSearchData = filterSearchCityKeywords(
-          filterSearchData,
-          keyword.value
-        );
-      }
       searchedResults.value = filterSearchData;
+      if (keyword.value) {
+        filterSearchData = filterSearchCityKeywords(keyword.value);
+        searchedResults.value = filterSearchData;
+      }
       setMarkers(filterSearchData);
     }
   },

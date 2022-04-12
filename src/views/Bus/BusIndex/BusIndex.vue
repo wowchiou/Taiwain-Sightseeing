@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import CITY from '@/utils/city.json';
+import helper from '@/helpers/components/BusIndex.helper.js';
 
 import AppSearchBar from '@/components/AppSearchBar';
 import CitySelector from '@/components/CitySelector';
@@ -9,6 +10,7 @@ import CityKeywordInput from '@/components/CityKeywordInput';
 import BusSearchList from '@/components/BusSearchList';
 
 const { state, commit, dispatch } = useStore();
+const { isRouteNameContainKeywords } = helper;
 const searchedCity = ref('');
 const keyword = ref('');
 const busResults = ref([]);
@@ -61,24 +63,17 @@ function keywordSearch() {
 }
 
 function filterBusSearchKeywords() {
-  let results = [];
+  let keywordsResults = [];
   busRoutes.value.forEach((bus) => {
     const { RouteName, DepartureStopNameZh, DestinationStopNameZh } = bus;
-    checkRouteName(RouteName.Zh_tw);
-    checkRouteName(DepartureStopNameZh);
-    checkRouteName(DestinationStopNameZh);
-
-    function checkRouteName(routeName) {
-      if (isRouteNameContainKeywords(routeName)) {
-        return results.push(bus);
-      }
-    }
-
-    function isRouteNameContainKeywords(routeName) {
-      return routeName && routeName.indexOf(keyword.value) !== -1;
-    }
+    if (isRouteNameContainKeywords(RouteName.Zh_tw, keyword.value))
+      return keywordsResults.push(bus);
+    if (isRouteNameContainKeywords(DepartureStopNameZh, keyword.value))
+      return keywordsResults.push(bus);
+    if (isRouteNameContainKeywords(DestinationStopNameZh, keyword.value))
+      return keywordsResults.push(bus);
   });
-  return results;
+  return keywordsResults;
 }
 </script>
 
