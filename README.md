@@ -8,9 +8,6 @@ Vue3、vue-cli4、vuex、scss、RWD、Leaflet.js
 網站：<br>
 https://wowchiou.github.io/Taiwain-Sightseeing/#/
 
-程式碼：<br>
-https://github.com/wowchiou/Taiwain-Sightseeing/tree/dev
-
 風景區、餐飲、旅宿查詢
 ![1](https://user-images.githubusercontent.com/42172531/157607099-63b43455-f14a-4a57-99e4-f41633b4da98.png)
 
