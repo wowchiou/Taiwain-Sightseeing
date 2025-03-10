@@ -1,10 +1,11 @@
 import axios from 'axios';
-import { ElNotification } from 'element-plus';
+// import { ElNotification } from 'element-plus';
 import store from '@/store';
 
-const TDX_BASE_URL = process.env.VUE_APP_TDX_API_URL;
-const GIST_BASE_URL = process.env.VUR_APP_GIST_API_URL;
-const AUTH_URL = process.env.VUE_APP_TDX_TOKEN_URL;
+const TDX_BASE_URL = 'https://tdx.transportdata.tw/api/basic';
+const GIST_BASE_URL = 'https://gist.motc.gov.tw/gist_api';
+const AUTH_URL =
+  'https://tdx.transportdata.tw/auth/realms/TDXConnect/protocol/openid-connect/token';
 
 async function FetchAuthorization() {
   const parameter = {
@@ -91,11 +92,12 @@ httpTDX.interceptors.response.use(
       }
     }
     if (response?.status === 429) {
-      ElNotification({
-        title: '請求過於頻繁',
-        message: 'TDX API上限已滿，請稍後再試！',
-        type: 'warning',
-      });
+      // ElNotification({
+      //   title: '請求過於頻繁',
+      //   message: 'TDX API上限已滿，請稍後再試！',
+      //   type: 'warning',
+      // });
+      alert('請求過於頻繁，請稍後再試！');
       store.dispatch('showLoader', false);
     }
     return Promise.reject(error);
@@ -137,11 +139,11 @@ httpGIST.interceptors.response.use(
       }
     }
     if (response?.status === 429) {
-      ElNotification({
-        title: '請求過於頻繁',
-        message: 'TDX API上限已滿，請稍後再試！',
-        type: 'warning',
-      });
+      // ElNotification({
+      //   title: '請求過於頻繁',
+      //   message: 'TDX API上限已滿，請稍後再試！',
+      //   type: 'warning',
+      // });
       store.dispatch('showLoader', false);
     }
     return Promise.reject(error);
