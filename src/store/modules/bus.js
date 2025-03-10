@@ -25,25 +25,27 @@ export default {
       commit('SET_BUS_KEYWORDS', '');
     },
 
-    getBusTotalData({ commit, dispatch }, city) {
-      return Promise.all([
-        dispatch('fetchBusCityRoute', city),
-        dispatch('fetchBusCityStopOfRoute', city),
-      ])
-        .then(([busCityRoutes, busCityStopOfRoute]) => {
-          const busTotalResult = busCityRoutes.map((route) => {
-            return {
-              ...route,
-              detail: busCityStopOfRoute.find(
-                (stop) => stop.RouteUID === route.RouteUID
-              ),
-            };
-          });
-          commit('SET_BUS_ROUTES', busTotalResult);
-        })
-        .catch((err) => {
-          throw err;
+    async getBusTotalData({ commit, dispatch }, city) {
+      try {
+        const busCityRoutes = await dispatch('fetchBusCityRoute', city);
+        const busCityStopOfRoute = await dispatch(
+          'fetchBusCityStopOfRoute',
+          city
+        );
+
+        const busTotalResult = busCityRoutes.map((route) => {
+          return {
+            ...route,
+            detail: busCityStopOfRoute.find(
+              (stop) => stop.RouteUID === route.RouteUID
+            ),
+          };
         });
+        console.log(busTotalResult);
+        commit('SET_BUS_ROUTES', busTotalResult);
+      } catch (error) {
+        throw new Error(error);
+      }
     },
 
     // 獲取指定城市所有客運路線

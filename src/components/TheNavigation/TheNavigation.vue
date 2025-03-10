@@ -28,7 +28,7 @@
 
 <script>
 import TheNavigationList from '@/components/TheNavigationList';
-import menuList from '@/utils/menu-list.json';
+import { menuList } from '@/utils/menu-list';
 
 export default {
   components: {

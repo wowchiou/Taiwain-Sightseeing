@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import store from '@/store';
 import Home from '@/views/Home';
 
@@ -69,6 +69,7 @@ export const routes = [
   {
     path: '/network-error',
     name: 'network-error',
+    props: true,
     component: () => import('@/views/NetWorkError'),
   },
   {
@@ -79,7 +80,7 @@ export const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(process.env.BASE_URL),
+  history: createWebHistory(process.env.BASE_URL),
   routes,
   scrollBehavior(to, from, savedPosition) {
     return savedPosition || { top: 0 };

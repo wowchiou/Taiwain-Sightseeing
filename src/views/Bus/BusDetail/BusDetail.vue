@@ -8,7 +8,7 @@ import BusStationCard from '@/components/BusStationCard';
 import BusDirectionButtons from '@/components/BusDirectionButtons';
 import BusStopsList from '@/components/BusStopsList';
 import ButtonBackToFrontPage from '@/components/ButtonBackToFrontPage';
-import RefreshButton from '@/components/RefreshButton';
+// import RefreshButton from '@/components/RefreshButton';
 
 const props = defineProps({
   city: {
@@ -66,8 +66,8 @@ async function setMap() {
   dispatch('showLoader', true);
   await getBusEstimatedTime();
   await setBusShape();
-  dispatch('map/setBusStopsMarker', busCurrentDirectionStops.value);
-  setBusMarker();
+  await dispatch('map/setBusStopsMarker', busCurrentDirectionStops.value);
+  await setBusMarker();
   dispatch('showLoader', false);
 }
 
@@ -156,7 +156,7 @@ async function changeDirection(direction) {
       />
     </div>
     <BusStopsList :busStops="timeOfBusStops" />
-    <RefreshButton :refreshHandler="setMap" />
+    <!-- <RefreshButton :refreshHandler="setMap" /> -->
   </div>
 </template>
 
