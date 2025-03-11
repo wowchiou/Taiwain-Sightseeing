@@ -66,7 +66,6 @@ export const httpTDX = axios.create({
 // **請求攔截器**：每次請求前都確認 token 是否有效
 httpTDX.interceptors.request.use(
   async (config) => {
-    console.log(config);
     const token = await getValidToken();
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
@@ -97,7 +96,7 @@ httpTDX.interceptors.response.use(
       //   message: 'TDX API上限已滿，請稍後再試！',
       //   type: 'warning',
       // });
-      alert('請求過於頻繁，請稍後再試！');
+      alert('抱歉，TDX服務(免費版)每分鐘僅能發送5次API，請稍後再試！');
       store.dispatch('showLoader', false);
     }
     return Promise.reject(error);
