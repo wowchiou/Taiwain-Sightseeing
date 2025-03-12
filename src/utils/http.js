@@ -2,25 +2,17 @@ import axios from 'axios';
 // import { ElNotification } from 'element-plus';
 import store from '@/store';
 
+const isDev = process.env.NODE_ENV === 'development';
+
 const TDX_BASE_URL = 'https://tdx.transportdata.tw/api/basic';
 const GIST_BASE_URL = 'https://gist.motc.gov.tw/gist_api';
-const AUTH_URL =
-  'https://tdx.transportdata.tw/auth/realms/TDXConnect/protocol/openid-connect/token';
+
+const AUTH_URL = isDev
+  ? 'http://localhost:3000/api/tdx/token'
+  : 'https://nuxt-platform.vercel.app/api/tdx/token';
 
 async function FetchAuthorization() {
-  const parameter = {
-    grant_type: 'client_credentials',
-    client_id: process.env.VUE_APP_TDX_ID,
-    client_secret: process.env.VUE_APP_TDX_KEY,
-  };
-
-  return await fetch(AUTH_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: new URLSearchParams(parameter),
-  })
+  return await fetch(AUTH_URL)
     .then((response) => response.json())
     .then((data) => {
       console.log(data);

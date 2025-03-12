@@ -14,12 +14,5 @@ export default {
   components: {
     AppLoader,
   },
-  mounted() {
-    fetch('http://localhost:3000/api/tdx/token')
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-      });
-  },
 };
 </script>
