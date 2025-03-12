@@ -1,4 +1,4 @@
-import { httpGIST, httpTDX } from '@/utils/http';
+import { httpGIST, httpAC } from '@/utils/http';
 
 export default {
   getCity() {
@@ -12,48 +12,52 @@ export default {
   },
 
   getScenicSpot() {
-    return httpTDX.get('/v2/Tourism/ScenicSpot');
+    return httpAC.get('/Tourism/ScenicSpot');
   },
 
   getRestaurant() {
-    return httpTDX.get('/v2/Tourism/Restaurant');
+    return httpAC.get('/Tourism/Restaurant');
   },
 
   getHotel() {
-    return httpTDX.get('/v2/Tourism/Hotel');
+    return httpAC.get('/Tourism/Hotel');
   },
 
   getBikeStation(city) {
-    return httpTDX.get(`/v2/Bike/Station/${city}`);
+    return httpAC.get(`/Bike/Station?city=${city}`);
   },
 
   getBikeAvailability(city) {
-    return httpTDX.get(`/v2/Bike/Availability/${city}`);
+    return httpAC.get(`/Bike/Availability?city=${city}`);
   },
 
   getBusCityRoute(city) {
-    return httpTDX.get(`/v2/Bus/Route/City/${city}`);
+    return httpAC.get(`/Bus/Route?city=${city}`);
   },
 
   getBusCityStopOfRoute(city) {
-    return httpTDX.get(`/v2/Bus/StopOfRoute/City/${city}`);
+    return httpAC.get(`/Bus/StopOfRoute?city=${city}`);
   },
 
   getRealTimeOfArrival(city, routeName) {
-    return httpTDX.get(`/v2/Bus/RealTimeByFrequency/City/${city}/${routeName}`);
+    return httpAC.get(
+      `/Bus/RealTimeByFrequency?city=${city}&routeName=${routeName}`
+    );
   },
 
   getBusStopOfRoute(city, routeName) {
-    return httpTDX.get(`/v2/Bus/StopOfRoute/City/${city}/${routeName}`);
+    return httpAC.get(
+      `/Bus/StopOfRouteByName?city=${city}&routeName=${routeName}`
+    );
   },
 
   getEstimatedTimeOfArrival(city, routeName) {
-    return httpTDX.get(
-      `/v2/Bus/EstimatedTimeOfArrival/City/${city}/${routeName}`
+    return httpAC.get(
+      `/Bus/EstimatedTimeOfArrival?city=${city}&routeName=${routeName}`
     );
   },
 
   getBusShape(city, routeName) {
-    return httpTDX.get(`/v2/Bus/Shape/City/${city}/${routeName}`);
+    return httpAC.get(`/Bus/Shape?city=${city}&routeName=${routeName}`);
   },
 };

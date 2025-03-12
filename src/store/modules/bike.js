@@ -1,11 +1,11 @@
 import Api from '@/service';
-import BIKE_CITY_STATIONS from '@/utils/bikeCityStations.json';
+import CITY_LIST from '@/utils/city.json';
 
 export default {
   namespaced: true,
   state: {
     bikeStations: null,
-    bikeCities: BIKE_CITY_STATIONS,
+    bikeCities: CITY_LIST.filter((city) => city.bike),
   },
   mutations: {
     SET_BIKE_STATIONS(state, stations) {

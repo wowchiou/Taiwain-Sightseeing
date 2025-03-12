@@ -5,7 +5,9 @@
     "CityCode": "TPE",
     "City": "Taipei",
     "CountyID": "A",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": true,
+    "latlng": [25.0375417, 121.5645581]
   },
   {
     "CityID": "B",
@@ -13,7 +15,9 @@
     "CityCode": "TXG",
     "City": "Taichung",
     "CountyID": "B",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": true,
+    "latlng": [24.1477358, 120.6736482]
   },
   {
     "CityID": "C",
@@ -21,7 +25,9 @@
     "CityCode": "KEE",
     "City": "Keelung",
     "CountyID": "C",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": false,
+    "latlng": [25.1276035, 121.7391833]
   },
   {
     "CityID": "D",
@@ -29,7 +35,9 @@
     "CityCode": "TNN",
     "City": "Tainan",
     "CountyID": "D",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": true,
+    "latlng": [22.9908275, 120.2129143]
   },
   {
     "CityID": "E",
@@ -37,7 +45,9 @@
     "CityCode": "KHH",
     "City": "Kaohsiung",
     "CountyID": "E",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": true,
+    "latlng": [22.6272784, 120.3014353]
   },
   {
     "CityID": "F",
@@ -45,7 +55,9 @@
     "CityCode": "NWT",
     "City": "NewTaipei",
     "CountyID": "F",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": true,
+    "latlng": [25.0133672, 121.4639878]
   },
   {
     "CityID": "G",
@@ -53,7 +65,9 @@
     "CityCode": "ILA",
     "City": "YilanCounty",
     "CountyID": "G",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": false,
+    "latlng": [24.7512996, 121.7536725]
   },
   {
     "CityID": "H",
@@ -61,7 +75,9 @@
     "CityCode": "TAO",
     "City": "Taoyuan",
     "CountyID": "H",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": true,
+    "latlng": [24.9936286, 121.3009798]
   },
   {
     "CityID": "I",
@@ -69,7 +85,9 @@
     "CityCode": "CYI",
     "City": "Chiayi",
     "CountyID": "I",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": false,
+    "latlng": [23.4792983, 120.4485925]
   },
   {
     "CityID": "J",
@@ -77,7 +95,9 @@
     "CityCode": "HSQ",
     "City": "HsinchuCounty",
     "CountyID": "J",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": true,
+    "latlng": [24.8268246, 121.0206171]
   },
   {
     "CityID": "K",
@@ -85,7 +105,9 @@
     "CityCode": "MIA",
     "City": "MiaoliCounty",
     "CountyID": "K",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": true,
+    "latlng": [24.5601594, 120.8214265]
   },
   {
     "CityID": "M",
@@ -93,7 +115,9 @@
     "CityCode": "NAN",
     "City": "NantouCounty",
     "CountyID": "M",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": false,
+    "latlng": [23.9169628, 120.6840581]
   },
   {
     "CityID": "N",
@@ -101,7 +125,9 @@
     "CityCode": "CHA",
     "City": "ChanghuaCounty",
     "CountyID": "N",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": true,
+    "latlng": [24.0685233, 120.5574793]
   },
   {
     "CityID": "O",
@@ -109,7 +135,9 @@
     "CityCode": "HSZ",
     "City": "Hsinchu",
     "CountyID": "O",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": false,
+    "latlng": [24.8039476, 120.9646985]
   },
   {
     "CityID": "P",
@@ -117,7 +145,9 @@
     "CityCode": "YUN",
     "City": "YunlinCounty",
     "CountyID": "P",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": true,
+    "latlng": [23.7092035, 120.5429863]
   },
   {
     "CityID": "Q",
@@ -125,7 +155,9 @@
     "CityCode": "CYQ",
     "City": "ChiayiCounty",
     "CountyID": "Q",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": true,
+    "latlng": [23.4599074, 120.241712]
   },
   {
     "CityID": "T",
@@ -133,7 +165,9 @@
     "CityCode": "PIF",
     "City": "PingtungCounty",
     "CountyID": "T",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": true,
+    "latlng": [22.6813732, 120.4926576]
   },
   {
     "CityID": "U",
@@ -141,7 +175,9 @@
     "CityCode": "HUA",
     "City": "HualienCounty",
     "CountyID": "U",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": false,
+    "latlng": [23.9768285, 121.6052988]
   },
   {
     "CityID": "V",
@@ -149,7 +185,9 @@
     "CityCode": "TTT",
     "City": "TaitungCounty",
     "CountyID": "V",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": false,
+    "latlng": [22.7545748, 121.1416762]
   },
   {
     "CityID": "W",
@@ -157,7 +195,9 @@
     "CityCode": "KIN",
     "City": "KinmenCounty",
     "CountyID": "W",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": false,
+    "latlng": [24.4327087, 118.317098]
   },
   {
     "CityID": "X",
@@ -165,7 +205,9 @@
     "CityCode": "PEN",
     "City": "PenghuCounty",
     "CountyID": "X",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": false,
+    "latlng": [23.5654806, 119.5638015]
   },
   {
     "CityID": "Z",
@@ -173,6 +215,8 @@
     "CityCode": "LIE",
     "City": "LienchiangCounty",
     "CountyID": "Z",
-    "Version": "21.08.1"
+    "Version": "21.08.1",
+    "bike": false,
+    "latlng": [26.160583, 119.958613]
   }
 ]

@@ -23,11 +23,11 @@ export const menuList = [
   //   },
   //   iconClass: 'fas fa-bed',
   // },
-  // {
-  //   "title": "YouBike即時車位查詢",
-  //   "path": { "name": "bike" },
-  //   "iconClass": "fas fa-bicycle"
-  // },
+  {
+    title: 'YouBike即時車位查詢',
+    path: { name: 'bike' },
+    iconClass: 'fas fa-bicycle',
+  },
   {
     title: '公車/客運時間查詢',
     path: { name: 'bus-index' },

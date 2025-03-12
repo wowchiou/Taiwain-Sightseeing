@@ -11,6 +11,10 @@ const AUTH_URL = isDev
   ? 'http://localhost:3000/api/tdx/token'
   : 'https://nuxt-platform.vercel.app/api/tdx/token';
 
+const AC_URL = isDev
+  ? 'http://localhost:3000/api/tdx/public'
+  : 'https://nuxt-platform.vercel.app/api/tdx/public';
+
 async function FetchAuthorization() {
   return await fetch(AUTH_URL)
     .then((response) => response.json())
@@ -140,3 +144,7 @@ httpGIST.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export const httpAC = axios.create({
+  baseURL: AC_URL,
+});

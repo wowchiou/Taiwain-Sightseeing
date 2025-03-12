@@ -1,6 +1,7 @@
 import Leaflet from '@/utils/leaflet.utils.js';
 import Wkt from '@/utils/wkt.utils.js';
 import helper from '@/helpers/store/map.helper.js';
+import cityList from '@/utils/city.json';
 
 const stopsFeatureGroup = Leaflet.createFeatureGroup();
 const busFeatureGroup = Leaflet.createFeatureGroup();
@@ -38,13 +39,11 @@ export default {
       Leaflet.setTitleLayer(map);
     },
 
-    setLocationOfCityOnMap({ dispatch, rootState }, cityName) {
-      dispatch('fetchCityAddress', cityName, {
-        root: true,
-      }).then(([cityPosition]) => {
-        const cityGeometry = Wkt.getCityGeometry(cityPosition.Geometry);
-        rootState.map.OSM.setView(cityGeometry, 12);
-      });
+    setLocationOfCityOnMap({ rootState }, cityName) {
+      console.log(cityName);
+      const cityPosition = cityList.find((city) => city.CityName === cityName);
+      console.log(cityPosition);
+      rootState.map.OSM.setView(cityPosition.latlng, 12);
     },
 
     clearMarkersCluster({ state }) {
@@ -110,8 +109,12 @@ export default {
             <p class="bike-name">${name}</p>
           </div>
           <div class="bike-body">
-            <p class="bike-rent">可出借<span>${detail.AvailableRentBikes}</span>輛</p>
-            <p class="bike-return">可歸還<span>${detail.AvailableReturnBikes}</span>輛</p>
+            <p class="bike-rent">可出借<span>${
+              detail.AvailableRentBikes || 0
+            }</span>輛</p>
+            <p class="bike-return">可歸還<span>${
+              detail.AvailableReturnBikes || 0
+            }</span>輛</p>
           </div>`;
         }
       });
